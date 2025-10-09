@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "sonner";
 
 // Import the new Client Component provider
 import { QueryProvider } from "@/providers/QueryProvider";
@@ -27,6 +28,7 @@ export default function RootLayout({
             {children}
           </AuthProvider>
         </QueryProvider>
+        <Toaster />
       </body>
     </html>
   );

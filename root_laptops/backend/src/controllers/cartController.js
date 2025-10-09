@@ -13,14 +13,8 @@ export const getCart = async (req, res) => {
     }
 
     const cartItems = await CartItem.find({ cart_id: cart._id })
-      .populate('laptop_id', 'name price')
-      .populate({
-        path: 'laptop_id',
-        populate: {
-          path: 'brand_id',
-          select: 'name'
-        }
-      });
+      .populate('watch_id', 'name price')
+
 
     const totalAmount = cartItems.reduce((total, item) => {
       return total + (parseFloat(item.price) * item.quantity);
@@ -47,10 +41,10 @@ export const getCart = async (req, res) => {
 // Thêm sp
 export const addToCart = async (req, res) => {
   try {
-    const { laptop_id, quantity = 1 } = req.body;
+    const { watch_id, quantity = 1 } = req.body;
 
     // Kiểm tra 
-    const product = await Product.findById(laptop_id);
+    const product = await Product.findById(watch_id);
     if (!product) {
       return res.status(404).json({
         success: false,
@@ -69,7 +63,7 @@ export const addToCart = async (req, res) => {
     // Check sp có hay chưa 
     const existingItem = await CartItem.findOne({
       cart_id: cart._id,
-      laptop_id: laptop_id
+      watch_id: watch_id
     });
     // nếu có thì tăng sl 
     if (existingItem) {
@@ -79,7 +73,7 @@ export const addToCart = async (req, res) => {
       // nếu k có thì tạo mới
       const cartItem = new CartItem({
         cart_id: cart._id,
-        laptop_id: laptop_id,
+        watch_id: watch_id,
         quantity: quantity,
         price: product.price
       });
@@ -116,7 +110,7 @@ export const updateCartItem = async (req, res) => {
       item_id,
       { quantity },
       { new: true }
-    ).populate('laptop_id', 'name price');
+    ).populate('watch_id', 'name price');
 
     if (!cartItem) {
       return res.status(404).json({
@@ -166,3 +160,85 @@ export const removeFromCart = async (req, res) => {
   }
 };
 
+
+// Xóa toàn bộ giỏ hàng của người dùng
+export const clearUserCart = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    // Tìm giỏ hàng của người dùng
+    const cart = await Cart.findOne({ user_id: userId });
+
+    if (!cart) {
+      return res.status(404).json({
+        success: false,
+        message: 'Không tìm thấy giỏ hàng của người dùng.'
+      });
+    }
+
+    // Xóa tất cả các CartItem liên quan đến giỏ hàng này
+    await CartItem.deleteMany({ cart_id: cart._id });
+
+    res.json({
+      success: true,
+      message: 'Giỏ hàng đã được xóa thành công.'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi khi xóa giỏ hàng',
+      error: error.message
+    });
+  }
+};
+
+// Cập nhật toàn bộ giỏ hàng của người dùng
+export const updateUserCart = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { items } = req.body; // items là một mảng các { watch_id, quantity }
+
+    // Tìm giỏ hàng của người dùng
+    let cart = await Cart.findOne({ user_id: userId });
+
+    if (!cart) {
+      cart = new Cart({ user_id: userId });
+      await cart.save();
+    }
+
+    // Xóa tất cả các CartItem hiện có của giỏ hàng này
+    await CartItem.deleteMany({ cart_id: cart._id });
+
+    // Thêm các CartItem mới
+    const newCartItems = [];
+    for (const item of items) {
+      const product = await Product.findById(item.watch_id);
+      if (!product) {
+        // Nếu sản phẩm không tồn tại, bỏ qua hoặc trả về lỗi
+        console.warn(`Product with ID ${item.watch_id} not found. Skipping.`);
+        continue;
+      }
+      newCartItems.push({
+        cart_id: cart._id,
+        watch_id: item.watch_id,
+        quantity: item.quantity,
+        price: product.price // Lấy giá hiện tại của sản phẩm
+      });
+    }
+
+    if (newCartItems.length > 0) {
+      await CartItem.insertMany(newCartItems);
+    }
+
+    res.json({
+      success: true,
+      message: 'Giỏ hàng đã được cập nhật thành công.'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi khi cập nhật giỏ hàng',
+      error: error.message
+    });
+  }
+};

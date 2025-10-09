@@ -38,7 +38,7 @@ mongoose.connect(process.env.MONGODB_URI)
 app.get("/", (req, res) => {
   res.json({
     success: true,
-    message: "Laptop E-commerce API",
+    message: "Watch Store E-commerce API",
     version: "1.0.0",
     endpoints: {
       products: "/api/v1/products",

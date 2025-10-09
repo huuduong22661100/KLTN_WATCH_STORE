@@ -6,7 +6,7 @@ const orderItemSchema = new mongoose.Schema({
     ref: 'Order',
     required: true
   },
-  laptop_id: {
+  watch_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Product',
     required: true

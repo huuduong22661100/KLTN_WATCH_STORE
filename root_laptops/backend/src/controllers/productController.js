@@ -14,15 +14,65 @@ export const createProduct = async (req, res) => {
 // 🟢 Lấy danh sách sản phẩm (có thể phân trang)
 export const getProducts = async (req, res) => {
   try {
-    const { page = 1, limit = 10 } = req.query;
-    const products = await Product.find()
+    const { page = 1, limit = 10, category, color, minPrice, maxPrice, search, sort } = req.query;
+    let query = {};
+    let sortOptions = {};
+
+    if (category) {
+      query.category_id = category;
+    }
+    if (color) {
+      query.color_id = color;
+    }
+    if (minPrice || maxPrice) {
+      query.price = {};
+      if (minPrice) query.price.$gte = parseFloat(minPrice);
+      if (maxPrice) query.price.$lte = parseFloat(maxPrice);
+    }
+    if (search) {
+      query.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    if (sort) {
+      switch (sort) {
+        case 'price_asc':
+          sortOptions.price = 1;
+          break;
+        case 'price_desc':
+          sortOptions.price = -1;
+          break;
+        case 'name_asc':
+          sortOptions.name = 1;
+          break;
+        case 'name_desc':
+          sortOptions.name = -1;
+          break;
+        case 'newest':
+          sortOptions.createdAt = -1;
+          break;
+        case 'oldest':
+          sortOptions.createdAt = 1;
+          break;
+        default:
+          sortOptions.createdAt = -1;
+      }
+    } else {
+      sortOptions.createdAt = -1;
+    }
+
+
+    const products = await Product.find(query)
       .populate("color_id")
       .populate("category_id")
+      .sort(sortOptions)
       .limit(limit * 1)
       .skip((page - 1) * limit)
       .exec();
 
-    const count = await Product.countDocuments();
+    const count = await Product.countDocuments(query);
 
     res.status(200).json({
       success: true,

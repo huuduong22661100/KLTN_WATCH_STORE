@@ -7,70 +7,54 @@ import Product from '../models/Product.js';
 // Tạo đơn hàng từ giỏ hàng
 export const createOrder = async (req, res) => {
   try {
-    const { shipping_address, payment_method } = req.body;
+    const { shipping_address, payment_method, total_amount, order_items } = req.body;
+    const userId = req.user.id;
 
-    // Lấy giỏ hàng của người dùng
-    const cart = await Cart.findOne({ user_id: req.user.id });
-    if (!cart) {
-      return res.status(404).json({
-        success: false,
-        message: 'Cart not found'
-      });
-    }
-
-    // Lấy các sản phẩm trong giỏ hàng
-    const cartItems = await CartItem.find({ cart_id: cart._id })
-      .populate('laptop_id');
-
-    if (cartItems.length === 0) {
+    // Validate input
+    if (!shipping_address || !payment_method || !total_amount || !order_items || !Array.isArray(order_items) || order_items.length === 0) {
       return res.status(400).json({
         success: false,
-        message: 'Cart is empty'
+        message: 'Invalid order data provided.'
       });
     }
 
-    // Tính tổng tiền
-    const totalAmount = cartItems.reduce((total, item) => {
-      return total + (parseFloat(item.price) * item.quantity);
-    }, 0);
-
-    // Tạo đơn hàng
+    // Create the main order
     const order = new Order({
-      user_id: req.user.id,
-      total_amount: totalAmount,
-      shipping_address,
-      payment_method
+      user_id: userId,
+      total_amount: total_amount,
+      shipping_address: shipping_address,
+      payment_method: payment_method,
+      status: 'pending',
     });
 
     await order.save();
 
-    // Tạo các sản phẩm trong đơn hàng
-    const orderItems = cartItems.map(cartItem => ({
+    // Create order items from the provided list
+    const itemsToCreate = order_items.map(item => ({
       order_id: order._id,
-      laptop_id: cartItem.laptop_id._id,
-      quantity: cartItem.quantity,
-      price: cartItem.price
+      watch_id: item.watch_id,
+      quantity: item.quantity,
+      price: item.price,
     }));
 
-    await OrderItem.insertMany(orderItems);
+    await OrderItem.insertMany(itemsToCreate);
 
-    // Xóa giỏ hàng
-    await CartItem.deleteMany({ cart_id: cart._id });
-
-    // Lấy thông tin chi tiết đơn hàng
-    const populatedOrder = await Order.findById(order._id)
-      .populate('user_id', 'name email');
+    // Clear the user's cart after successful order creation
+    const cart = await Cart.findOne({ user_id: userId });
+    if (cart) {
+      await CartItem.deleteMany({ cart_id: cart._id });
+    }
 
     res.status(201).json({
       success: true,
       message: 'Order created successfully',
-      data: populatedOrder
+      data: order,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
       message: 'Error creating order',
-      error: error.message
+      error: error.message,
     });
   }
 };
@@ -121,23 +105,19 @@ export const getOrderById = async (req, res) => {
       });
     }
 
-    // Kiểm tra người dùng có quyền xem đơn hàng này không (bỏ qua nếu là admin)
-    if (req.user.role !== 'admin' && order.user_id._id.toString() !== req.user.id) {
+    // Kiểm tra người dùng có quyền xem đơn hàng này không
+    if (order.user_id._id.toString() !== req.user.id) {
       return res.status(403).json({
         success: false,
-        message: 'Access denied. You can only view your own orders.'
+        message: 'Access denied'
       });
     }
 
     // Lấy các sản phẩm trong đơn hàng
     const orderItems = await OrderItem.find({ order_id: id })
-      .populate('laptop_id', 'name price')
       .populate({
-        path: 'laptop_id',
-        populate: {
-          path: 'brand_id',
-          select: 'name'
-        }
+        path: 'watch_id',
+        select: 'name price images',
       });
 
     res.json({

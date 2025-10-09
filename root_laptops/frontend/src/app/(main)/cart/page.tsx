@@ -7,13 +7,46 @@ import { useCartStore } from '@/store/cartStore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Trash2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import { useEffect, useState } from 'react';
 
 export default function CartPage() {
-  const { items, removeFromCart, updateQuantity, getTotalPrice } = useCartStore();
+  const router = useRouter();
+  const { items, removeFromCart, updateQuantity, getTotalPrice, clearCart, updateCartOnServer, isCartDirty, setIsCartDirty } = useCartStore();
+
+  const [initialItems, setInitialItems] = useState(items);
+
+  useEffect(() => {
+    setInitialItems(items);
+  }, []);
+
+  useEffect(() => {
+    const hasChanged = JSON.stringify(items) !== JSON.stringify(initialItems);
+    setIsCartDirty(hasChanged);
+  }, [items, initialItems, setIsCartDirty]);
 
   const handleQuantityChange = (productId: string, newQuantity: number) => {
     if (newQuantity < 1) newQuantity = 1; // Ensure quantity is at least 1
     updateQuantity(productId, newQuantity);
+  };
+
+  const handleUpdateCart = async () => {
+    try {
+      await updateCartOnServer(items);
+      setInitialItems(items); // Reset initial items after successful update
+      setIsCartDirty(false);
+      toast.success('Giỏ hàng đã được cập nhật thành công!');
+    } catch (error) {
+      toast.error('Cập nhật giỏ hàng thất bại. Vui lòng thử lại.');
+      console.error('Failed to update cart:', error);
+    }
+  };
+
+  const handleClearCart = () => {
+    clearCart();
+    toast.info('Giỏ hàng của bạn đã được xóa.');
+    router.push('/products');
   };
 
   return (
@@ -80,6 +113,19 @@ export default function CartPage() {
                 </div>
               </div>
             ))}
+            <div className="mt-6 flex flex-col space-y-4">
+              <Link href="/products">
+                <Button variant="outline" className="w-full">Tiếp tục mua sắm</Button>
+              </Link>
+              <Button variant="destructive" className="w-full" onClick={handleClearCart}>Xóa giỏ hàng</Button>
+              <Button
+                className="w-full"
+                disabled={!isCartDirty} // Disable if no changes
+                onClick={handleUpdateCart}
+              >
+                Cập nhật giỏ hàng
+              </Button>
+            </div>
           </div>
 
           {/* Cart Summary */}
@@ -97,9 +143,12 @@ export default function CartPage() {
               <span>Tổng cộng:</span>
               <span>{getTotalPrice().toLocaleString('vi-VN')}đ</span>
             </div>
-            <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-3">
-              Tiến hành thanh toán
-            </Button>
+            <Link href="/checkout">
+              <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-3">
+                Tiến hành thanh toán
+              </Button>
+            </Link>
+
           </div>
         </div>
       )}

@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import RegisterForm from '@/features/auth/components/registerForm';
+import RegisterForm from '@/features/auth/components/RegisterForm';
 import Link from 'next/link';
 import { Button } from '@/shared/components/ui/button';
 import {
