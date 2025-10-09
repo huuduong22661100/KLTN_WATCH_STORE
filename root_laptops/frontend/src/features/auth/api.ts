@@ -1,4 +1,4 @@
-import { LoginPayload, RegisterPayload, AuthResponse } from "./types";
+import { LoginCredentials, RegisterPayload, LoginResponse } from "./types";
 
 const API_BASE_URL = "http://localhost:5000/api/v1/users"; // Sửa lại cho đúng với backend của bạn
 
@@ -15,7 +15,7 @@ export const meApi = async (token: string) => {
   return res.json();
 };
 
-export const loginApi = async (payload: LoginPayload): Promise<AuthResponse> => {
+export const loginApi = async (payload: LoginCredentials): Promise<LoginResponse> => {
   const res = await fetch(`${API_BASE_URL}/login`, {
     method: "POST",
     headers: {
@@ -31,7 +31,7 @@ export const loginApi = async (payload: LoginPayload): Promise<AuthResponse> => 
   return res.json();
 };
 
-export const registerApi = async (payload: RegisterPayload): Promise<AuthResponse> => {
+export const registerApi = async (payload: RegisterPayload): Promise<LoginResponse> => {
   const res = await fetch(`${API_BASE_URL}/register`, {
     method: "POST",
     headers: {
