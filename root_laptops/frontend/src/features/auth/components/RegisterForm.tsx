@@ -1,171 +1,119 @@
-"use client";
+'use client';
 
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
+import { useRegister } from '../hooks/useRegister';
+import type { RegisterPayload } from '../types';
 
-import { Button } from '@/shared/components/ui/button';
-import { Input } from '@/shared/components/ui/input';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { useRegister, RegisterPayload } from '../api/useRegister';
-
-// --- Zod Schema for validation ---
-const registerSchema = z.object({
-  name: z.string().min(2, { message: "Tên phải có ít nhất 2 ký tự." }),
-  phone: z.string().regex(/^[0-9]{10,11}$/, { message: "Số điện thoại không hợp lệ (10-11 chữ số)." }),
-  email: z.string().email({ message: "Email không hợp lệ." }),
-  address: z.string().min(10, { message: "Địa chỉ phải có ít nhất 10 ký tự." }),
-  password: z.string().min(6, { message: "Mật khẩu phải có ít nhất 6 ký tự." }),
-  confirmPassword: z.string().min(6, { message: "Xác nhận mật khẩu phải có ít nhất 6 ký tự." }),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Mật khẩu xác nhận không khớp.",
-  path: ["confirmPassword"],
-});
-
-type RegisterFormValues = z.infer<typeof registerSchema>;
-
-const RegisterForm = () => {
+export function RegisterForm() {
   const router = useRouter();
-  const { mutate: registerUser, isPending } = useRegister();
-
-  const form = useForm<RegisterFormValues>({
-    resolver: zodResolver(registerSchema),
-    defaultValues: {
-        name: "",
-        phone: "",
-        email: "",
-        address: "",
-        password: "",
-        confirmPassword: ""
-    }
+  const { mutate: register, isPending, error } = useRegister();
+  
+  const [formData, setFormData] = useState<RegisterPayload>({
+    name: '',
+    email: '',
+    password: '',
   });
 
-  const onSubmit = (data: RegisterFormValues) => {
-    // Exclude 'confirmPassword' from the payload sent to the API
-    const payload: RegisterPayload = {
-      name: data.name,
-      phone: data.phone,
-      email: data.email,
-      address: data.address,
-      password: data.password,
-    };
-
-    registerUser(payload, {
-      onSuccess: (res) => {
-        toast.success("Đăng ký thành công!", {
-          description: "Bạn sẽ được chuyển đến trang đăng nhập.",
-        });
-        router.push('/login'); // Correct redirection
-      },
-      onError: (error: Error) => {
-        toast.error("Đăng ký thất bại", {
-          description: error.message || "Đã có lỗi xảy ra trong quá trình đăng ký.",
-        });
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    register(formData, {
+      onSuccess: () => {
+        router.push('/');
       },
     });
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
+
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Tên <span className="text-red-500">*</span></FormLabel>
-              <FormControl>
-                <Input placeholder="Tên của bạn" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <div className="w-full max-w-md mx-auto">
+      <div className="bg-white p-8 rounded-lg shadow-lg">
+        <h2 className="text-2xl font-bold text-center mb-6">
+          Đăng ký tài khoản
+        </h2>
 
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email <span className="text-red-500">*</span></FormLabel>
-              <FormControl>
-                <Input type="email" placeholder="Email" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded mb-4">
+            <span className="text-sm">{error.message}</span>
+          </div>
+        )}
 
-        <FormField
-          control={form.control}
-          name="phone"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Số điện thoại <span className="text-red-500">*</span></FormLabel>
-              <FormControl>
-                <Input type="tel" placeholder="0901234567" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        <FormField
-          control={form.control}
-          name="address"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Địa chỉ <span className="text-red-500">*</span></FormLabel>
-              <FormControl>
-                <Input placeholder="Số nhà, đường, quận/huyện, tỉnh/thành phố" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+              Họ và tên
+            </label>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              value={formData.name}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Nguyễn Văn A"
+              required
+              disabled={isPending}
+            />
+          </div>
 
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Mật khẩu <span className="text-red-500">*</span></FormLabel>
-              <FormControl>
-                <Input type="password" placeholder="Mật khẩu" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              Email
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="your@email.com"
+              required
+              disabled={isPending}
+            />
+          </div>
 
-        <FormField
-          control={form.control}
-          name="confirmPassword"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Xác nhận mật khẩu <span className="text-red-500">*</span></FormLabel>
-              <FormControl>
-                <Input type="password" placeholder="Xác nhận mật khẩu" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+              Mật khẩu
+            </label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              value={formData.password}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="••••••••"
+              minLength={6}
+              required
+              disabled={isPending}
+            />
+          </div>
 
-        <Button 
-          type="submit" 
-          className="w-full bg-blue-600 hover:bg-blue-700" 
-          disabled={isPending}
-        >
-          {isPending ? "Đang đăng ký..." : "Đăng ký"}
-        </Button>
-      </form>
-    </Form>
+          <button
+            type="submit"
+            disabled={isPending}
+            className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+          >
+            {isPending ? 'Đang đăng ký...' : 'Đăng ký'}
+          </button>
+        </form>
+
+        <div className="mt-6 text-center text-sm text-gray-600">
+          Đã có tài khoản?{' '}
+          <a href="/login" className="text-blue-600 hover:underline font-medium">
+            Đăng nhập
+          </a>
+        </div>
+      </div>
+    </div>
   );
-};
-
-export default RegisterForm;
+}

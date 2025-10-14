@@ -1,6 +1,6 @@
-# Laptop Store - Frontend
+# Watch Store - Frontend
 
-This is the customer-facing frontend for the Laptop Store e-commerce application. It is built with Next.js and TypeScript.
+This is the customer-facing frontend for the Watch Store e-commerce application. It is built with Next.js and TypeScript.
 
 ## Features
 

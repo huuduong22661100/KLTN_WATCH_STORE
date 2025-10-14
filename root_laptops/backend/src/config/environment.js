@@ -10,7 +10,7 @@ const config = {
   NODE_ENV: process.env.NODE_ENV || 'development',
   
   // Database configuration
-  MONGODB_URI: process.env.MONGODB_URI || 'mongodb://localhost:27017/laptop_store',
+  MONGODB_URI: process.env.MONGODB_URI || 'mongodb://localhost:27017/Watch_store',
   
   // JWT configuration
   JWT_SECRET: process.env.JWT_SECRET || 'your-secret-key',

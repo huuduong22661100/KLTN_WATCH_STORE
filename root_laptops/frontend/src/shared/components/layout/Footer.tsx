@@ -15,7 +15,7 @@ import {
 
 const footerData = {
   info: [
-    "CÔNG TY TNHH BÁN LẺ LAPTOP",
+    "CÔNG TY TNHH BÁN LẺ Watch",
     "Trụ sở chính: 123 Đường ABC, Q. 1, TP. HCM",
     "Chi nhánh Hà Nội: 456 Đường XYZ, Q. Ba Đình, Hà Nội",
     "Hotline: 1800 6785",
@@ -36,7 +36,7 @@ const footerData = {
       title: "VỀ CHÚNG TÔI",
       icon: <Users className="inline mr-1 w-4 h-4" />,
       items: [
-        "Giới thiệu về Laptop Store",
+        "Giới thiệu về Watch Store",
         "Triết lí kinh doanh",
         "Cam kết chính hãng",
         "Khách hàng nói gì về chúng tôi",
@@ -48,7 +48,7 @@ const footerData = {
       title: "TIN TỨC",
       icon: <Newspaper className="inline mr-1 w-4 h-4" />,
       items: [
-        "Kiến thức về laptop",
+        "Kiến thức về Watch",
         "Bản tin công nghệ",
         "Tin khuyến mại",
         "Tuyển dụng",
@@ -205,7 +205,7 @@ const Footer = () => {
             ))}
           </div>
           <p className="text-xs text-gray-400">
-            Copyright © 2024 Laptop Store. All rights reserved.
+            Copyright © 2024 Watch Store. All rights reserved.
           </p>
         </div>
       </div>

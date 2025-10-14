@@ -6,9 +6,17 @@ const orderItemSchema = new mongoose.Schema({
     ref: 'Order',
     required: true
   },
-  watch_id: {
+  product_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Product',
+    required: true
+  },
+  product_name: {
+    type: String,
+    required: true
+  },
+  product_image: {
+    type: String,
     required: true
   },
   quantity: {
@@ -17,7 +25,11 @@ const orderItemSchema = new mongoose.Schema({
     min: 1
   },
   price: {
-    type: mongoose.Schema.Types.Decimal128,
+    type: Number,
+    required: true
+  },
+  subtotal: {
+    type: Number,
     required: true
   }
 }, {

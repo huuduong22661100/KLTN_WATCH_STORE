@@ -1,13 +1,7 @@
-
 "use client";
-import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useProducts } from "../hook/useProducts";
 import ProductCard from "./ProductCard";
-import { LayoutGrid, List } from "lucide-react";
-import { Button } from "@/components/ui/button";
-
-import { Product } from "@/features/products/types";
 
 const ProductList = () => {
     const [layout, setLayout] = useState<"grid" | "list">("grid");
@@ -16,14 +10,14 @@ const ProductList = () => {
         data: products,
         isLoading,
         error,
-    } = useProducts();
+    } = useProducts({ page: 1, limit: 12 }); // Truyền object thay vì 2 tham số
 
     if (isLoading) {
         return <div>Đang tải sản phẩm...</div>;
     }
 
     if (error) {
-        return <div>Có lỗi xảy ra: {error.message}</div>;
+        return <div>Có lỗi xảy ra</div>;
     }
 
     const containerClasses =
@@ -33,27 +27,8 @@ const ProductList = () => {
 
     return (
         <section>
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold">Sản phẩm mới</h2>
-                <div className="flex items-center gap-2">
-                    <Button
-                        variant={layout === "grid" ? "default" : "outline"}
-                        size="icon"
-                        onClick={() => setLayout("grid")}
-                    >
-                        <LayoutGrid className="w-5 h-5" />
-                    </Button>
-                    <Button
-                        variant={layout === "list" ? "default" : "outline"}
-                        size="icon"
-                        onClick={() => setLayout("list")}
-                    >
-                        <List className="w-5 h-5" />
-                    </Button>
-                </div>
-            </div>
             <div className={containerClasses}>
-                {products?.map((product: Product) => (
+                {products?.data?.products?.map((product: any) => (
                     <ProductCard key={product.id} product={product} layout={layout} />
                 ))}
             </div>

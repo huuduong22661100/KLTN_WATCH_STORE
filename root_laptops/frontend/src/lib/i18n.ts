@@ -6,7 +6,7 @@ import { initReactI18next } from 'react-i18next';
 const resources = {
   en: {
     common: {
-      appName: 'Laptop Store',
+      appName: 'Watch Store',
       home: 'Home',
       products: 'Products',
       login: 'Login',
@@ -19,7 +19,7 @@ const resources = {
   },
   vi: {
     common: {
-      appName: 'Laptop Store',
+      appName: 'Watch Store',
       home: 'Trang chủ',
       products: 'Sản phẩm',
       login: 'Đăng nhập',

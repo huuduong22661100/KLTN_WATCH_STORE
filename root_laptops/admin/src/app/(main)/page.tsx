@@ -14,26 +14,26 @@ export default function HomePage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Placeholder Category Card 1 */}
           <div className="bg-muted p-6 rounded-lg text-center hover:shadow-md transition-shadow">
-            <img src="/assets/image/category-gaming.png" alt="Laptop Gaming" className="mx-auto mb-4 h-32 object-contain" />
-            <h3 className="text-xl font-semibold mb-2">Laptop Gaming</h3>
+            <img src="/assets/image/category-gaming.png" alt="Watch Gaming" className="mx-auto mb-4 h-32 object-contain" />
+            <h3 className="text-xl font-semibold mb-2">Watch Gaming</h3>
             <a href="/products?category=Gaming" className="text-primary hover:underline">Xem ngay</a>
           </div>
           {/* Placeholder Category Card 2 */}
           <div className="bg-muted p-6 rounded-lg text-center hover:shadow-md transition-shadow">
-            <img src="/assets/image/category-office.png" alt="Laptop Văn phòng" className="mx-auto mb-4 h-32 object-contain" />
-            <h3 className="text-xl font-semibold mb-2">Laptop Văn phòng</h3>
+            <img src="/assets/image/category-office.png" alt="Watch Văn phòng" className="mx-auto mb-4 h-32 object-contain" />
+            <h3 className="text-xl font-semibold mb-2">Watch Văn phòng</h3>
             <a href="/products?category=Office" className="text-primary hover:underline">Xem ngay</a>
           </div>
           {/* Placeholder Category Card 3 */}
           <div className="bg-muted p-6 rounded-lg text-center hover:shadow-md transition-shadow">
-            <img src="/assets/image/category-student.png" alt="Laptop cho Sinh viên" className="mx-auto mb-4 h-32 object-contain" />
-            <h3 className="text-xl font-semibold mb-2">Laptop cho Sinh viên</h3>
+            <img src="/assets/image/category-student.png" alt="Watch cho Sinh viên" className="mx-auto mb-4 h-32 object-contain" />
+            <h3 className="text-xl font-semibold mb-2">Watch cho Sinh viên</h3>
             <a href="/products?category=Student" className="text-primary hover:underline">Xem ngay</a>
           </div>
           {/* Placeholder Category Card 4 */}
           <div className="bg-muted p-6 rounded-lg text-center hover:shadow-md transition-shadow">
-            <img src="/assets/image/category-graphic.png" alt="Laptop Đồ họa" className="mx-auto mb-4 h-32 object-contain" />
-            <h3 className="text-xl font-semibold mb-2">Laptop Đồ họa</h3>
+            <img src="/assets/image/category-graphic.png" alt="Watch Đồ họa" className="mx-auto mb-4 h-32 object-contain" />
+            <h3 className="text-xl font-semibold mb-2">Watch Đồ họa</h3>
             <a href="/products?category=Graphic-Design" className="text-primary hover:underline">Xem ngay</a>
           </div>
         </div>
@@ -68,7 +68,7 @@ export default function HomePage() {
       <section className="container py-12">
         <div className="relative bg-primary text-primary-foreground p-12 rounded-lg text-center">
           <h2 className="text-4xl font-bold mb-4">Ưu đãi đặc biệt!</h2>
-          <p className="text-xl mb-6">Giảm giá lên đến 20% cho tất cả laptop gaming.</p>
+          <p className="text-xl mb-6">Giảm giá lên đến 20% cho tất cả Watch gaming.</p>
           <a href="/products?category=Gaming" className="bg-primary-foreground text-primary font-semibold px-8 py-3 rounded-full hover:bg-muted transition-colors">
             Mua ngay
           </a>

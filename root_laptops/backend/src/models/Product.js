@@ -18,6 +18,7 @@ const productSchema = new mongoose.Schema({
     }]
   },
   price: { type: Number, min: 0 },
+  stock: { type: Number, required: true, min: 0, default: 0 },
   brand: { type: String },
   sku: { type: String },
   category_id: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }],

@@ -13,7 +13,7 @@ export const getCart = async (req, res) => {
     }
 
     const cartItems = await CartItem.find({ cart_id: cart._id })
-      .populate('watch_id', 'name price')
+      .populate('watch_id')
 
 
     const totalAmount = cartItems.reduce((total, item) => {

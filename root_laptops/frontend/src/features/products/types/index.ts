@@ -43,3 +43,15 @@ export interface Product {
   gender: string;
   origin: string;
 }
+export interface ProductsResponse {
+  success: boolean;
+  data: {
+    products: Product[];
+    pagination: {
+      page: number;
+      limit: number;
+      total: number;
+      totalPages: number;
+    };
+  };
+}

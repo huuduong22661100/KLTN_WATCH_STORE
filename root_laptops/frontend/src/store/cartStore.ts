@@ -2,8 +2,9 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { Product } from '@/features/products/types';
 import { useAuthStore } from './authStore';
-import { API_URL } from '@/constants/api-url';
+import { API_BASE_URL } from '@/constants/api-url';
 import { toast } from 'sonner';
+import { addToCartApi } from '@/features/cart/api';
 
 interface CartItem {
   product: Product;
@@ -32,6 +33,7 @@ export const useCartStore = create<CartState>()(
       setIsCartDirty: (dirty: boolean) => set({ isCartDirty: dirty }),
 
       loadCartFromServer: async () => {
+        set({ items: [] }); // Clear local state first
         const token = useAuthStore.getState().token;
         if (!token) {
           set({ items: [] });
@@ -39,7 +41,7 @@ export const useCartStore = create<CartState>()(
         }
 
         try {
-          const response = await fetch(`${API_URL}/cart`, {
+          const response = await fetch(`${API_BASE_URL}/cart`, {
             method: 'GET',
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -64,23 +66,34 @@ export const useCartStore = create<CartState>()(
       },
 
       addToCart: async (product, quantity) => {
-        const state = get();
-        const existingItemIndex = state.items.findIndex(item => item.product._id === product._id);
+        const token = useAuthStore.getState().token;
+        if (!token) {
+          toast.error("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng.");
+          return;
+        }
 
+        const originalItems = get().items;
+        // Optimistic update
+        const existingItemIndex = originalItems.findIndex(item => item.product._id === product._id);
         let updatedItems;
         if (existingItemIndex > -1) {
-          updatedItems = state.items.map((item, index) =>
+          updatedItems = originalItems.map((item, index) =>
             index === existingItemIndex
               ? { ...item, quantity: item.quantity + quantity }
               : item
           );
         } else {
-          updatedItems = [...state.items, { product, quantity }];
+          updatedItems = [...originalItems, { product, quantity }];
         }
-
         set({ items: updatedItems });
-        get().setIsCartDirty(true);
-        toast.success("Sản phẩm đã được thêm vào giỏ hàng!");
+
+        try {
+          await addToCartApi({ watch_id: product._id, quantity }, token);
+          toast.success("Sản phẩm đã được thêm vào giỏ hàng!");
+        } catch (error) {
+          toast.error("Thêm vào giỏ hàng thất bại. Vui lòng thử lại.");
+          set({ items: originalItems }); // Revert
+        }
       },
 
       removeFromCart: async (productId) => {
@@ -131,7 +144,7 @@ export const useCartStore = create<CartState>()(
             quantity: item.quantity,
           }));
 
-          const response = await fetch(`${API_URL}/cart`, {
+          const response = await fetch(`${API_BASE_URL}/cart`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',

@@ -10,8 +10,8 @@ import { AuthProvider } from "@/providers/AuthProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Cửa Hàng Laptop",
-  description: "Trang thương mại điện tử chuyên cung cấp các loại laptop chất lượng cao.",
+  title: "Cửa Hàng Watch",
+  description: "Trang thương mại điện tử chuyên cung cấp các loại Watch chất lượng cao.",
 };
 
 export default function RootLayout({

@@ -2,14 +2,14 @@ export const mockupData = [
   {
     id: '0',
     modelName: 'MSI MEG Trident X 10SD-1012US',
-    imageUrl: '/assets/image/laptop1.png',
+    imageUrl: '/assets/image/Watch1.png',
     company: 'MSI',
     price: 2799,
     colors: ['black', 'red'],
     sku: 'MTX10SD1012US',
     imgSliders: [
-      { url: '/assets/image/laptop1.png' },
-      { url: '/assets/image/laptop2.png' },
+      { url: '/assets/image/Watch1.png' },
+      { url: '/assets/image/Watch2.png' },
       { url: '/assets/image/ram01.png' },
       { url: '/assets/image/rtx02.png' },
     ],

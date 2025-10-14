@@ -1,1 +1,1 @@
-// AI controller will be updated for laptop products in the future.
+// AI controller will be updated for Watch products in the future.

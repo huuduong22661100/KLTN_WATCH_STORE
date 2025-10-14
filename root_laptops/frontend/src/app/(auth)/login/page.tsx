@@ -1,171 +1,151 @@
-"use client";
+'use client';
 
-import React from 'react';
-import Link from 'next/link';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-
-import { Button } from '@/shared/components/ui/button';
-import { Input } from '@/shared/components/ui/input';
-import { Label } from '@/shared/components/ui/label';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/shared/components/ui/form';
 import { toast } from 'sonner';
 
-import { useLogin } from '@/features/auth/api/useLogin';
+import { useLogin } from '@/features/auth/hooks/useLogin'; // ✅ SỬA PATH
 import { useAuthStore } from '@/store/authStore';
 import { LoginCredentials } from '@/features/auth/types';
 
-// 1. Zod Schema
-const formSchema = z.object({
-  email: z.string().email({ message: "Email không hợp lệ." }),
-  password: z.string().min(1, { message: "Mật khẩu không được để trống." }),
-});
-
-// 2. LoginForm Component
-const LoginForm = () => {
+export default function LoginPage() {
   const router = useRouter();
-  const { login } = useAuthStore();
+  const { mutate: login, isPending, error } = useLogin();
   
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
+  const [formData, setFormData] = useState<LoginCredentials>({
+    email: '',
+    password: '',
   });
 
-  const { mutate: loginUser, isPending } = useLogin();
-
-  const onSubmit = (values: LoginCredentials) => {
-    loginUser(values, {
-      onSuccess: (data) => {
-        toast.success("Thành công", {
-          description: data.message,
-        });
-        login(data.data.token, data.data.user);
-        router.push('/');
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    login(formData, {
+      onSuccess: () => {
+        toast.success('Đăng nhập thành công!');
+        router.push('/'); // ✅ REDIRECT VỀ TRANG CHỦ
       },
-      onError: (error) => {
-        toast.error("Lỗi", {
-          description: error.message,
-        });
+      onError: (err) => {
+        toast.error(err.message || 'Đăng nhập thất bại');
       },
     });
   };
 
-  return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email <span className="text-red-500">*</span></FormLabel>
-              <FormControl>
-                <Input placeholder="Nhập email của bạn" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Mật khẩu <span className="text-red-500">*</span></FormLabel>
-              <FormControl>
-                <Input type="password" placeholder="Nhập mật khẩu của bạn" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
 
-        <div className="flex items-center space-x-4 pt-2">
-          <Button 
-            type="submit" 
-            className="px-8 py-3 bg-blue-600 hover:bg-blue-700 font-semibold rounded-lg"
-            disabled={isPending}
-          >
-            {isPending ? 'Đang đăng nhập...' : 'Sign in'}
-          </Button>
-          
-          <Link 
-            href="/forgot-password" 
-            className="text-blue-600 hover:text-blue-700 text-sm font-medium"
-          >
-            Quên mật khẩu?
-          </Link>
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        <div>
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            Đăng nhập vào tài khoản
+          </h2>
+          <p className="mt-2 text-center text-sm text-gray-600">
+            Hoặc{' '}
+            <a href="/register" className="font-medium text-blue-600 hover:text-blue-500">
+              đăng ký tài khoản mới
+            </a>
+          </p>
         </div>
-      </form>
-    </Form>
-  );
-};
 
+        <div className="mt-8 bg-white py-8 px-6 shadow-lg rounded-lg">
+          {error && (
+            <div className="mb-4 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg">
+              <div className="flex items-center gap-2">
+                <span>⚠️</span>
+                <span className="text-sm">{error.message}</span>
+              </div>
+            </div>
+          )}
 
-const CustomerLoginPage = () => {
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="py-4 px-6 md:px-12">
-        <p className="text-sm text-gray-600">
-          <Link href="/">Trang chủ</Link> &gt; Đăng nhập
-        </p>
-      </header>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                Email
+              </label>
+              <div className="mt-1">
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  placeholder="your@email.com"
+                  required
+                  disabled={isPending}
+                />
+              </div>
+            </div>
 
-      <div className="container mx-auto px-4 md:px-6 py-6">
-        <h1 className="text-3xl md:text-4xl font-semibold text-gray-800 mb-8">Đăng Nhập</h1>
-      </div>
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                Mật khẩu
+              </label>
+              <div className="mt-1">
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  autoComplete="current-password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  placeholder="••••••••"
+                  required
+                  disabled={isPending}
+                />
+              </div>
+            </div>
 
-      <div className="container mx-auto px-4 md:px-6 pb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-          
-          <div className="bg-white p-8 md:p-10 rounded-lg shadow-md border border-gray-100">
-            <h2 className="text-xl font-semibold mb-6 text-gray-800">Khách Hàng Đã Đăng Ký</h2>
-            <p className="text-gray-600 mb-8">
-              Nếu bạn đã có tài khoản, hãy đăng nhập bằng địa chỉ email của bạn.
-            </p>
-            
-            <LoginForm />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <input
+                  id="remember-me"
+                  name="remember-me"
+                  type="checkbox"
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                />
+                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                  Ghi nhớ đăng nhập
+                </label>
+              </div>
 
-          </div>
+              <div className="text-sm">
+                <a href="/forgot-password" className="font-medium text-blue-600 hover:text-blue-500">
+                  Quên mật khẩu?
+                </a>
+              </div>
+            </div>
 
-          <div className="bg-white p-8 md:p-10 rounded-lg shadow-md border border-gray-100">
-            <h2 className="text-xl font-semibold mb-6 text-gray-800">Khách Hàng Mới?</h2>
-            
-            <p className="text-gray-600 mb-6">
-              Tạo tài khoản có nhiều lợi ích:
-            </p>
-            
-            <ul className="list-disc list-inside space-y-2 text-gray-600 mb-10 ml-4">
-              <li>Thanh toán nhanh hơn</li>
-              <li>Lưu nhiều địa chỉ</li>
-              <li>Theo dõi đơn hàng và hơn thế nữa</li>
-            </ul>
-            
-            <Link href="/register" passHref>
-              <Button 
-                className="px-8 py-3 bg-blue-600 hover:bg-blue-700 font-semibold rounded-lg text-white"
+            <div>
+              <button
+                type="submit"
+                disabled={isPending}
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
               >
-                Tạo tài khoản
-              </Button>
-            </Link>
-          </div>
-
+                {isPending ? (
+                  <span className="flex items-center gap-2">
+                    <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Đang đăng nhập...
+                  </span>
+                ) : (
+                  'Đăng nhập'
+                )}
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
   );
-};
-
-export default CustomerLoginPage;
+}

@@ -1,12 +1,12 @@
-Laptop E-commerce Backend API
+Watch E-commerce Backend API
 
-Đây là hệ thống Backend API cho website thương mại điện tử bán laptop, có tích hợp gợi ý sản phẩm và chatbot bằng AI.
+Đây là hệ thống Backend API cho website thương mại điện tử bán Watch, có tích hợp gợi ý sản phẩm và chatbot bằng AI.
 <!--  -->
 Các tính năng chính
 
 - Đăng nhập/Đăng ký & phân quyền: sử dụng JWT để quản lý tài khoản.
 
-- Quản lý sản phẩm: thêm, sửa, xóa, lấy danh sách laptop.
+- Quản lý sản phẩm: thêm, sửa, xóa, lấy danh sách Watch.
 
 - Giỏ hàng: thêm/xóa sản phẩm, cập nhật số lượng.
 
@@ -36,7 +36,7 @@ Tạo file .env (dựa trên .env.example) rồi thêm cấu hình:
 
 PORT=5000
 NODE_ENV=development
-MONGODB_URI=mongodb://localhost:27017/laptop-ecommerce
+MONGODB_URI=mongodb://localhost:27017/Watch-ecommerce
 JWT_SECRET=...
 OPENAI_API_KEY=key-openai
 CORS_ORIGIN=http://localhost:3000
@@ -95,7 +95,7 @@ Database Models
 
 User – tài khoản người dùng
 
-Product – thông tin laptop
+Product – thông tin Watch
 
 Brand / Category / Color – thương hiệu, loại, màu sắc
 
@@ -122,7 +122,7 @@ Token hết hạn sau 7 ngày.
 <!--  -->
 Tính năng AI
 
-Phân tích nhu cầu, đưa ra laptop phù hợp. Sinh mô tả sản phẩm nhanh cho marketing.
+Phân tích nhu cầu, đưa ra Watch phù hợp. Sinh mô tả sản phẩm nhanh cho marketing.
 Trả lời câu hỏi về sản phẩm dựa trên thông tin kỹ thuật.
 
 <!--  -->

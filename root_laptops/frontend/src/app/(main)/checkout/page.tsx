@@ -1,346 +1,135 @@
 'use client';
 
-import { API_URL } from '@/constants/api-url';
-
 import { useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-
-import { useAuthStore } from '@/store/authStore';
-import { useCartStore } from '@/store/cartStore';
-import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group';
-import { Separator } from '@/components/ui/separator';
-
-// Schema cho toàn bộ form
-const checkoutSchema = z.object({
-  fullName: z.string().min(1, 'Họ tên là bắt buộc'),
-  email: z.string().email('Email không hợp lệ'),
-  phone: z.string().min(1, 'Số điện thoại là bắt buộc'),
-  address: z.string().min(1, 'Địa chỉ là bắt buộc'),
-  paymentMethod: z.enum(['cod', 'e-wallet']).refine((val) => val !== undefined, {
-    message: 'Phương thức thanh toán là bắt buộc',
-  }),
-});
-
-type CheckoutFormValues = z.infer<typeof checkoutSchema>;
+import { 
+  CheckoutForm, 
+  PaymentMethod, 
+  OrderReview,
+  useCheckoutForm 
+} from '@/features/checkout';
+import { useCreateOrder } from '@/features/orders';
+import { useCart } from '@/features/cart';
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const queryClient = useQueryClient();
-  const [step, setStep] = useState<'shipping' | 'payment' | 'review'>('shipping');
-  const { user, token } = useAuthStore();
-  const { items, getTotalPrice, clearCart } = useCartStore();
+  const { data: cart, isLoading: isLoadingCart } = useCart();
+  const { mutate: createOrder, isPending } = useCreateOrder();
+  
+  const {
+    formData,
+    summary,
+    isCalculatingFee,
+    updateField,
+    validateForm,
+  } = useCheckoutForm();
 
-  const totalAmount = getTotalPrice();
-  const shippingCost = 100000;
-  const taxRate = 0.08; // 8% VAT
-  const taxAmount = totalAmount * taxRate;
-  const finalTotal = totalAmount + shippingCost + taxAmount;
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Khởi tạo form với schema bao gồm paymentMethod
-  const form = useForm<CheckoutFormValues>({
-    resolver: zodResolver(checkoutSchema),
-    defaultValues: {
-      fullName: user?.name || '',
-      email: user?.email || '',
-      phone: user?.phone || '',
-      address: user?.address || '',
-      paymentMethod: 'cod', // Giá trị mặc định
-    },
-  });
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
 
+  if (!validateForm()) {
+    toast.error('Vui lòng điền đầy đủ thông tin');
+    return;
+  }
 
+  if (!cart || cart.items.length === 0) {
+    toast.error('Giỏ hàng trống');
+    return;
+  }
 
-// ... (rest of imports)
+  setIsSubmitting(true);
 
-// ... (component code)
-
-  const { mutate: createOrder, isPending } = useMutation({
-    mutationFn: async (orderData: any) => {
-      const response = await fetch(`${API_URL}/orders`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify(orderData),
-      });
-      if (!response.ok) {
-        throw new Error('Tạo đơn hàng thất bại');
-      }
-      return response.json();
-    },
-    onSuccess: () => {
+  createOrder(formData, {
+    onSuccess: (order) => {
       toast.success('Đặt hàng thành công!');
-      clearCart();
-      queryClient.invalidateQueries({ queryKey: ['cart'] });
-      router.push('/order-success');
+      router.push(`/order-success/${order.id}`); // ✅ ĐÚNG URL
     },
-    onError: (error: any) => {
-      toast.error(error.message || 'Đã có lỗi xảy ra. Vui lòng thử lại.');
+    onError: (error) => {
+      toast.error(error.message);
+    },
+    onSettled: () => {
+      setIsSubmitting(false);
     },
   });
+};
 
-  function onShippingSubmit() {
-    setStep('payment');
+  if (isLoadingCart) {
+    return (
+      <div className="container mx-auto py-8">
+        <div className="text-center">Đang tải...</div>
+      </div>
+    );
   }
 
-  function onPaymentSubmit() {
-    setStep('review');
-  }
-
-  function handlePlaceOrder(data: CheckoutFormValues) {
-    if (!user) {
-      toast.error('Thông tin người dùng không đầy đủ');
-      return;
-    }
-
-    const orderData = {
-      user_id: user.id,
-      total_amount: finalTotal,
-      shipping_address: data.address,
-      payment_method: data.paymentMethod,
-      order_items: items.map((item) => ({
-        watch_id: item.product._id,
-        quantity: item.quantity,
-        price: item.product.price,
-      })),
-    };
-
-    createOrder(orderData);
-  }
-
-  const renderStep = () => {
-    switch (step) {
-      case 'shipping':
-        return (
-          <Card>
-            <CardHeader>
-              <CardTitle>Bước 1: Thông tin giao hàng</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={form.handleSubmit(onShippingSubmit)} className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="fullName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Họ và tên</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Nhập họ và tên" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Nhập email" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="phone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Số điện thoại</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Nhập số điện thoại" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="address"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Địa chỉ</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Nhập địa chỉ" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button type="submit" className="w-full">Tiếp tục đến thanh toán</Button>
-              </form>
-            </CardContent>
-          </Card>
-        );
-      case 'payment':
-        return (
-          <Card>
-            <CardHeader>
-              <CardTitle>Bước 2: Phương thức thanh toán</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <FormField
-                control={form.control}
-                name="paymentMethod"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Chọn phương thức thanh toán</FormLabel>
-                    <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        className="space-y-2"
-                      >
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="cod" />
-                          </FormControl>
-                          <FormLabel className="font-normal">Thanh toán khi nhận hàng (COD)</FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="e-wallet" />
-                          </FormControl>
-                          <FormLabel className="font-normal">Thanh toán bằng ví điện tử</FormLabel>
-                        </FormItem>
-                      </RadioGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="flex justify-between">
-                <Button variant="outline" onClick={() => setStep('shipping')}>
-                  Quay lại
-                </Button>
-                <Button onClick={form.handleSubmit(onPaymentSubmit)}>Tiếp tục đến xác nhận</Button>
-              </div>
-            </CardContent>
-          </Card>
-        );
-      case 'review':
-        return (
-          <Card>
-            <CardHeader>
-              <CardTitle>Bước 3: Xác nhận đơn hàng</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div>
-                <h3 className="font-semibold">Thông tin giao hàng</h3>
-                <p>{form.getValues('fullName')}</p>
-                <p>{form.getValues('email')}</p>
-                <p>{form.getValues('phone')}</p>
-                <p>{form.getValues('address')}</p>
-              </div>
-              <Separator />
-              <div>
-                <h3 className="font-semibold">Phương thức thanh toán</h3>
-                <p>{form.getValues('paymentMethod') === 'cod' ? 'Thanh toán khi nhận hàng (COD)' : 'Ví điện tử'}</p>
-              </div>
-              <Separator />
-              <div>
-                <h3 className="font-semibold">Tổng kết đơn hàng</h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span>Tạm tính:</span>
-                    <span>{totalAmount.toLocaleString('vi-VN')}đ</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Phí vận chuyển:</span>
-                    <span>{shippingCost.toLocaleString('vi-VN')}đ</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Thuế (8%):</span>
-                    <span>{taxAmount.toLocaleString('vi-VN')}đ</span>
-                  </div>
-                  <Separator />
-                  <div className="flex justify-between font-bold text-lg">
-                    <span>Tổng cộng:</span>
-                    <span>{finalTotal.toLocaleString('vi-VN')}đ</span>
-                  </div>
-                </div>
-              </div>
-              <div className="flex justify-between">
-                <Button variant="outline" onClick={() => setStep('payment')} disabled={isPending}>
-                  Quay lại
-                </Button>
-                <Button onClick={form.handleSubmit(handlePlaceOrder)} disabled={isPending}>
-                  {isPending ? 'Đang xử lý...' : 'Xác nhận đặt hàng'}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        );
-      default:
-        return null;
-    }
-  };
-
-  return (
-    <div className="container mx-auto py-12">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="md:col-span-2">
-          <FormProvider {...form}>{renderStep()}</FormProvider>
-        </div>
-        <div className="col-span-1">
-          <Card>
-            <CardHeader>
-              <CardTitle>Sản phẩm trong giỏ</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {items.map((item) => (
-                <div key={item.product._id} className="flex items-center justify-between mb-4">
-                  <div className="flex items-center">
-                    <img
-                      src={item.product.images.mainImg.url}
-                      alt={item.product.title}
-                      className="w-16 h-16 object-cover rounded-md mr-4"
-                    />
-                    <div>
-                      <p className="font-semibold">{item.product.title}</p>
-                      <p className="text-sm text-gray-500">Số lượng: {item.quantity}</p>
-                    </div>
-                  </div>
-                  <p className="font-semibold">{(item.product.price * item.quantity).toLocaleString('vi-VN')}đ</p>
-                </div>
-              ))}
-              <Separator />
-              <div className="space-y-2 mt-4">
-                <div className="flex justify-between">
-                  <span>Tạm tính:</span>
-                  <span>{totalAmount.toLocaleString('vi-VN')}đ</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Phí vận chuyển:</span>
-                  <span>{shippingCost.toLocaleString('vi-VN')}đ</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Thuế (8%):</span>
-                  <span>{taxAmount.toLocaleString('vi-VN')}đ</span>
-                </div>
-                <Separator />
-                <div className="flex justify-between font-bold text-lg">
-                  <span>Tổng cộng:</span>
-                  <span>{finalTotal.toLocaleString('vi-VN')}đ</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+  if (!cart || cart.items.length === 0) {
+    return (
+      <div className="container mx-auto py-8">
+        <div className="text-center">
+          <p className="text-xl mb-4">Giỏ hàng trống</p>
+          <a href="/products" className="text-blue-600 hover:underline">
+            Tiếp tục mua sắm
+          </a>
         </div>
       </div>
+    );
+  }
+
+  return (
+    <div className="container mx-auto py-8">
+      <h1 className="text-3xl font-bold mb-8">Thanh toán</h1>
+
+      <form onSubmit={handleSubmit}>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Form */}
+          <div className="lg:col-span-2 space-y-6">
+            <CheckoutForm
+              formData={formData}
+              onFieldChange={updateField}
+            />
+
+            <PaymentMethod
+              selected={formData.payment_method}
+              onChange={(method) => updateField('payment_method', method)}
+            />
+          </div>
+
+          {/* Summary */}
+          <div className="lg:col-span-1">
+            <OrderReview
+              summary={summary}
+              isCalculatingFee={isCalculatingFee}
+            />
+
+            <button
+              type="submit"
+              disabled={isSubmitting || isPending}
+              className="w-full mt-4 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed font-semibold"
+            >
+              {isSubmitting || isPending ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Đang xử lý...
+                </span>
+              ) : (
+                `Đặt hàng (${summary.total.toLocaleString('vi-VN')} đ)`
+              )}
+            </button>
+
+            <p className="text-xs text-gray-500 text-center mt-4">
+              Bằng việc đặt hàng, bạn đồng ý với{' '}
+              <a href="/terms" className="text-blue-600 hover:underline">
+                Điều khoản dịch vụ
+              </a>
+            </p>
+          </div>
+        </div>
+      </form>
     </div>
   );
 }

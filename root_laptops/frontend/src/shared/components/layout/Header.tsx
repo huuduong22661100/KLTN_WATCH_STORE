@@ -32,10 +32,10 @@ const headerData = {
       name: "Sản phẩm",
       url: "/products",
       submenu: [
-        { name: "Laptop Gaming", url: "/products?category=Gaming" },
-        { name: "Laptop Văn phòng", url: "/products?category=Office" },
-        { name: "Laptop cho Sinh viên", url: "/products?category=Student" },
-        { name: "Laptop Đồ họa", url: "/products?category=Graphic-Design" },
+        { name: "Watch Gaming", url: "/products?category=Gaming" },
+        { name: "Watch Văn phòng", url: "/products?category=Office" },
+        { name: "Watch cho Sinh viên", url: "/products?category=Student" },
+        { name: "Watch Đồ họa", url: "/products?category=Graphic-Design" },
       ],
     },
     { url: "/brands", name: "Thương hiệu" },
@@ -50,7 +50,7 @@ const Header = () => {
   const cartItems = useCartStore((state) => state.items);
   const [isClient, setIsClient] = useState(false);
 
-  const { isLoggedIn, user, logout } = useAuthStore();
+  const { isAuthenticated: isLoggedIn, user, logout } = useAuthStore();
   console.log("User object in Header:", user);
 
   useEffect(() => {
@@ -63,7 +63,7 @@ const Header = () => {
         {/* Logo */}
         <a href="/" className="flex items-center gap-2">
           <img src={headerData.logoUrl} alt="Logo" className="h-10 w-auto" />
-          <span className="font-bold text-xl tracking-widest">LAPTOP STORE</span>
+          <span className="font-bold text-xl tracking-widest">Watch Store</span>
         </a>
 
         {/* Navigation */}
@@ -132,7 +132,7 @@ const Header = () => {
               </span>
             </a>
             {/* Cart Dropdown */}
-            <div className="absolute top-full right-0 mt-2 w-80 bg-black border border-gray-700 shadow-lg rounded-md p-4 z-50 hidden group-hover:block">
+            <div className="absolute top-full right-0 pd-2 w-80 bg-black border border-gray-700 shadow-lg rounded-md p-4 z-50 hidden group-hover:block">
               <h3 className="font-bold text-lg mb-2">Giỏ hàng của tôi</h3>
               <p className="text-sm text-gray-400 mb-4">
                 {isClient ? totalItems : 0} sản phẩm trong giỏ

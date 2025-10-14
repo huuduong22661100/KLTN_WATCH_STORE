@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 // MongoDB connection string
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/laptop_store';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/Watch_store';
 
 // MongoDB connection options
 const options = {
