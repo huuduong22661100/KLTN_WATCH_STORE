@@ -1,16 +1,18 @@
 import { useMutation } from "@tanstack/react-query";
 import { loginApi } from "../api";
 import { useAuthStore } from "@/store/authStore";
-import { LoginPayload, AuthResponse } from "../types";
+import { LoginCredentials, LoginResponse } from "../types";
 
 export function useLogin() {
   const { login } = useAuthStore();
 
-  return useMutation<AuthResponse, Error, LoginPayload>({
+  return useMutation<LoginResponse, Error, LoginCredentials>({
     mutationFn: loginApi, 
     onSuccess: (data) => {
-      // Khi API trả về thành công, gọi action `login` của store
-      login(data.token, data.user);
+      login(data.data.user, data.data.token);
     },
+    onError: (error) => {
+      console.error('Login failed:', error);
+    }
   });
 }

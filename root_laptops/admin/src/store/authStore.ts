@@ -4,7 +4,7 @@ interface AuthState {
   token: string | null;
   user: any | null; // Sẽ thay thế 'any' bằng kiểu User cụ thể
   isLoggedIn: boolean;
-  login: (token: string, user: any) => void;
+  login: (user: any, token: string) => void;
   logout: () => void;
 }
 
@@ -15,7 +15,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   isLoggedIn: false,
 
   // Hàm login, chỉ ghi vào localStorage ở phía client
-  login: (token, user) => {
+  login: (user, token) => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));

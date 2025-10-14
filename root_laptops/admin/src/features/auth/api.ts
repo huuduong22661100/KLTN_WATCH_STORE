@@ -1,48 +1,60 @@
-import { LoginPayload, RegisterPayload, AuthResponse } from "./types";
+import { AUTH_ENDPOINTS } from '@/constants/api-url';
+import { LoginCredentials, RegisterPayload, LoginResponse, User } from './types';
 
-const API_BASE_URL = "http://localhost:5000/api/v1/users"; // Sửa lại cho đúng với backend của bạn
-
-export const meApi = async (token: string) => {
-  const res = await fetch(`${API_BASE_URL}/profile`, { // Giả sử endpoint là /profile
+export const loginApi = async (payload: LoginCredentials): Promise<LoginResponse> => {
+  const res = await fetch(AUTH_ENDPOINTS.LOGIN, {
+    method: 'POST',
     headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  if (!res.ok) {
-    const errorData = await res.json().catch(() => ({ message: "Failed to fetch current user" }));
-    throw new Error(errorData.message);
-  }
-  return res.json();
-};
-
-export const loginApi = async (payload: LoginPayload): Promise<AuthResponse> => {
-  const res = await fetch(`${API_BASE_URL}/login`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(payload),
   });
 
   if (!res.ok) {
-    const errorData = await res.json().catch(() => ({ message: "Email hoặc mật khẩu không đúng" }));
-    throw new Error(errorData.message);
+    const error = await res.json().catch(() => ({ message: 'Đăng nhập thất bại' }));
+    throw new Error(error.message);
   }
+
   return res.json();
 };
 
-export const registerApi = async (payload: RegisterPayload): Promise<AuthResponse> => {
-  const res = await fetch(`${API_BASE_URL}/register`, {
-    method: "POST",
+export const registerApi = async (payload: RegisterPayload): Promise<LoginResponse> => {
+  const res = await fetch(AUTH_ENDPOINTS.REGISTER, {
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(payload),
   });
 
   if (!res.ok) {
-    const errorData = await res.json().catch(() => ({ message: "Đăng ký thất bại" }));
-    throw new Error(errorData.message);
+    const error = await res.json().catch(() => ({ message: 'Đăng ký thất bại' }));
+    throw new Error(error.message);
   }
+
   return res.json();
+};
+
+export const getCurrentUserApi = async (token: string): Promise<User> => {
+  const res = await fetch(AUTH_ENDPOINTS.ME, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error('Không thể lấy thông tin người dùng');
+  }
+
+  const result = await res.json();
+  return result.data.user;
+};
+
+export const logoutApi = async (token: string): Promise<void> => {
+  await fetch(AUTH_ENDPOINTS.LOGOUT, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
 };
