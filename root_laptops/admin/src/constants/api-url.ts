@@ -19,3 +19,44 @@ export const PRODUCT_ENDPOINTS = {
   UPDATE: (id: string) => `${API_BASE_URL}/products/${id}`,
   DELETE: (id: string) => `${API_BASE_URL}/products/${id}`,
 } as const;
+
+// ✅ News endpoints
+export const NEWS_ENDPOINTS = {
+  LIST: `${API_BASE_URL}/news`,
+  DETAIL: (id: string) => `${API_BASE_URL}/news/${id}`,
+  CREATE: `${API_BASE_URL}/news`,
+  UPDATE: (id: string) => `${API_BASE_URL}/news/${id}`,
+} as const;
+
+// ✅ Color endpoints
+export const COLOR_ENDPOINTS = {
+  LIST: `${API_BASE_URL}/colors`,
+  DETAIL: (id: string) => `${API_BASE_URL}/colors/${id}`,
+  CREATE: `${API_BASE_URL}/colors`,
+  UPDATE: (id: string) => `${API_BASE_URL}/colors/${id}`,
+  DELETE: (id: string) => `${API_BASE_URL}/colors/${id}`,
+} as const;
+
+// ✅ Category endpoints
+export const CATEGORY_ENDPOINTS = {
+  LIST: `${API_BASE_URL}/categories`,
+  DETAIL: (id: string) => `${API_BASE_URL}/categories/${id}`,
+  CREATE: `${API_BASE_URL}/categories`,
+  UPDATE: (id: string) => `${API_BASE_URL}/categories/${id}`,
+  DELETE: (id: string) => `${API_BASE_URL}/categories/${id}`,
+} as const;
+
+// ✅ Order endpoints
+export const ORDER_ENDPOINTS = {
+  LIST: `${API_BASE_URL}/orders`,
+  DETAIL: (id: string) => `${API_BASE_URL}/orders/${id}`,
+  UPDATE_STATUS: (id: string) => `${API_BASE_URL}/orders/${id}/status`,
+} as const;
+
+// ✅ User endpoints
+export const USER_ENDPOINTS = {
+  LIST: `${API_BASE_URL}/users`,
+  DETAIL: (id: string) => `${API_BASE_URL}/users/${id}`,
+  UPDATE: (id: string) => `${API_BASE_URL}/users/${id}`,
+  DELETE: (id: string) => `${API_BASE_URL}/users/${id}`,
+} as const;
