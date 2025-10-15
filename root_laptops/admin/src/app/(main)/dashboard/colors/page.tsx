@@ -35,11 +35,11 @@ export default function ColorsPage() {
   const [editingColor, setEditingColor] = useState<Color | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [formData, setFormData] = useState<ColorFormData>({
-    name: '',
-    hex_code: '#000000',
+    color: '#000000',
   });
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const { data: colors, isLoading, isError } = useColors();
+  const { data: colors, isLoading, isError } = useColors({ search: searchQuery });
   const createColor = useCreateColor();
   const updateColor = useUpdateColor();
   const deleteColor = useDeleteColor();
@@ -48,14 +48,12 @@ export default function ColorsPage() {
     if (color) {
       setEditingColor(color);
       setFormData({
-        name: color.name,
-        hex_code: color.hex_code,
+        color: color.color,
       });
     } else {
       setEditingColor(null);
       setFormData({
-        name: '',
-        hex_code: '#000000',
+        color: '#000000',
       });
     }
     setIsDialogOpen(true);
@@ -103,6 +101,15 @@ export default function ColorsPage() {
         </Button>
       </div>
 
+      <div className="flex justify-between items-center">
+        <Input
+          placeholder="Tìm kiếm theo tên màu..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="max-w-sm"
+        />
+      </div>
+
       {isLoading && (
         <div className="flex justify-center py-8">
           <div className="text-muted-foreground">Đang tải...</div>
@@ -121,7 +128,6 @@ export default function ColorsPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Màu sắc</TableHead>
-                <TableHead>Tên màu</TableHead>
                 <TableHead>Mã màu</TableHead>
                 <TableHead className="text-right">Thao tác</TableHead>
               </TableRow>
@@ -129,21 +135,20 @@ export default function ColorsPage() {
             <TableBody>
               {colors.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={3} className="text-center py-8 text-muted-foreground">
                     Không có màu sắc nào
                   </TableCell>
                 </TableRow>
               ) : (
                 colors.map((color) => (
-                  <TableRow key={color._id}>
+                  <TableRow key={color.id}>
                     <TableCell>
                       <div
                         className="w-10 h-10 rounded border"
-                        style={{ backgroundColor: color.hex_code }}
+                        style={{ backgroundColor: color.color }}
                       />
                     </TableCell>
-                    <TableCell className="font-medium">{color.name}</TableCell>
-                    <TableCell>{color.hex_code}</TableCell>
+                    <TableCell className="font-medium">{color.color}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
                         <Button
@@ -186,31 +191,22 @@ export default function ColorsPage() {
           <form onSubmit={handleSubmit}>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
-                <Label htmlFor="name">Tên màu</Label>
-                <Input
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  required
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="hex_code">Mã màu (Hex)</Label>
+                <Label htmlFor="color">Mã màu (Hex)</Label>
                 <div className="flex gap-2">
                   <Input
-                    id="hex_code"
+                    id="color"
                     type="color"
-                    value={formData.hex_code}
+                    value={formData.color}
                     onChange={(e) =>
-                      setFormData({ ...formData, hex_code: e.target.value })
+                      setFormData({ ...formData, color: e.target.value })
                     }
                     className="w-20 h-10"
                     required
                   />
                   <Input
-                    value={formData.hex_code}
+                    value={formData.color}
                     onChange={(e) =>
-                      setFormData({ ...formData, hex_code: e.target.value })
+                      setFormData({ ...formData, color: e.target.value })
                     }
                     required
                   />

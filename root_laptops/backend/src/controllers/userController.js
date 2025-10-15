@@ -62,9 +62,13 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    // Debug logging (temporary) - do NOT log passwords in production
+    console.log(`[login] attempt for email=${email}`);
     // tìm người dùng theo mail
     const user = await User.findOne({ email });
+    console.log('[login] user found:', !!user);
     if (!user) {
+      console.log('[login] no user with that email');
       return res.status(401).json({
         success: false,
         message: 'Thông tin xác thực không hợp lệ'
@@ -73,7 +77,9 @@ export const login = async (req, res) => {
 
     // check mk 
     const isPasswordValid = await user.comparePassword(password);
+    console.log('[login] password valid:', !!isPasswordValid);
     if (!isPasswordValid) {
+      console.log('[login] invalid password for email=', email);
       return res.status(401).json({
         success: false,
         message: 'Thông tin xác thực không hợp lệ'
@@ -162,33 +168,129 @@ export const updateProfile = async (req, res) => {
   }
 };
 
-// Lấy tất cả người ùng 
-// export const getUsers = async (req, res) => {
-//   try {
-//     const { page = 1, limit = 10 } = req.query;
+// ✅ Lấy tất cả người dùng (Admin only)
+export const getUsers = async (req, res) => {
+  try {
+    const { page = 1, limit = 10 } = req.query;
 
-//     const users = await User.find()
-//       .select('-password_hash')
-//       .limit(limit * 1)
-//       .skip((page - 1) * limit)
-//       .sort({ createdAt: -1 });
+    const users = await User.find()
+      .select('-password_hash')
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .sort({ createdAt: -1 });
 
-//     const total = await User.countDocuments();
+    const total = await User.countDocuments();
 
-//     res.json({
-//       success: true,
-//       data: users,
-//       pagination: {
-//         current: parseInt(page),
-//         pages: Math.ceil(total / limit),
-//         total
-//       }
-//     });
-//   } catch (error) {
-//     res.status(500).json({
-//       success: false,
-//       message: 'Error fetching users',
-//       error: error.message
-//     });
-//   }
-// };
+    res.json({
+      success: true,
+      data: users,
+      total,
+      page: parseInt(page),
+      totalPages: Math.ceil(total / limit)
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi khi lấy danh sách người dùng',
+      error: error.message
+    });
+  }
+};
+
+// ✅ Lấy thông tin 1 user theo ID (Admin only)
+export const getUserById = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select('-password_hash');
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'Không tìm thấy người dùng'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: user
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi khi lấy thông tin người dùng',
+      error: error.message
+    });
+  }
+};
+
+// ✅ Cập nhật thông tin user (Admin only)
+export const updateUser = async (req, res) => {
+  try {
+    const { name, phone, address, avatar_url, role, password } = req.body;
+
+    // Tìm user bằng ID
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'Không tìm thấy người dùng'
+      });
+    }
+
+    // Cập nhật các trường
+    user.name = name || user.name;
+    user.phone = phone || user.phone;
+    user.address = address || user.address;
+    user.avatar_url = avatar_url || user.avatar_url;
+    user.role = role || user.role;
+
+    // Nếu có mật khẩu mới, cập nhật nó
+    if (password) {
+      user.password_hash = password;
+    }
+
+    // Lưu user, middleware sẽ tự động hash password
+    const updatedUser = await user.save();
+
+    // Loại bỏ password_hash khỏi response
+    const userResponse = updatedUser.toObject();
+    delete userResponse.password_hash;
+
+    res.json({
+      success: true,
+      message: 'Cập nhật người dùng thành công',
+      data: userResponse
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi khi cập nhật người dùng',
+      error: error.message
+    });
+  }
+};
+
+// ✅ Xóa user (Admin only)
+export const deleteUser = async (req, res) => {
+  try {
+    const user = await User.findByIdAndDelete(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'Không tìm thấy người dùng'
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'Xóa người dùng thành công'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi khi xóa người dùng',
+      error: error.message
+    });
+  }
+};

@@ -3,22 +3,46 @@
 import React, { useState } from 'react';
 import { useProducts } from '@/features/products/hooks/useProducts';
 import ProductTable from '@/features/products/components/ProductTable';
+import { CreateProductDialog } from '@/features/products/components/CreateProductDialog';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
 import { Plus, Search } from 'lucide-react';
 import { Pagination } from '@/shared/components/ui/pagination';
 import { Product } from '@/shared/types';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/shared/components/ui/select';
+import { useCategories } from '@/features/categories/hooks/useCategories';
+import { useColors } from '@/features/colors/hooks/useColors';
 
 export default function ProductsPage() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState<string | 'all'>('all');
+  const [colorFilter, setColorFilter] = useState<string | 'all'>('all');
+  const [minPriceFilter, setMinPriceFilter] = useState('');
+  const [maxPriceFilter, setMaxPriceFilter] = useState('');
+  const [sortFilter, setSortFilter] = useState<string | 'newest'>('newest');
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   
-  const { data, isLoading, isError } = useProducts({ 
-    page, 
+  const { data, isLoading, isError } = useProducts({
+    page,
     limit: 10,
-    search: searchQuery 
+    search: searchQuery,
+    ...(categoryFilter !== 'all' && { category: categoryFilter }),
+    ...(colorFilter !== 'all' && { color: colorFilter }),
+    ...(minPriceFilter && { minPrice: parseFloat(minPriceFilter) }),
+    ...(maxPriceFilter && { maxPrice: parseFloat(maxPriceFilter) }),
+    sort: sortFilter,
   });
+
+  const { data: categories } = useCategories();
+  const { data: colors } = useColors();
 
   const handleSearch = () => {
     setSearchQuery(search);
@@ -44,12 +68,12 @@ export default function ProductsPage() {
             Quản lý danh sách sản phẩm trong cửa hàng
           </p>
         </div>
-        <Button>
+        <Button onClick={() => setIsCreateDialogOpen(true)}>
           <Plus className="mr-2 h-4 w-4" /> Thêm sản phẩm
         </Button>
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2 mb-4">
         <div className="relative flex-1">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
@@ -61,6 +85,63 @@ export default function ProductsPage() {
           />
         </div>
         <Button onClick={handleSearch}>Tìm kiếm</Button>
+
+        <Select value={categoryFilter} onValueChange={(value) => setCategoryFilter(value)}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Lọc theo danh mục" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tất cả danh mục</SelectItem>
+            {categories?.map((category) => (
+              <SelectItem key={category._id} value={category._id}>
+                {category.category}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <Select value={colorFilter} onValueChange={(value) => setColorFilter(value)}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Lọc theo màu sắc" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tất cả màu sắc</SelectItem>
+            {colors?.map((color) => (
+              <SelectItem key={color._id} value={color._id}>
+                {color.color}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <Input
+          type="number"
+          placeholder="Giá từ..."
+          value={minPriceFilter}
+          onChange={(e) => setMinPriceFilter(e.target.value)}
+          className="w-[120px]"
+        />
+        <Input
+          type="number"
+          placeholder="Giá đến..."
+          value={maxPriceFilter}
+          onChange={(e) => setMaxPriceFilter(e.target.value)}
+          className="w-[120px]"
+        />
+
+        <Select value={sortFilter} onValueChange={setSortFilter}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Sắp xếp theo" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="newest">Mới nhất</SelectItem>
+            <SelectItem value="oldest">Cũ nhất</SelectItem>
+            <SelectItem value="price_asc">Giá tăng dần</SelectItem>
+            <SelectItem value="price_desc">Giá giảm dần</SelectItem>
+            <SelectItem value="name_asc">Tên A-Z</SelectItem>
+            <SelectItem value="name_desc">Tên Z-A</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {isLoading && (
@@ -89,6 +170,12 @@ export default function ProductsPage() {
           />
         </>
       )}
+
+      {/* Create Product Dialog */}
+      <CreateProductDialog 
+        open={isCreateDialogOpen} 
+        onOpenChange={setIsCreateDialogOpen} 
+      />
     </div>
   );
 }

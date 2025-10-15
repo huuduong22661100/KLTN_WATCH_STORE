@@ -1,7 +1,7 @@
 import { AUTH_ENDPOINTS } from '@/constants/api-url';
-import { LoginCredentials, RegisterPayload, LoginResponse, User } from './types';
+import { LoginPayload, RegisterPayload, AuthResponse, User } from './types';
 
-export const loginApi = async (payload: LoginCredentials): Promise<LoginResponse> => {
+export const loginApi = async (payload: LoginPayload): Promise<AuthResponse> => {
   const res = await fetch(AUTH_ENDPOINTS.LOGIN, {
     method: 'POST',
     headers: {
@@ -18,7 +18,7 @@ export const loginApi = async (payload: LoginCredentials): Promise<LoginResponse
   return res.json();
 };
 
-export const registerApi = async (payload: RegisterPayload): Promise<LoginResponse> => {
+export const registerApi = async (payload: RegisterPayload): Promise<AuthResponse> => {
   const res = await fetch(AUTH_ENDPOINTS.REGISTER, {
     method: 'POST',
     headers: {

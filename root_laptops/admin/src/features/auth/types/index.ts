@@ -2,7 +2,10 @@ export interface User {
   id: string;
   email: string;
   name: string;
-  // Có thể thêm các trường khác của user nếu cần
+  role?: string;
+  phone?: string;
+  address?: string;
+  avatar_url?: string;
 }
 
 // Dữ liệu gửi đi khi login
@@ -18,8 +21,15 @@ export type RegisterPayload = {
   name: string;
 };
 
-// Dữ liệu API trả về sau khi login/register thành công
+// ✅ Dữ liệu API trả về sau khi login/register thành công (giống Frontend)
 export interface AuthResponse {
-  user: User;
-  token: string;
+  success: boolean;
+  message: string;
+  data: {
+    user: User;
+    token: string;
+  };
 }
+
+// Alias để dễ hiểu
+export type LoginResponse = AuthResponse;

@@ -35,13 +35,11 @@ export default function CategoriesPage() {
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [formData, setFormData] = useState<CategoryFormData>({
-    name: '',
-    slug: '',
-    description: '',
-    image_url: '',
+    category: '',
   });
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const { data: categories, isLoading, isError } = useCategories();
+  const { data: categories, isLoading, isError } = useCategories({ search: searchQuery });
   const createCategory = useCreateCategory();
   const updateCategory = useUpdateCategory();
   const deleteCategory = useDeleteCategory();
@@ -50,18 +48,12 @@ export default function CategoriesPage() {
     if (category) {
       setEditingCategory(category);
       setFormData({
-        name: category.name,
-        slug: category.slug,
-        description: category.description || '',
-        image_url: category.image_url || '',
+        category: category.category,
       });
     } else {
       setEditingCategory(null);
       setFormData({
-        name: '',
-        slug: '',
-        description: '',
-        image_url: '',
+        category: '',
       });
     }
     setIsDialogOpen(true);
@@ -109,6 +101,15 @@ export default function CategoriesPage() {
         </Button>
       </div>
 
+      <div className="flex justify-between items-center">
+        <Input
+          placeholder="Tìm kiếm theo tên danh mục..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="max-w-sm"
+        />
+      </div>
+
       {isLoading && (
         <div className="flex justify-center py-8">
           <div className="text-muted-foreground">Đang tải...</div>
@@ -127,24 +128,20 @@ export default function CategoriesPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Tên danh mục</TableHead>
-                <TableHead>Slug</TableHead>
-                <TableHead>Mô tả</TableHead>
                 <TableHead className="text-right">Thao tác</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {categories.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={2} className="text-center py-8 text-muted-foreground">
                     Không có danh mục nào
                   </TableCell>
                 </TableRow>
               ) : (
                 categories.map((category) => (
-                  <TableRow key={category._id}>
-                    <TableCell className="font-medium">{category.name}</TableCell>
-                    <TableCell>{category.slug}</TableCell>
-                    <TableCell>{category.description || '-'}</TableCell>
+                  <TableRow key={category.id}>
+                    <TableCell className="font-medium">{category.category}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
                         <Button
@@ -187,41 +184,12 @@ export default function CategoriesPage() {
           <form onSubmit={handleSubmit}>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
-                <Label htmlFor="name">Tên danh mục</Label>
+                <Label htmlFor="category">Tên danh mục</Label>
                 <Input
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  id="category"
+                  value={formData.category}
+                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                   required
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="slug">Slug</Label>
-                <Input
-                  id="slug"
-                  value={formData.slug}
-                  onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                  required
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="description">Mô tả</Label>
-                <Input
-                  id="description"
-                  value={formData.description}
-                  onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
-                  }
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="image_url">URL hình ảnh</Label>
-                <Input
-                  id="image_url"
-                  value={formData.image_url}
-                  onChange={(e) =>
-                    setFormData({ ...formData, image_url: e.target.value })
-                  }
                 />
               </div>
             </div>

@@ -2,19 +2,23 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getOrders, getOrderById, updateOrderStatus } from '../api';
 import { QueryParams, Order } from '@/shared/types';
 import { toast } from 'sonner';
+import { useAuthStore } from '@/store/authStore';
 
 export const useOrders = (params?: QueryParams) => {
+  const { token } = useAuthStore();
   return useQuery({
     queryKey: ['orders', params],
     queryFn: () => getOrders(params),
+    enabled: !!token,
   });
 };
 
 export const useOrder = (id: string) => {
+  const { token } = useAuthStore();
   return useQuery({
     queryKey: ['orders', id],
     queryFn: () => getOrderById(id),
-    enabled: !!id,
+    enabled: !!id && !!token,
   });
 };
 

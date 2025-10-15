@@ -1,8 +1,10 @@
 import { COLOR_ENDPOINTS } from '@/constants/api-url';
-import { Color, ColorFormData } from '@/shared/types';
+import { Color, ColorFormData, QueryParams } from '@/shared/types';
+import { fetchWithAuth } from '@/lib/apiClient';
 
-export const getColors = async (): Promise<Color[]> => {
-  const res = await fetch(COLOR_ENDPOINTS.LIST);
+export const getColors = async (params?: QueryParams): Promise<Color[]> => {
+  const queryString = params ? '?' + new URLSearchParams(params as any).toString() : '';
+  const res = await fetchWithAuth(COLOR_ENDPOINTS.LIST + queryString);
 
   if (!res.ok) {
     throw new Error('Failed to fetch colors');
@@ -13,7 +15,7 @@ export const getColors = async (): Promise<Color[]> => {
 };
 
 export const getColorById = async (id: string): Promise<Color> => {
-  const res = await fetch(COLOR_ENDPOINTS.DETAIL(id));
+  const res = await fetchWithAuth(COLOR_ENDPOINTS.DETAIL(id));
 
   if (!res.ok) {
     throw new Error('Failed to fetch color');
@@ -24,11 +26,8 @@ export const getColorById = async (id: string): Promise<Color> => {
 };
 
 export const createColor = async (colorData: ColorFormData): Promise<Color> => {
-  const res = await fetch(COLOR_ENDPOINTS.CREATE, {
+  const res = await fetchWithAuth(COLOR_ENDPOINTS.CREATE, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
     body: JSON.stringify(colorData),
   });
 
@@ -41,11 +40,8 @@ export const createColor = async (colorData: ColorFormData): Promise<Color> => {
 };
 
 export const updateColor = async (id: string, colorData: Partial<ColorFormData>): Promise<Color> => {
-  const res = await fetch(COLOR_ENDPOINTS.UPDATE(id), {
+  const res = await fetchWithAuth(COLOR_ENDPOINTS.UPDATE(id), {
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
     body: JSON.stringify(colorData),
   });
 
@@ -58,7 +54,7 @@ export const updateColor = async (id: string, colorData: Partial<ColorFormData>)
 };
 
 export const deleteColor = async (id: string): Promise<void> => {
-  const res = await fetch(COLOR_ENDPOINTS.DELETE(id), {
+  const res = await fetchWithAuth(COLOR_ENDPOINTS.DELETE(id), {
     method: 'DELETE',
   });
 

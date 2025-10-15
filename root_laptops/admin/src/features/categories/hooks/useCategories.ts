@@ -1,20 +1,24 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getCategories, getCategoryById, createCategory, updateCategory, deleteCategory } from '../api';
-import { CategoryFormData } from '@/shared/types';
+import { CategoryFormData, QueryParams } from '@/shared/types';
 import { toast } from 'sonner';
+import { useAuthStore } from '@/store/authStore';
 
-export const useCategories = () => {
+export const useCategories = (params?: QueryParams) => {
+  const { token } = useAuthStore();
   return useQuery({
-    queryKey: ['categories'],
-    queryFn: getCategories,
+    queryKey: ['categories', params],
+    queryFn: () => getCategories(params),
+    enabled: !!token,
   });
 };
 
 export const useCategory = (id: string) => {
+  const { token } = useAuthStore();
   return useQuery({
     queryKey: ['categories', id],
     queryFn: () => getCategoryById(id),
-    enabled: !!id,
+    enabled: !!id && !!token,
   });
 };
 

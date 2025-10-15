@@ -1,20 +1,24 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getColors, getColorById, createColor, updateColor, deleteColor } from '../api';
-import { ColorFormData } from '@/shared/types';
+import { ColorFormData, QueryParams } from '@/shared/types';
 import { toast } from 'sonner';
+import { useAuthStore } from '@/store/authStore';
 
-export const useColors = () => {
+export const useColors = (params?: QueryParams) => {
+  const { token } = useAuthStore();
   return useQuery({
-    queryKey: ['colors'],
-    queryFn: getColors,
+    queryKey: ['colors', params],
+    queryFn: () => getColors(params),
+    enabled: !!token,
   });
 };
 
 export const useColor = (id: string) => {
+  const { token } = useAuthStore();
   return useQuery({
     queryKey: ['colors', id],
     queryFn: () => getColorById(id),
-    enabled: !!id,
+    enabled: !!id && !!token,
   });
 };
 

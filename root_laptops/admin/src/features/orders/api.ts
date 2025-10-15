@@ -1,9 +1,10 @@
 import { ORDER_ENDPOINTS } from '@/constants/api-url';
 import { Order, PaginatedResponse, QueryParams } from '@/shared/types';
+import { fetchWithAuth } from '@/lib/apiClient';
 
 export const getOrders = async (params?: QueryParams): Promise<PaginatedResponse<Order>> => {
   const queryString = params ? '?' + new URLSearchParams(params as any).toString() : '';
-  const res = await fetch(ORDER_ENDPOINTS.LIST + queryString);
+  const res = await fetchWithAuth(ORDER_ENDPOINTS.LIST + queryString);
 
   if (!res.ok) {
     throw new Error('Failed to fetch orders');
@@ -13,7 +14,7 @@ export const getOrders = async (params?: QueryParams): Promise<PaginatedResponse
 };
 
 export const getOrderById = async (id: string): Promise<Order> => {
-  const res = await fetch(ORDER_ENDPOINTS.DETAIL(id));
+  const res = await fetchWithAuth(ORDER_ENDPOINTS.DETAIL(id));
 
   if (!res.ok) {
     throw new Error('Failed to fetch order');
@@ -27,11 +28,8 @@ export const updateOrderStatus = async (
   id: string,
   status: Order['status']
 ): Promise<Order> => {
-  const res = await fetch(ORDER_ENDPOINTS.UPDATE_STATUS(id), {
+  const res = await fetchWithAuth(ORDER_ENDPOINTS.UPDATE_STATUS(id), {
     method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-    },
     body: JSON.stringify({ status }),
   });
 

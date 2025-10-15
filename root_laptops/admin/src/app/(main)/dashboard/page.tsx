@@ -24,10 +24,10 @@ export default function DashboardPage() {
   
   const totalRevenue = ordersData?.data?.reduce((sum, order) => {
     if (order.status !== 'cancelled') {
-      return sum + order.total;
+      return sum + order.total; // Backend uses 'total', not 'total_amount'
     }
-    return sum;
-  }, 0) || 0;
+    return sum; 
+  }, 0) || 0; 
 
   const lowStockProducts = productsData?.data?.filter(p => p.stock < 10).length || 0;
   const pendingOrders = ordersData?.data?.filter(o => o.status === 'pending').length || 0;

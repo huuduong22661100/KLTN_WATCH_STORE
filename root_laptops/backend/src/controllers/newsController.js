@@ -33,15 +33,21 @@ export const getNewsBySlug = async (req, res) => {
 // @access  Private/Admin
 export const createNews = async (req, res) => {
   try {
-    const { title, slug, content, thumbnail_img } = req.body;
-    const author_id = req.user._id; // From authenticateToken middleware
+    const { title, slug, content, thumbnail_img, author_id, status } = req.body;
+
+    // Validate author_id role
+    const authorUser = await User.findById(author_id);
+    if (!authorUser || authorUser.role !== 'admin') {
+      return res.status(400).json({ success: false, message: 'Tác giả phải là người dùng có vai trò admin.' });
+    }
 
     const newNews = new News({
       title,
       slug,
       content,
       thumbnail_img,
-      author_id
+      author_id,
+      status
     });
 
     const savedNews = await newNews.save();
@@ -56,10 +62,19 @@ export const createNews = async (req, res) => {
 // @access  Private/Admin
 export const updateNews = async (req, res) => {
   try {
-    const { title, slug, content, thumbnail_img } = req.body;
+    const { title, slug, content, thumbnail_img, author_id, status } = req.body;
+
+    // Validate author_id role if provided
+    if (author_id) {
+      const authorUser = await User.findById(author_id);
+      if (!authorUser || authorUser.role !== 'admin') {
+        return res.status(400).json({ success: false, message: 'Tác giả phải là người dùng có vai trò admin.' });
+      }
+    }
+
     const updatedNews = await News.findByIdAndUpdate(
       req.params.id,
-      { title, slug, content, thumbnail_img },
+      { title, slug, content, thumbnail_img, author_id, status },
       { new: true, runValidators: true }
     );
     if (!updatedNews) {
@@ -70,7 +85,6 @@ export const updateNews = async (req, res) => {
     res.status(400).json({ success: false, message: error.message });
   }
 };
-
 // @desc    Delete a news article
 // @route   DELETE /api/v1/news/:id
 // @access  Private/Admin

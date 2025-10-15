@@ -2,11 +2,14 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getProducts, getProductById, createProduct, updateProduct, deleteProduct } from '../api';
 import { QueryParams, ProductFormData } from '@/shared/types';
 import { toast } from 'sonner';
+import { useAuthStore } from '@/store/authStore';
 
 export const useProducts = (params?: QueryParams) => {
+  const { token } = useAuthStore();
   return useQuery({
     queryKey: ['products', params],
     queryFn: () => getProducts(params),
+    enabled: !!token,
   });
 };
 

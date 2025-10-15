@@ -18,6 +18,14 @@ export interface QueryParams {
   limit?: number;
   search?: string;
   sort?: string;
+  customerName?: string;
+  date?: string;
+  orderCode?: string;
+  paymentMethod?: string;
+  category?: string;
+  color?: string;
+  minPrice?: number;
+  maxPrice?: number;
   [key: string]: any;
 }
 
@@ -26,7 +34,7 @@ export interface Product {
   _id: string;
   id: number;
   title: string;
-  description: { name: string; title: string; }[];
+  description: { _id?: string; title: string; description?: string; }[];
   images: {
     mainImg: { url: string; alt_text?: string; };
     sliderImg: { url: string; alt_text?: string; }[];
@@ -35,12 +43,12 @@ export interface Product {
   stock: number;
   brand: string;
   sku: string;
-  category_id: Category[] | string[];
+  category_id: (string | { _id: string; id: number; category: string; })[]; // Có thể là string hoặc populated object
   tags: string[];
   gender: 'Nam' | 'Nữ';
   origin: string;
-  color_id: Color | string;
-  specifications: {
+  color_id?: string | { _id: string; id: number; color: string; }; // Optional và có thể populated
+  specifications?: {
     weight?: string;
     movement?: string;
     size?: string;
@@ -50,13 +58,14 @@ export interface Product {
     water_resistance_level?: string;
     dial_shape?: string;
   };
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface ProductFormData {
+  id?: number;
   title: string;
-  description: { name: string; title: string; }[];
+  description: { title: string; description?: string; }[];
   images: {
     mainImg: { url: string; alt_text?: string; };
     sliderImg: { url: string; alt_text?: string; }[];
@@ -65,11 +74,11 @@ export interface ProductFormData {
   stock: number;
   brand: string;
   sku: string;
-  category_id: string[];
+  category_id: string[]; // Array of ObjectId strings
   tags: string[];
   gender: 'Nam' | 'Nữ';
   origin: string;
-  color_id: string;
+  color_id?: string; // ObjectId string
   specifications: {
     weight?: string;
     movement?: string;
@@ -84,42 +93,36 @@ export interface ProductFormData {
 
 // ============ Category Types ============
 export interface Category {
-  _id: string;
-  name: string;
-  slug: string;
-  description?: string;
-  image_url?: string;
-  createdAt: string;
-  updatedAt: string;
+  _id: string; // MongoDB ObjectId
+  id: number;  // Custom numeric ID
+  category: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface CategoryFormData {
-  name: string;
-  slug: string;
-  description?: string;
-  image_url?: string;
+  category: string;
 }
 
 // ============ Color Types ============
 export interface Color {
-  _id: string;
-  name: string;
-  hex_code: string;
-  createdAt: string;
-  updatedAt: string;
+  _id: string; // MongoDB ObjectId
+  id: number;  // Custom numeric ID
+  color: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface ColorFormData {
-  name: string;
-  hex_code: string;
+  color: string;
 }
 
 // ============ Order Types ============
 export interface Order {
   _id: string;
   order_number: string;
-  user_id: User | string;
-  total: number;
+  user_id: User | string; // Can be populated User object or just ID string
+  total: number; // Backend uses 'total', not 'total_amount'
   shipping_fee: number;
   status: 'pending' | 'confirmed' | 'processing' | 'shipping' | 'delivered' | 'cancelled';
   shipping_name: string;
@@ -128,9 +131,8 @@ export interface Order {
   shipping_district: string;
   shipping_city: string;
   payment_method: string;
-  payment_status: 'pending' | 'paid' | 'failed';
-  items: OrderItem[];
-  notes?: string;
+  items?: OrderItem[]; // Optional, populated separately
+  note?: string; // Backend uses 'note', not 'notes'
   createdAt: string;
   updatedAt: string;
 }
@@ -174,8 +176,8 @@ export interface News {
   slug: string;
   content: string;
   excerpt?: string;
-  featured_image?: string;
-  author: string;
+  thumbnail_img: string;
+  author_id: { _id: string; name: string; };
   status: 'draft' | 'published';
   createdAt: string;
   updatedAt: string;
@@ -186,7 +188,7 @@ export interface NewsFormData {
   slug: string;
   content: string;
   excerpt?: string;
-  featured_image?: string;
-  author: string;
+  thumbnail_img: string;
+  author_id: string;
   status: 'draft' | 'published';
 }

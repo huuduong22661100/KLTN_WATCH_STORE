@@ -1,8 +1,10 @@
 import { CATEGORY_ENDPOINTS } from '@/constants/api-url';
-import { Category, CategoryFormData } from '@/shared/types';
+import { Category, CategoryFormData, QueryParams } from '@/shared/types';
+import { fetchWithAuth } from '@/lib/apiClient';
 
-export const getCategories = async (): Promise<Category[]> => {
-  const res = await fetch(CATEGORY_ENDPOINTS.LIST);
+export const getCategories = async (params?: QueryParams): Promise<Category[]> => {
+  const queryString = params ? '?' + new URLSearchParams(params as any).toString() : '';
+  const res = await fetchWithAuth(CATEGORY_ENDPOINTS.LIST + queryString);
 
   if (!res.ok) {
     throw new Error('Failed to fetch categories');
@@ -13,7 +15,7 @@ export const getCategories = async (): Promise<Category[]> => {
 };
 
 export const getCategoryById = async (id: string): Promise<Category> => {
-  const res = await fetch(CATEGORY_ENDPOINTS.DETAIL(id));
+  const res = await fetchWithAuth(CATEGORY_ENDPOINTS.DETAIL(id));
 
   if (!res.ok) {
     throw new Error('Failed to fetch category');
@@ -24,11 +26,8 @@ export const getCategoryById = async (id: string): Promise<Category> => {
 };
 
 export const createCategory = async (categoryData: CategoryFormData): Promise<Category> => {
-  const res = await fetch(CATEGORY_ENDPOINTS.CREATE, {
+  const res = await fetchWithAuth(CATEGORY_ENDPOINTS.CREATE, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
     body: JSON.stringify(categoryData),
   });
 
@@ -41,11 +40,8 @@ export const createCategory = async (categoryData: CategoryFormData): Promise<Ca
 };
 
 export const updateCategory = async (id: string, categoryData: Partial<CategoryFormData>): Promise<Category> => {
-  const res = await fetch(CATEGORY_ENDPOINTS.UPDATE(id), {
+  const res = await fetchWithAuth(CATEGORY_ENDPOINTS.UPDATE(id), {
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
     body: JSON.stringify(categoryData),
   });
 
@@ -58,7 +54,7 @@ export const updateCategory = async (id: string, categoryData: Partial<CategoryF
 };
 
 export const deleteCategory = async (id: string): Promise<void> => {
-  const res = await fetch(CATEGORY_ENDPOINTS.DELETE(id), {
+  const res = await fetchWithAuth(CATEGORY_ENDPOINTS.DELETE(id), {
     method: 'DELETE',
   });
 
