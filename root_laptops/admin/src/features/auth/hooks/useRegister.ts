@@ -9,7 +9,7 @@ export function useRegister() {
   return useMutation<AuthResponse, Error, RegisterPayload>({
     mutationFn: registerApi,
     onSuccess: (data) => {
-      // Tự động đăng nhập sau khi đăng ký thành công
+      
       login(data.token, data.user);
     },
   });

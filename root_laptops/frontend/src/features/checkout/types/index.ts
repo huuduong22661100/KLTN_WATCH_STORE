@@ -1,19 +1,19 @@
 export interface CheckoutFormData {
-  // Thông tin người nhận
+  
   shipping_name: string;
   shipping_phone: string;
   shipping_email?: string;
   
-  // Địa chỉ giao hàng (TEXT INPUT)
-  shipping_address: string;    // Số nhà, đường
-  shipping_city: string;        // User tự nhập: "Hồ Chí Minh"
-  shipping_district: string;    // User tự nhập: "Quận 1"
-  shipping_ward?: string;       // User tự nhập: "Phường Bến Nghé" (optional)
   
-  // Thanh toán
+  shipping_address: string;    
+  shipping_city: string;        
+  shipping_district: string;    
+  shipping_ward?: string;       
+  
+  
   payment_method: 'cod' | 'bank_transfer' | 'momo' | 'vnpay';
   
-  // Ghi chú
+  
   note?: string;
 }
 
@@ -52,4 +52,3 @@ export const PAYMENT_METHODS = [
   },
 ] as const;
 
-// ❌ XÓA: Province, District, Ward interfaces

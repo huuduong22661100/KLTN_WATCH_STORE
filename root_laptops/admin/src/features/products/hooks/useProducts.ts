@@ -10,14 +10,18 @@ export const useProducts = (params?: QueryParams) => {
     queryKey: ['products', params],
     queryFn: () => getProducts(params),
     enabled: !!token,
+    staleTime: 0, 
+    refetchOnMount: 'always', 
   });
 };
 
 export const useProduct = (id: string) => {
   return useQuery({
-    queryKey: ['products', id],
+    queryKey: ['product', id],
     queryFn: () => getProductById(id),
     enabled: !!id,
+    staleTime: 0, 
+    refetchOnMount: 'always', 
   });
 };
 
@@ -27,6 +31,7 @@ export const useCreateProduct = () => {
   return useMutation({
     mutationFn: (data: ProductFormData) => createProduct(data),
     onSuccess: () => {
+      
       queryClient.invalidateQueries({ queryKey: ['products'] });
       toast.success('Tạo sản phẩm thành công');
     },
@@ -43,7 +48,9 @@ export const useUpdateProduct = () => {
     mutationFn: ({ id, data }: { id: string; data: Partial<ProductFormData> }) =>
       updateProduct(id, data),
     onSuccess: () => {
+      
       queryClient.invalidateQueries({ queryKey: ['products'] });
+      queryClient.invalidateQueries({ queryKey: ['product'] });
       toast.success('Cập nhật sản phẩm thành công');
     },
     onError: () => {
@@ -58,7 +65,9 @@ export const useDeleteProduct = () => {
   return useMutation({
     mutationFn: (id: string) => deleteProduct(id),
     onSuccess: () => {
+      
       queryClient.invalidateQueries({ queryKey: ['products'] });
+      queryClient.invalidateQueries({ queryKey: ['product'] });
       toast.success('Xóa sản phẩm thành công');
     },
     onError: () => {

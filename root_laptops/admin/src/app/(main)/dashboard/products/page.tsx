@@ -49,16 +49,6 @@ export default function ProductsPage() {
     setPage(1);
   };
 
-  const handleEdit = (product: Product) => {
-    // TODO: Open edit dialog
-    console.log('Edit product:', product);
-  };
-
-  const handleView = (product: Product) => {
-    // TODO: Navigate to detail page
-    console.log('View product:', product);
-  };
-
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
@@ -96,7 +86,7 @@ export default function ProductsPage() {
               <SelectItem key={category._id} value={category._id}>
                 {category.category}
               </SelectItem>
-            ))}
+            )) || null}
           </SelectContent>
         </Select>
 
@@ -110,7 +100,7 @@ export default function ProductsPage() {
               <SelectItem key={color._id} value={color._id}>
                 {color.color}
               </SelectItem>
-            ))}
+            )) || null}
           </SelectContent>
         </Select>
 
@@ -159,9 +149,7 @@ export default function ProductsPage() {
       {data && (
         <>
           <ProductTable 
-            products={data.data} 
-            onEdit={handleEdit}
-            onView={handleView}
+            products={data.data}
           />
           <Pagination
             currentPage={page}
@@ -171,7 +159,7 @@ export default function ProductsPage() {
         </>
       )}
 
-      {/* Create Product Dialog */}
+      {}
       <CreateProductDialog 
         open={isCreateDialogOpen} 
         onOpenChange={setIsCreateDialogOpen} 

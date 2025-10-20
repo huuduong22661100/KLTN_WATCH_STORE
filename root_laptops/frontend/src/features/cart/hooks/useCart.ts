@@ -8,6 +8,6 @@ export function useCart() {
   return useQuery({
     queryKey: ['cart', token],
     queryFn: () => getCartApi(token!),
-    enabled: !!token, // Chỉ fetch khi đã login
+    enabled: !!token, 
   });
 }

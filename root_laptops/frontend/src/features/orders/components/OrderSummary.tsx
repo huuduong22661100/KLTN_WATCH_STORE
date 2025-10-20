@@ -21,7 +21,7 @@ export function OrderSummary({ order }: OrderSummaryProps) {
     }
   };
 
-  // ✅ Tính subtotal từ items nếu không có
+  
   const subtotal = order.subtotal || order.total - order.shipping_fee;
 
   return (

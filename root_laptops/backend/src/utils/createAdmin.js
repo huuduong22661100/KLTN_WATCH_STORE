@@ -1,7 +1,4 @@
-/**
- * Script tạo tài khoản admin mặc định
- * Chạy: node src/utils/createAdmin.js
- */
+
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
@@ -11,15 +8,15 @@ dotenv.config();
 
 const createAdminUser = async () => {
   try {
-    // Kết nối MongoDB
+    
     await mongoose.connect(process.env.MONGODB_URI);
     console.log('✅ Connected to MongoDB');
 
-    // Thông tin admin mặc định
+    
     const adminEmail = 'admin@example.com';
-    const adminPassword = 'admin123'; // ⚠️ Đổi password này sau khi tạo
+    const adminPassword = 'admin123'; 
 
-    // Kiểm tra admin đã tồn tại chưa
+    
     const existingAdmin = await User.findOne({ email: adminEmail });
     
     if (existingAdmin) {
@@ -27,14 +24,14 @@ const createAdminUser = async () => {
       console.log('Email:', existingAdmin.email);
       console.log('Role:', existingAdmin.role);
       
-      // Cập nhật role nếu chưa phải admin
+      
       if (existingAdmin.role !== 'admin') {
         existingAdmin.role = 'admin';
         await existingAdmin.save();
         console.log('✅ Đã cập nhật role thành admin');
       }
     } else {
-      // Tạo admin mới
+      
       const hashedPassword = await bcrypt.hash(adminPassword, 10);
       
       const admin = new User({

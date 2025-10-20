@@ -18,6 +18,7 @@ const productSchema = new mongoose.Schema({
     }]
   },
   price: { type: Number, min: 0 },
+  sale_price: { type: Number, min: 0, default: null },
   stock: { type: Number, required: true, min: 0, default: 0 },
   brand: { type: String },
   sku: { type: String },
@@ -25,7 +26,7 @@ const productSchema = new mongoose.Schema({
   tags: [{ type: String }],
   gender: { type: String, enum: ['Nam', 'Nữ'] },
   origin: { type: String, default: "Nhật Bản" },
-  color_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Color' },
+  color_id: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Color' }],
   specifications: {
     weight: { type: String },
     movement: { type: String },

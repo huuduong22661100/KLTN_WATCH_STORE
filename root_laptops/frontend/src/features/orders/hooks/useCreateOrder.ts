@@ -13,7 +13,7 @@ export function useCreateOrder() {
       return createOrderApi(payload, token);
     },
     onSuccess: () => {
-      // Invalidate orders & cart
+      
       queryClient.invalidateQueries({ queryKey: ['orders'] });
       queryClient.invalidateQueries({ queryKey: ['cart'] });
     },

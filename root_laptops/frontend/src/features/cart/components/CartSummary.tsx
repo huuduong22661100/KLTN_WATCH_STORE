@@ -8,6 +8,13 @@ interface CartSummaryProps {
 }
 
 export function CartSummary({ cart, onCheckout }: CartSummaryProps) {
+  
+  const calculatedTotal = cart.items.reduce((total: number, item: any) => {
+    const product = item.watch_id;
+    const price = product.sale_price || product.price;
+    return total + (price * item.quantity);
+  }, 0);
+
   return (
     <div className="bg-white p-6 rounded-lg shadow">
       <h2 className="text-xl font-bold mb-4">Tổng đơn hàng</h2>
@@ -15,7 +22,7 @@ export function CartSummary({ cart, onCheckout }: CartSummaryProps) {
       <div className="space-y-2 mb-4">
         <div className="flex justify-between">
           <span>Tạm tính ({cart.itemCount} sản phẩm):</span>
-          <span>{cart.total.toLocaleString('vi-VN')} đ</span>
+          <span>{calculatedTotal.toLocaleString('vi-VN')} đ</span>
         </div>
         <div className="flex justify-between">
           <span>Phí vận chuyển:</span>
@@ -24,7 +31,7 @@ export function CartSummary({ cart, onCheckout }: CartSummaryProps) {
         <div className="border-t pt-2 flex justify-between font-bold text-lg">
           <span>Tổng cộng:</span>
           <span className="text-blue-600">
-            {cart.total.toLocaleString('vi-VN')} đ
+            {calculatedTotal.toLocaleString('vi-VN')} đ
           </span>
         </div>
       </div>

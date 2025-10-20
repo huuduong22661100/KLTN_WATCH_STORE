@@ -47,7 +47,7 @@ const userSchema = new mongoose.Schema({
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
 });
 
-// Băm trc khi lưu
+
 userSchema.pre('save', async function(next) {
   if (!this.isModified('password_hash')) return next();
   
@@ -60,7 +60,7 @@ userSchema.pre('save', async function(next) {
   }
 });
 
-// check mk 
+
 userSchema.methods.comparePassword = async function(candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password_hash);
 };

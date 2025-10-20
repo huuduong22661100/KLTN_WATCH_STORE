@@ -2,11 +2,11 @@ import Cart from '../models/Cart.js';
 import CartItem from '../models/CartItem.js';
 import Product from '../models/Product.js';
 
-// get cart
+
 export const getCart = async (req, res) => {
   try {
     let cart = await Cart.findOne({ user_id: req.user.id });
-    // k có thì tạo
+    
     if (!cart) {
       cart = new Cart({ user_id: req.user.id });
       await cart.save();
@@ -17,7 +17,9 @@ export const getCart = async (req, res) => {
 
 
     const totalAmount = cartItems.reduce((total, item) => {
-      return total + (parseFloat(item.price) * item.quantity);
+      
+      const itemPrice = item.watch_id.sale_price || parseFloat(item.price);
+      return total + (itemPrice * item.quantity);
     }, 0);
 
     res.json({
@@ -38,12 +40,12 @@ export const getCart = async (req, res) => {
   }
 };
 
-// Thêm sp
+
 export const addToCart = async (req, res) => {
   try {
     const { watch_id, quantity = 1 } = req.body;
 
-    // Kiểm tra 
+    
     const product = await Product.findById(watch_id);
     if (!product) {
       return res.status(404).json({
@@ -52,30 +54,30 @@ export const addToCart = async (req, res) => {
       });
     }
 
-    // get
+    
     let cart = await Cart.findOne({ user_id: req.user.id });
-    // Nếu k có thì create
+    
     if (!cart) {
       cart = new Cart({ user_id: req.user.id });
       await cart.save();
     }
 
-    // Check sp có hay chưa 
+    
     const existingItem = await CartItem.findOne({
       cart_id: cart._id,
       watch_id: watch_id
     });
-    // nếu có thì tăng sl 
+    
     if (existingItem) {
       existingItem.quantity += quantity;
       await existingItem.save();
     } else {
-      // nếu k có thì tạo mới
+      
       const cartItem = new CartItem({
         cart_id: cart._id,
         watch_id: watch_id,
         quantity: quantity,
-        price: product.price
+        price: product.sale_price || product.price
       });
       await cartItem.save();
     }
@@ -93,12 +95,12 @@ export const addToCart = async (req, res) => {
   }
 };
 
-// Cập nhập số lượng sp( onclick => truyền vào id)
+
 export const updateCartItem = async (req, res) => {
   try {
     const { item_id } = req.params;
     const { quantity } = req.body;
-    // Nếu giảm xuống 0
+    
     if (quantity <= 0) {
       return res.status(400).json({
         success: false,
@@ -133,7 +135,7 @@ export const updateCartItem = async (req, res) => {
   }
 };
 
-// Xóa sp ( onclick => truyền vào id)
+
 export const removeFromCart = async (req, res) => {
   try {
     const { item_id } = req.params;
@@ -161,12 +163,12 @@ export const removeFromCart = async (req, res) => {
 };
 
 
-// Xóa toàn bộ giỏ hàng của người dùng
+
 export const clearUserCart = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    // Tìm giỏ hàng của người dùng
+    
     const cart = await Cart.findOne({ user_id: userId });
 
     if (!cart) {
@@ -176,7 +178,7 @@ export const clearUserCart = async (req, res) => {
       });
     }
 
-    // Xóa tất cả các CartItem liên quan đến giỏ hàng này
+    
     await CartItem.deleteMany({ cart_id: cart._id });
 
     res.json({
@@ -192,13 +194,13 @@ export const clearUserCart = async (req, res) => {
   }
 };
 
-// Cập nhật toàn bộ giỏ hàng của người dùng
+
 export const updateUserCart = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { items } = req.body; // items là một mảng các { watch_id, quantity }
+    const { items } = req.body; 
 
-    // Tìm giỏ hàng của người dùng
+    
     let cart = await Cart.findOne({ user_id: userId });
 
     if (!cart) {
@@ -206,15 +208,15 @@ export const updateUserCart = async (req, res) => {
       await cart.save();
     }
 
-    // Xóa tất cả các CartItem hiện có của giỏ hàng này
+    
     await CartItem.deleteMany({ cart_id: cart._id });
 
-    // Thêm các CartItem mới
+    
     const newCartItems = [];
     for (const item of items) {
       const product = await Product.findById(item.watch_id);
       if (!product) {
-        // Nếu sản phẩm không tồn tại, bỏ qua hoặc trả về lỗi
+        
         console.warn(`Product with ID ${item.watch_id} not found. Skipping.`);
         continue;
       }
@@ -222,7 +224,7 @@ export const updateUserCart = async (req, res) => {
         cart_id: cart._id,
         watch_id: item.watch_id,
         quantity: item.quantity,
-        price: product.price // Lấy giá hiện tại của sản phẩm
+        price: product.sale_price || product.price 
       });
     }
 

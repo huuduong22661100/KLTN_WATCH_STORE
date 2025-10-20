@@ -2,15 +2,35 @@
 import { useState } from "react";
 import { useProducts } from "../hook/useProducts";
 import ProductCard from "./ProductCard";
+import { Product } from "@/features/products/types";
 
-const ProductList = () => {
+interface ProductListProps {
+    filters?: {
+        category?: string;
+        page?: number;
+        limit?: number;
+        color?: string;
+        minPrice?: number;
+        maxPrice?: number;
+        search?: string;
+        sort?: string;
+    };
+}
+
+const ProductList = ({ filters = {} }: ProductListProps) => {
     const [layout, setLayout] = useState<"grid" | "list">("grid");
+
+    const defaultFilters = {
+        page: 1,
+        limit: 12,
+        ...filters,
+    };
 
     const {
         data: products,
         isLoading,
         error,
-    } = useProducts({ page: 1, limit: 12 }); // Truyền object thay vì 2 tham số
+    } = useProducts(defaultFilters);
 
     if (isLoading) {
         return <div>Đang tải sản phẩm...</div>;
@@ -28,8 +48,8 @@ const ProductList = () => {
     return (
         <section>
             <div className={containerClasses}>
-                {products?.data?.products?.map((product: any) => (
-                    <ProductCard key={product.id} product={product} layout={layout} />
+                {products?.data?.products?.map((product: Product) => (
+                    <ProductCard key={product._id} product={product} />
                 ))}
             </div>
         </section>

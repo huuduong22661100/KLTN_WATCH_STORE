@@ -1,15 +1,15 @@
 import Color from '../models/Color.js';
 
-// @desc    Get all colors
-// @route   GET /api/v1/colors
-// @access  Public
+
+
+
 export const getColors = async (req, res) => {
   try {
     const { search } = req.query;
     const filter = {};
 
     if (search) {
-      filter.color = { $regex: search, $options: 'i' }; // Case-insensitive search
+      filter.color = { $regex: search, $options: 'i' }; 
     }
 
     const colors = await Color.find(filter).sort({ id: 1 });
@@ -20,9 +20,9 @@ export const getColors = async (req, res) => {
   }
 };
 
-// @desc    Get single color
-// @route   GET /api/v1/colors/:id
-// @access  Public
+
+
+
 export const getColorById = async (req, res) => {
   try {
     const color = await Color.findById(req.params.id);
@@ -36,14 +36,14 @@ export const getColorById = async (req, res) => {
   }
 };
 
-// @desc    Create a color
-// @route   POST /api/v1/colors
-// @access  Private/Admin
+
+
+
 export const createColor = async (req, res) => {
   try {
     const { color, id } = req.body;
     
-    // Kiểm tra xem color đã tồn tại chưa
+    
     const existingColor = await Color.findOne({ color });
     if (existingColor) {
       return res.status(400).json({ success: false, message: 'Màu sắc đã tồn tại' });
@@ -58,9 +58,9 @@ export const createColor = async (req, res) => {
   }
 };
 
-// @desc    Update a color
-// @route   PUT /api/v1/colors/:id
-// @access  Private/Admin
+
+
+
 export const updateColor = async (req, res) => {
   try {
     const { color } = req.body;
@@ -79,9 +79,9 @@ export const updateColor = async (req, res) => {
   }
 };
 
-// @desc    Delete a color
-// @route   DELETE /api/v1/colors/:id
-// @access  Private/Admin
+
+
+
 export const deleteColor = async (req, res) => {
   try {
     const color = await Color.findByIdAndDelete(req.params.id);

@@ -14,7 +14,7 @@ export const calculateShippingFeeApi = async (
     });
     
     if (!res.ok) {
-      return 0; // Miễn phí nếu không tính được
+      return 0; 
     }
     
     const result = await res.json();

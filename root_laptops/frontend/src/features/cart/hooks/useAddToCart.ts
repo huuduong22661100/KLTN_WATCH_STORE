@@ -11,7 +11,7 @@ export function useAddToCart() {
   return useMutation({
     mutationFn: (payload: AddToCartPayload) => addToCartApi(payload, token!),
     onSuccess: () => {
-      // ✅ Refetch cart để cập nhật UI
+      
       queryClient.invalidateQueries({ queryKey: ['cart'] });
       toast.success('Đã thêm vào giỏ hàng');
     },

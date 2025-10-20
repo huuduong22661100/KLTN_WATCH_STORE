@@ -1,0 +1,91 @@
+[{
+  "_id": {
+    "$oid": "68d576258eeaf6e58e8aaa39"
+  },
+  "id": 3,
+  "category": "Casio BABY-G"
+},
+{
+  "_id": {
+    "$oid": "68d576258eeaf6e58e8aaa3a"
+  },
+  "id": 4,
+  "category": "Limited Edition"
+},
+{
+  "_id": {
+    "$oid": "68d576258eeaf6e58e8aaa3c"
+  },
+  "id": 6,
+  "category": "CASIO SHEEN"
+},
+{
+  "_id": {
+    "$oid": "68d576258eeaf6e58e8aaa3d"
+  },
+  "id": 7,
+  "category": "Casio PRO-TREK"
+},
+{
+  "_id": {
+    "$oid": "68d576258eeaf6e58e8aaa40"
+  },
+  "id": 10,
+  "category": "Casio Lịch Lãm Nữ"
+},
+{
+  "_id": {
+    "$oid": "68d576258eeaf6e58e8aaa41"
+  },
+  "id": 11,
+  "category": "Casio "
+},
+{
+  "_id": {
+    "$oid": "68d576258eeaf6e58e8aaa3e"
+  },
+  "id": 8,
+  "category": "Casio Lịch Lãm"
+},
+{
+  "_id": {
+    "$oid": "68d576258eeaf6e58e8aaa3f"
+  },
+  "id": 9,
+  "category": "Casio Lịch Lãm Nam"
+},
+{
+  "_id": {
+    "$oid": "68d576258eeaf6e58e8aaa37"
+  },
+  "id": 1,
+  "category": "Casio G-SHOCK"
+},
+{
+  "_id": {
+    "$oid": "68d576258eeaf6e58e8aaa38"
+  },
+  "id": 2,
+  "category": "Sản Phẩm Mới"
+},
+{
+  "_id": {
+    "$oid": "68d576258eeaf6e58e8aaa43"
+  },
+  "id": 13,
+  "category": "Casio Trẻ Trung Nam"
+},
+{
+  "_id": {
+    "$oid": "68d576258eeaf6e58e8aaa3b"
+  },
+  "id": 5,
+  "category": "Casio EDIFICE"
+},
+{
+  "_id": {
+    "$oid": "68d576258eeaf6e58e8aaa42"
+  },
+  "id": 12,
+  "category": "Casio Trẻ Trung"
+}]

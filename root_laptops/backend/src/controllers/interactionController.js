@@ -1,4 +1,4 @@
-// controllers/interactionController.js
+
 import Feedback from '../models/Feedback.js';
 import Cart from '../models/Cart.js';
 import CartItem from '../models/CartItem.js';

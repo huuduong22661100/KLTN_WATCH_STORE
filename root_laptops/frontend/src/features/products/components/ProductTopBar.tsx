@@ -1,67 +1,117 @@
 'use client';
 import React from 'react';
-import { Button } from '@/shared/components/ui/button';
-import { ChevronUp, ChevronDown } from 'lucide-react';
-import { useCartStore } from '@/store/cartStore';
 import { Product } from '@/features/products/types';
 
 interface ProductTopBarProps {
   activeIndex: number;
   setActiveIndex: (index: number) => void;
-  totalPrice: number;
-  quantity: number;
-  setQuantity: React.Dispatch<React.SetStateAction<number>>;
   product: Product;
 }
 
 export function ProductTopBar({
   activeIndex,
   setActiveIndex,
-  totalPrice,
-  quantity,
-  setQuantity,
   product,
 }: ProductTopBarProps) {
-  return (
-    <div className="border-b border-border sticky top-0 bg-background/95 backdrop-blur-sm z-10">
-      <div className="container mx-auto flex justify-between items-center py-4">
-        {/* Left side: Tab buttons */}
-        <div className="flex gap-8 font-semibold">
-          <button
-            onClick={() => setActiveIndex(0)}
-            className={`pb-2 transition-colors ${activeIndex === 0 ? 'text-primary border-b-2 border-primary' : 'text-muted-foreground hover:text-foreground'}`}>
-            About Product
-          </button>
-          <button
-            onClick={() => setActiveIndex(1)}
-            className={`pb-2 transition-colors ${activeIndex === 1 ? 'text-primary border-b-2 border-primary' : 'text-muted-foreground hover:text-foreground'}`}>
-            Details
-          </button>
-          <button
-            onClick={() => setActiveIndex(2)}
-            className={`pb-2 transition-colors ${activeIndex === 2 ? 'text-primary border-b-2 border-primary' : 'text-muted-foreground hover:text-foreground'}`}>
-            More Details
-          </button>
-        </div>
+  const { description, specifications } = product;
 
-        {/* Right side: Bill section */}
-                  <div className="flex items-center gap-4">
-                    <div className="text-right">
-                      <span className="text-sm text-muted-foreground">Total</span>
-                      <p className="font-bold text-lg">{totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</p>
-                    </div>
-                    <div className="flex items-center gap-2 rounded-full bg-muted p-2">
-                      <span className="px-4 font-semibold text-lg">{quantity}</span>
-                      <div className="flex flex-col">
-                        <ChevronUp className="h-5 w-5 cursor-pointer text-muted-foreground hover:text-foreground" onClick={() => setQuantity(q => q + 1)} />
-                        <ChevronDown className="h-5 w-5 cursor-pointer text-muted-foreground hover:text-foreground" onClick={() => setQuantity(q => (q > 1 ? q - 1 : 1))} />
-                      </div>
-                    </div>
-                    <Button onClick={() => useCartStore.getState().addToCart(product, quantity)}>Add to Cart</Button>
-                    <Button variant="outline">
-                      <img src="/assets/icon/paypal.svg" alt="Paypal" className="h-6" />
-                    </Button>
-                  </div>      </div>
+  const renderContent = () => {
+    switch (activeIndex) {
+      case 0: 
+        return (
+          <div className="mt-6 space-y-6 text-foreground leading-relaxed prose prose-lg max-w-none">
+            {description.map((descItem, index) => (
+              <div key={index} className="bg-card rounded-lg p-6 border">
+                <h3 className="font-bold text-2xl mb-4 text-primary">{descItem.title}</h3>
+                <div 
+                  className="text-muted-foreground"
+                  dangerouslySetInnerHTML={{ __html: descItem.description }} 
+                />
+              </div>
+            ))}
+          </div>
+        );
+      case 1: 
+        return (
+          <div className="mt-6 bg-card rounded-lg border overflow-hidden">
+            <div className="bg-muted/50 px-6 py-4 border-b">
+              <h3 className="font-bold text-xl">Technical Specifications</h3>
+            </div>
+            <div className="divide-y">
+              {Object.entries(specifications).map(([key, value], index) => (
+                <div 
+                  key={key} 
+                  className={`flex px-6 py-4 ${index % 2 === 0 ? 'bg-muted/10' : 'bg-background'}`}
+                >
+                  <span className="font-semibold capitalize text-foreground w-1/3">
+                    {key.replace(/_/g, ' ')}
+                  </span>
+                  <span className="text-muted-foreground w-2/3">{value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      case 2: 
+        return (
+          <div className="mt-6 bg-card rounded-lg p-8 border text-center">
+            <div className="max-w-md mx-auto space-y-4">
+              <div className="text-6xl">⭐</div>
+              <h3 className="font-bold text-2xl">No Reviews Yet</h3>
+              <p className="text-muted-foreground">
+                Be the first to review this product and share your experience with others.
+              </p>
+              <button className="mt-4 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">
+                Write a Review
+              </button>
+            </div>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="border-t border-border mt-12 pt-8">
+      {}
+      <div className="flex gap-1 mb-8 border-b">
+        <button
+          onClick={() => setActiveIndex(0)}
+          className={`px-6 py-3 font-semibold text-base transition-all relative ${
+            activeIndex === 0 
+              ? 'text-primary border-b-2 border-primary' 
+              : 'text-muted-foreground hover:text-foreground'
+          }`}
+        >
+          About Product
+        </button>
+        <button
+          onClick={() => setActiveIndex(1)}
+          className={`px-6 py-3 font-semibold text-base transition-all relative ${
+            activeIndex === 1 
+              ? 'text-primary border-b-2 border-primary' 
+              : 'text-muted-foreground hover:text-foreground'
+          }`}
+        >
+          Specifications
+        </button>
+        <button
+          onClick={() => setActiveIndex(2)}
+          className={`px-6 py-3 font-semibold text-base transition-all relative ${
+            activeIndex === 2 
+              ? 'text-primary border-b-2 border-primary' 
+              : 'text-muted-foreground hover:text-foreground'
+          }`}
+        >
+          Reviews
+        </button>
+      </div>
+
+      {}
+      <div className="min-h-[400px]">
+        {renderContent()}
+      </div>
     </div>
   );
 }

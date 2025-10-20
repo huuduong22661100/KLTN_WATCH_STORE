@@ -45,7 +45,11 @@ export const getOrdersApi = async (
   );
 
   if (!res.ok) {
-    throw new Error('Không thể tải danh sách đơn hàng');
+    const error = await res.json().catch(() => ({ 
+      message: 'Không thể tải danh sách đơn hàng' 
+    }));
+    console.error('Get orders error:', error);
+    throw new Error(error.message);
   }
 
   return res.json();

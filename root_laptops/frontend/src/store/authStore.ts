@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { User } from '@/features/auth/types';
 import { useCartStore } from './cartStore';
+import { clearAllStorage } from '@/lib/storage';
 
 interface AuthState {
   user: User | null;
@@ -21,7 +22,7 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
       
       login: (user, token) => {
-        // ⚠️ CHẶN ADMIN ĐĂNG NHẬP VÀO FRONTEND
+        
         if (user.role === 'admin') {
           throw new Error('Tài khoản Admin vui lòng đăng nhập tại trang quản trị');
         }
@@ -29,8 +30,14 @@ export const useAuthStore = create<AuthState>()(
       },
       
       logout: () => {
+        
         set({ user: null, token: null, isAuthenticated: false });
+        
+        
         useCartStore.getState().clearCart();
+        
+        
+        clearAllStorage();
       },
       
       updateProfile: (userData) => {
@@ -40,7 +47,7 @@ export const useAuthStore = create<AuthState>()(
       },
     }),
     {
-      name: 'user-auth-storage', // ⚠️ KEY RIÊNG CHO USER
+      name: 'user-auth-storage', 
     }
   )
 );

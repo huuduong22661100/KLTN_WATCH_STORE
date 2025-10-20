@@ -40,7 +40,7 @@ export function OrderStatusComponent({ status }: OrderStatusProps) {
 
           return (
             <div key={step.key} className="flex flex-col items-center flex-1">
-              {/* Line */}
+              {}
               {index > 0 && (
                 <div className={`absolute h-0.5 ${isCompleted ? 'bg-blue-600' : 'bg-gray-300'}`} 
                      style={{
@@ -52,7 +52,7 @@ export function OrderStatusComponent({ status }: OrderStatusProps) {
                 />
               )}
 
-              {/* Circle */}
+              {}
               <div className={`relative z-10 w-6 h-6 rounded-full flex items-center justify-center ${
                 isActive ? 'bg-blue-600' : 'bg-gray-300'
               }`}>
@@ -65,7 +65,7 @@ export function OrderStatusComponent({ status }: OrderStatusProps) {
                 )}
               </div>
 
-              {/* Label */}
+              {}
               <p className={`text-xs mt-2 text-center ${isActive ? 'text-blue-600 font-semibold' : 'text-gray-500'}`}>
                 {step.label}
               </p>

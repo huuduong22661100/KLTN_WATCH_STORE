@@ -1,4 +1,4 @@
-// ============ Common Types ============
+
 export interface ApiResponse<T> {
   success: boolean;
   data: T;
@@ -29,7 +29,7 @@ export interface QueryParams {
   [key: string]: any;
 }
 
-// ============ Product Types ============
+
 export interface Product {
   _id: string;
   id: number;
@@ -40,14 +40,15 @@ export interface Product {
     sliderImg: { url: string; alt_text?: string; }[];
   };
   price: number;
+  sale_price?: number | null; 
   stock: number;
   brand: string;
   sku: string;
-  category_id: (string | { _id: string; id: number; category: string; })[]; // Có thể là string hoặc populated object
+  category_id: (string | { _id: string; id: number; category: string; })[]; 
   tags: string[];
   gender: 'Nam' | 'Nữ';
   origin: string;
-  color_id?: string | { _id: string; id: number; color: string; }; // Optional và có thể populated
+  color_id?: (string | { _id: string; id: number; color: string; })[]; 
   specifications?: {
     weight?: string;
     movement?: string;
@@ -71,14 +72,15 @@ export interface ProductFormData {
     sliderImg: { url: string; alt_text?: string; }[];
   };
   price: number;
+  sale_price?: number | null; 
   stock: number;
   brand: string;
   sku: string;
-  category_id: string[]; // Array of ObjectId strings
+  category_id: string[]; 
   tags: string[];
   gender: 'Nam' | 'Nữ';
   origin: string;
-  color_id?: string; // ObjectId string
+  color_id?: string[]; 
   specifications: {
     weight?: string;
     movement?: string;
@@ -91,10 +93,10 @@ export interface ProductFormData {
   };
 }
 
-// ============ Category Types ============
+
 export interface Category {
-  _id: string; // MongoDB ObjectId
-  id: number;  // Custom numeric ID
+  _id: string; 
+  id: number;  
   category: string;
   createdAt?: string;
   updatedAt?: string;
@@ -104,10 +106,10 @@ export interface CategoryFormData {
   category: string;
 }
 
-// ============ Color Types ============
+
 export interface Color {
-  _id: string; // MongoDB ObjectId
-  id: number;  // Custom numeric ID
+  _id: string; 
+  id: number;  
   color: string;
   createdAt?: string;
   updatedAt?: string;
@@ -117,22 +119,60 @@ export interface ColorFormData {
   color: string;
 }
 
-// ============ Order Types ============
+
+export type PaymentStatus = 'unpaid' | 'paid' | 'refunded';
+export type OrderStatus = 'pending' | 'confirmed' | 'processing' | 'ready_to_ship' | 'completed' | 'cancelled';
+export type ShippingStatus = 'not_shipped' | 'picking' | 'in_transit' | 'out_for_delivery' | 'delivered' | 'failed_delivery' | 'returning' | 'returned';
+
+export interface StatusHistory {
+  status_type: 'payment_status' | 'order_status' | 'shipping_status';
+  old_value: string | null;
+  new_value: string;
+  changed_by: string | User;
+  changed_at: string;
+  note?: string;
+}
+
+export interface ShippingInfo {
+  shipper_name?: string;
+  shipper_phone?: string;
+  tracking_number?: string;
+  estimated_delivery?: string;
+  actual_delivery?: string;
+}
+
 export interface Order {
   _id: string;
   order_number: string;
-  user_id: User | string; // Can be populated User object or just ID string
-  total: number; // Backend uses 'total', not 'total_amount'
+  user_id: User | string;
+  subtotal: number;
+  discount: number;
   shipping_fee: number;
-  status: 'pending' | 'confirmed' | 'processing' | 'shipping' | 'delivered' | 'cancelled';
+  total: number;
+  
+  
+  payment_status: PaymentStatus;
+  order_status: OrderStatus;
+  shipping_status: ShippingStatus;
+  
+  
+  status?: OrderStatus;
+  
+  
   shipping_name: string;
   shipping_phone: string;
   shipping_address: string;
   shipping_district: string;
   shipping_city: string;
+  
   payment_method: string;
-  items?: OrderItem[]; // Optional, populated separately
-  note?: string; // Backend uses 'note', not 'notes'
+  items?: OrderItem[];
+  note?: string;
+  
+  
+  status_history?: StatusHistory[];
+  shipping_info?: ShippingInfo;
+  
   createdAt: string;
   updatedAt: string;
 }
@@ -147,7 +187,7 @@ export interface OrderItem {
   subtotal: number;
 }
 
-// ============ User Types ============
+
 export interface User {
   _id: string;
   name: string;
@@ -169,7 +209,7 @@ export interface UserFormData {
   password?: string;
 }
 
-// ============ News Types ============
+
 export interface News {
   _id: string;
   title: string;

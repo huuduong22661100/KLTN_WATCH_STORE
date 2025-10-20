@@ -12,7 +12,7 @@ export function useCancelOrder() {
       return cancelOrderApi(orderId, token);
     },
     onSuccess: (_, orderId) => {
-      // Invalidate both list and detail
+      
       queryClient.invalidateQueries({ queryKey: ['orders'] });
       queryClient.invalidateQueries({ queryKey: ['order', orderId] });
     },

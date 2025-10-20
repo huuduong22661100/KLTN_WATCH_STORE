@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getOrders, getOrderById, updateOrderStatus } from '../api';
-import { QueryParams, Order } from '@/shared/types';
+import { QueryParams, Order, OrderStatus } from '@/shared/types';
 import { toast } from 'sonner';
 import { useAuthStore } from '@/store/authStore';
 
@@ -26,7 +26,7 @@ export const useUpdateOrderStatus = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, status }: { id: string; status: Order['status'] }) =>
+    mutationFn: ({ id, status }: { id: string; status: OrderStatus }) =>
       updateOrderStatus(id, status),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['orders'] });

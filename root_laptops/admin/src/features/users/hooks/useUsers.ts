@@ -18,15 +18,15 @@ export const useUsersForSelection = () => {
   return useQuery({
     queryKey: ['usersForSelection'],
     queryFn: async () => {
-      const response = await getUsers({ limit: 1000 }); // Fetch a large number of users
+      const response = await getUsers({ limit: 1000 }); 
       return response.data.map((user: { _id: string; name: string }) => ({ 
         _id: user._id, 
         name: user.name 
       }));
     },
     enabled: !!token,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes (renamed from cacheTime in React Query v5)
+    staleTime: 5 * 60 * 1000, 
+    gcTime: 10 * 60 * 1000, 
   });
 };
 

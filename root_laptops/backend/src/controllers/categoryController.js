@@ -1,15 +1,15 @@
 import Category from '../models/Category.js';
 
-// @desc    Get all categories
-// @route   GET /api/v1/categories
-// @access  Public
+
+
+
 export const getCategories = async (req, res) => {
   try {
     const { search } = req.query;
     const filter = {};
 
     if (search) {
-      filter.category = { $regex: search, $options: 'i' }; // Case-insensitive search
+      filter.category = { $regex: search, $options: 'i' }; 
     }
 
     const categories = await Category.find(filter).sort({ id: 1 });
@@ -20,9 +20,9 @@ export const getCategories = async (req, res) => {
   }
 };
 
-// @desc    Get single category
-// @route   GET /api/v1/categories/:id
-// @access  Public
+
+
+
 export const getCategoryById = async (req, res) => {
   try {
     const category = await Category.findById(req.params.id);
@@ -36,14 +36,14 @@ export const getCategoryById = async (req, res) => {
   }
 };
 
-// @desc    Create a category
-// @route   POST /api/v1/categories
-// @access  Private/Admin
+
+
+
 export const createCategory = async (req, res) => {
   try {
     const { category, id } = req.body;
     
-    // Kiểm tra xem category đã tồn tại chưa
+    
     const existingCategory = await Category.findOne({ category });
     if (existingCategory) {
       return res.status(400).json({ success: false, message: 'Danh mục đã tồn tại' });
@@ -58,9 +58,9 @@ export const createCategory = async (req, res) => {
   }
 };
 
-// @desc    Update a category
-// @route   PUT /api/v1/categories/:id
-// @access  Private/Admin
+
+
+
 export const updateCategory = async (req, res) => {
   try {
     const { category } = req.body;
@@ -79,9 +79,9 @@ export const updateCategory = async (req, res) => {
   }
 };
 
-// @desc    Delete a category
-// @route   DELETE /api/v1/categories/:id
-// @access  Private/Admin
+
+
+
 export const deleteCategory = async (req, res) => {
   try {
     const category = await Category.findByIdAndDelete(req.params.id);

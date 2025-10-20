@@ -12,9 +12,9 @@ export function useRemoveFromCart() {
   return useMutation({
     mutationFn: (cartItemId: string) => removeFromCartApi(cartItemId, token!),
     onSuccess: async () => {
-      // Invalidate server state first
+      
       await queryClient.invalidateQueries({ queryKey: ['cart'] });
-      // Then force a reload of the client state from the server
+      
       await loadCartFromServer();
       toast.success('Đã xóa khỏi giỏ hàng');
     },

@@ -2,7 +2,7 @@ import { Cart, AddToCartPayload, UpdateCartPayload } from './types';
 
 const API_BASE_URL = 'http://localhost:5000/api/v1';
 
-// ✅ Lấy giỏ hàng hiện tại
+
 export const getCartApi = async (token: string): Promise<Cart> => {
   const res = await fetch(`${API_BASE_URL}/cart`, {
     headers: {
@@ -24,7 +24,7 @@ export const getCartApi = async (token: string): Promise<Cart> => {
   };
 };
 
-// ✅ Thêm sản phẩm vào giỏ
+
 export const addToCartApi = async (
   payload: AddToCartPayload,
   token: string
@@ -46,7 +46,7 @@ export const addToCartApi = async (
   return res.json();
 };
 
-// ✅ Cập nhật số lượng
+
 export const updateCartApi = async (
   payload: UpdateCartPayload,
   token: string
@@ -68,7 +68,7 @@ export const updateCartApi = async (
   return res.json();
 };
 
-// ✅ Xóa item khỏi giỏ
+
 export const removeFromCartApi = async (
   cartItemId: string,
   token: string
@@ -87,7 +87,7 @@ export const removeFromCartApi = async (
   return res.json();
 };
 
-// ✅ Xóa toàn bộ giỏ hàng
+
 export const clearCartApi = async (token: string): Promise<void> => {
   const res = await fetch(`${API_BASE_URL}/cart/clear`, {
     method: 'DELETE',

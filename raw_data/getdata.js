@@ -3,6 +3,52 @@ const { Builder, Browser, By, until } = require("selenium-webdriver");
 const chrome = require("selenium-webdriver/chrome");
 const fs = require("fs");
 
+// Load categories and colors mappings
+let categoriesMapping = {};
+let colorsMapping = {};
+
+try {
+    const categoriesData = JSON.parse(fs.readFileSync("../root_laptops/backend/src/data/categories_id.json", "utf-8"));
+    categoriesData.forEach(cat => {
+        categoriesMapping[cat.category.toLowerCase().trim()] = cat._id;
+    });
+} catch (e) {
+    console.error("⚠️ Không thể đọc file categories_id.json:", e.message);
+}
+
+try {
+    const colorsData = JSON.parse(fs.readFileSync("../root_laptops/backend/src/data/colors_id.json", "utf-8"));
+    colorsData.forEach(color => {
+        colorsMapping[color.color.toLowerCase().trim()] = color._id;
+    });
+} catch (e) {
+    console.error("⚠️ Không thể đọc file colors_id.json:", e.message);
+}
+
+/**
+ * Hàm chuyển đổi tên category thành object _id
+ * @param {string} categoryName - Tên category (có thể chứa nhiều giá trị cách nhau bởi dấu phẩy)
+ * @returns {object|null} Object _id: { "$oid": "..." } hoặc null nếu không tìm thấy
+ */
+function getCategoryId(categoryName) {
+    // Lấy giá trị đầu tiên nếu có nhiều giá trị cách nhau bởi dấu phẩy
+    const firstCategory = categoryName.split(',')[0].trim();
+    const normalized = firstCategory.toLowerCase().trim();
+    return categoriesMapping[normalized] || null;
+}
+
+/**
+ * Hàm chuyển đổi tên color thành object _id
+ * @param {string} colorName - Tên color (có thể là "Đen, Vàng" hoặc "Đen")
+ * @returns {object|null} Object _id: { "$oid": "..." } hoặc null nếu không tìm thấy
+ */
+function getColorId(colorName) {
+    // Lấy màu đầu tiên nếu có nhiều màu cách nhau bởi dấu phẩy
+    const firstColor = colorName.split(',')[0].trim();
+    const normalized = firstColor.toLowerCase().trim();
+    return colorsMapping[normalized] || null;
+}
+
 /**
  * Hàm chuẩn hóa text thành key JSON (snake_case).
  * @param {string} key - Chuỗi cần chuẩn hóa.
@@ -80,176 +126,56 @@ function translateKey(key) {
 
             let product = {
                 id: index,
-                title: null,
-                description: [],
-                images: { mainImg: null, sliderImg: [] },
-                price: null,
-                brand: null,
-                sku: null,
-                categories: [],
-                tags: [],
-                gender: null,
-                origin: null,
-                color_variation: null,
-                specifications: {},
+                categories_id: [],
+                color_id: null,
             };
 
-            // --- Lấy tên sản phẩm, giá và ảnh ---
-            try {
-                const titleEl = await driver.wait(until.elementLocated(By.css(".product-title-container h1")), 8000);
-                product.title = await titleEl.getText();
-            } catch {
-                console.log("⚠️ Không tìm thấy tiêu đề.");
-            }
-
-            try {
-                const priceEl = await driver.findElement(By.css(".price.product-page-price"));
-                const priceText = await priceEl.getText();
-                product.price = parseInt(priceText.replace(/[^0-9]/g, ""));
-            } catch {
-                console.log("⚠️ Không có giá.");
-            }
-
-            try {
-                const mainImgEl = await driver.findElement(By.css(".woocommerce-product-gallery__image img.wp-post-image"));
-                const mainSrc = await mainImgEl.getAttribute("src");
-                product.images.mainImg = { url: mainSrc, alt_text: "main" };
-
-                const sliderImgEls = await driver.findElements(By.css(".woocommerce-product-gallery__image:not(:first-child) img"));
-                for (const imgEl of sliderImgEls) {
-                    const src = await imgEl.getAttribute("src");
-                    product.images.sliderImg.push({ url: src, alt_text: "slide" });
-                }
-            } catch {
-                console.log("⚠️ Không tìm thấy ảnh.");
-            }
-            
-            // --- Cào tất cả các khối nội dung, mô tả và thông số kỹ thuật ---
-            try {
-                const allContentBlocks = await driver.findElements(By.css('#tab_mô-tả-sản-phẩm > p, .container.margin-bottom-2.aem-GridColumn--default--none, .p-product_detail-spec-accordion__item, .p-product_detail-spec-table, .woocommerce-product-attributes.shop_attributes'));
-
-                for (const block of allContentBlocks) {
-                    const blockClass = await block.getAttribute('class');
-
-                    if (blockClass.includes('p-product_detail-spec-accordion__item')) {
-                        const titleEl = await block.findElement(By.css(".p-product_detail-spec-accordion__title"));
-                        const title = await titleEl.getText();
-                        const listItems = await block.findElements(By.css(".p-product_detail-spec-accordion__panel-item"));
-
-                        if (listItems.length > 0) {
-                            let descriptionHtml = "";
-                            for (const li of listItems) {
-                                const keyEl = await li.findElement(By.css(".p-product_detail-spec-accordion__panel-item-ttl h4"));
-                                const valueElements = await li.findElements(By.css(".p-product_detail-spec-accordion__panel-item-cont"));
-
-                                const key = await keyEl.getText();
-                                let valueText = "";
-                                for (const valEl of valueElements) {
-                                    valueText += await valEl.getText() + " ";
-                                }
-
-                                const translatedKey = translateKey(key);
-                                if (translatedKey) {
-                                    product.specifications[translatedKey] = valueText.trim();
-                                }
-                                descriptionHtml += `<li><h4>${key}</h4><div>${valueText.trim()}</div></li>`;
-                            }
-                            product.description.push({
-                                title: title,
-                                description: `<ul>${descriptionHtml}</ul>`,
-                                img: null
-                            });
-                        } else {
-                            const content = await block.findElement(By.css(".p-product_detail-spec-accordion__panel")).getText();
-                            if (content.trim() !== "") {
-                                product.description.push({
-                                    title: title,
-                                    description: content.trim(),
-                                    img: null
-                                });
-                            }
-                        }
-                    } else if (blockClass.includes('p-product_detail-spec-table')) {
-                        const rows = await block.findElements(By.css('tr'));
-                        for (const row of rows) {
-                            const cells = await row.findElements(By.css('th, td'));
-                            if (cells.length === 2) {
-                                const key = await cells[0].getText();
-                                const value = await cells[1].getText();
-                                const translatedKey = translateKey(key);
-                                if (translatedKey) {
-                                    product.specifications[translatedKey] = value;
-                                }
-                            }
-                        }
-                    } else if (blockClass.includes('woocommerce-product-attributes')) {
-                        const rows = await block.findElements(By.css('tr'));
-                        for (const row of rows) {
-                            const keyEl = await row.findElement(By.css('th'));
-                            const valueEl = await row.findElement(By.css('td p a, td'));
-                            const key = await keyEl.getText();
-                            const value = await valueEl.getText();
-                            const translatedKey = translateKey(key);
-                            if (translatedKey) {
-                                if (value.trim() !== "") {
-                                    product.specifications[translatedKey] = value.trim();
-                                }
-                            }
-                        }
-                    } else if (await block.getTagName() === 'p') {
-                        const descriptionText = await block.getText();
-                        if (descriptionText.trim() !== "") {
-                            product.description.push({
-                                title: "Mô tả sản phẩm",
-                                description: descriptionText.trim(),
-                                img: null,
-                            });
-                        }
-                    }
-                }
-            } catch (e) {
-                console.log("⚠️ Lỗi khi cào các khối nội dung:", e.message);
-            }
-
-            // --- Lấy SKU, danh mục và tags từ product meta ---
+            // --- Lấy SKU, danh mục và color từ product meta ---
             try {
                 const productMeta = await driver.findElement(By.css('.product_meta'));
-                try {
-                    const skuEl = await productMeta.findElement(By.css(".sku"));
-                    product.sku = await skuEl.getText();
-                } catch { }
+                
+                // Lấy categories
                 try {
                     const cats = await productMeta.findElements(By.css(".posted_in a"));
                     for (const cat of cats) {
-                        product.categories.push(await cat.getText());
-                    }
-                } catch { }
-                try {
-                    const tags = await productMeta.findElements(By.css(".tagged_as a"));
-                    for (const tag of tags) {
-                        product.tags.push(await tag.getText());
+                        const categoryName = await cat.getText();
+                        const categoryId = getCategoryId(categoryName);
+                        if (categoryId !== null) {
+                            product.categories_id.push(categoryId);
+                        } else {
+                            console.log(`⚠️ Không tìm thấy ID cho category: ${categoryName}`);
+                        }
                     }
                 } catch { }
             } catch {
                 console.log("⚠️ Không tìm thấy product meta.");
             }
 
-            // --- Cập nhật Brand từ Specifications nếu có ---
-            if (product.specifications.brand) {
-                product.brand = product.specifications.brand;
-                delete product.specifications.brand;
-            }
-            if (product.specifications.gender) {
-                product.gender = product.specifications.gender;
-                delete product.specifications.gender;
-            }
-            if (product.specifications.origin) {
-                product.origin = product.specifications.origin;
-                delete product.specifications.origin;
-            }
-            if (product.specifications.color_variation) {
-                product.color_variation = product.specifications.color_variation;
-                delete product.specifications.color_variation;
+            // --- Lấy color từ specifications ---
+            try {
+                const specsTable = await driver.findElement(By.css('.woocommerce-product-attributes.shop_attributes'));
+                const rows = await specsTable.findElements(By.css('tr'));
+                
+                for (const row of rows) {
+                    try {
+                        const keyEl = await row.findElement(By.css('th'));
+                        const key = await keyEl.getText();
+                        
+                        if (normalizeKey(key) === normalizeKey("Biến thể màu")) {
+                            const valueEl = await row.findElement(By.css('td p a, td'));
+                            const colorName = await valueEl.getText();
+                            const colorId = getColorId(colorName);
+                            if (colorId !== null) {
+                                product.color_id = colorId;
+                            } else {
+                                console.log(`⚠️ Không tìm thấy ID cho color: ${colorName}`);
+                            }
+                            break;
+                        }
+                    } catch { }
+                }
+            } catch {
+                console.log("⚠️ Không tìm thấy bảng specifications.");
             }
 
             existingData.push(product);

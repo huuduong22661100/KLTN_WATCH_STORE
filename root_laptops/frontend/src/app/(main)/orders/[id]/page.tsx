@@ -56,15 +56,66 @@ export default function OrderDetailPage({
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left: Order Info */}
+        {}
         <div className="lg:col-span-2 space-y-6">
-          {/* Status */}
+          {}
           <div className="bg-white p-6 rounded-lg shadow">
             <h3 className="font-semibold mb-4">Trạng thái đơn hàng</h3>
-            <OrderStatusComponent status={order.status} />
+            
+            {}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">💰 Thanh toán:</span>
+                <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                  order.payment_status === 'paid' ? 'bg-green-100 text-green-800' :
+                  order.payment_status === 'refunded' ? 'bg-gray-100 text-gray-800' :
+                  'bg-yellow-100 text-yellow-800'
+                }`}>
+                  {order.payment_status === 'paid' ? 'Đã thanh toán' :
+                   order.payment_status === 'refunded' ? 'Đã hoàn tiền' :
+                   'Chưa thanh toán'}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">📋 Đơn hàng:</span>
+                <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                  order.order_status === 'completed' ? 'bg-green-100 text-green-800' :
+                  order.order_status === 'cancelled' ? 'bg-red-100 text-red-800' :
+                  order.order_status === 'processing' ? 'bg-purple-100 text-purple-800' :
+                  order.order_status === 'confirmed' ? 'bg-blue-100 text-blue-800' :
+                  'bg-yellow-100 text-yellow-800'
+                }`}>
+                  {order.order_status === 'pending' ? 'Chờ xác nhận' :
+                   order.order_status === 'confirmed' ? 'Đã xác nhận' :
+                   order.order_status === 'processing' ? 'Đang chuẩn bị' :
+                   order.order_status === 'ready_to_ship' ? 'Sẵn sàng giao' :
+                   order.order_status === 'completed' ? 'Hoàn thành' :
+                   order.order_status === 'cancelled' ? 'Đã hủy' : order.order_status}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">🚚 Giao hàng:</span>
+                <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                  order.shipping_status === 'delivered' ? 'bg-green-100 text-green-800' :
+                  order.shipping_status === 'out_for_delivery' ? 'bg-indigo-100 text-indigo-800' :
+                  order.shipping_status === 'in_transit' ? 'bg-blue-100 text-blue-800' :
+                  order.shipping_status === 'failed_delivery' ? 'bg-red-100 text-red-800' :
+                  'bg-gray-100 text-gray-800'
+                }`}>
+                  {order.shipping_status === 'not_shipped' ? 'Chưa giao' :
+                   order.shipping_status === 'picking' ? 'Đang lấy hàng' :
+                   order.shipping_status === 'in_transit' ? 'Đang vận chuyển' :
+                   order.shipping_status === 'out_for_delivery' ? 'Đang giao' :
+                   order.shipping_status === 'delivered' ? 'Đã giao hàng' :
+                   order.shipping_status === 'failed_delivery' ? 'Giao thất bại' : order.shipping_status}
+                </span>
+              </div>
+            </div>
           </div>
 
-          {/* Shipping Info */}
+          {}
           <div className="bg-white p-6 rounded-lg shadow">
             <h3 className="font-semibold mb-4">Thông tin giao hàng</h3>
             <div className="space-y-2 text-sm">
@@ -76,12 +127,12 @@ export default function OrderDetailPage({
             </div>
           </div>
 
-          {/* Products */}
+          {}
           <div className="bg-white p-6 rounded-lg shadow">
             <h3 className="font-semibold mb-4">Sản phẩm</h3>
             <div className="space-y-4">
-              {order.items?.map((item: OrderItem) => (
-                <div key={item.id} className="flex items-center gap-4 pb-4 border-b last:border-0">
+              {order.items?.map((item: OrderItem, index: number) => (
+                <div key={item._id || item.id || index} className="flex items-center gap-4 pb-4 border-b last:border-0">
                   <img
                     src={item.product_image}
                     alt={item.product_name}
@@ -100,12 +151,12 @@ export default function OrderDetailPage({
           </div>
         </div>
 
-        {/* Right: Summary */}
+        {}
         <div className="lg:col-span-1">
           <OrderSummary order={order} />
 
-          {/* Actions */}
-          {order.status === 'pending' && (
+          {}
+          {(order.order_status === 'pending' || order.order_status === 'confirmed') && (
             <button
               onClick={handleCancel}
               disabled={isPending}

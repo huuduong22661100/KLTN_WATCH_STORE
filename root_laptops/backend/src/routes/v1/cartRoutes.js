@@ -10,12 +10,12 @@ import { authenticateToken } from '../../middlewares/auth.js';
 
 const router = express.Router();
 
-// xác thực
+
 router.use(authenticateToken);
 
 router.get('/', getCart);
 router.post('/add', addToCart);
-router.put('/', updateUserCart); // New route for updating the entire cart
+router.put('/', updateUserCart); 
 router.put('/items/:item_id', updateCartItem);
 router.delete('/items/:item_id', removeFromCart);
 

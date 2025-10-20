@@ -15,7 +15,7 @@ export const Pagination: React.FC<PaginationProps> = ({
 }) => {
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
   
-  // Show max 7 pages at a time
+  
   const getVisiblePages = () => {
     if (totalPages <= 7) return pages;
     

@@ -39,7 +39,7 @@ export function PaymentMethod({ selected, onChange }: PaymentMethodProps) {
         ))}
       </div>
 
-      {/* Bank Transfer Info */}
+      {}
       {selected === 'bank_transfer' && (
         <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
           <p className="font-semibold mb-2">Thông tin chuyển khoản:</p>

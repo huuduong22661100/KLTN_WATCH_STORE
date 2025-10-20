@@ -9,7 +9,7 @@ export function useRegister() {
   return useMutation<LoginResponse, Error, RegisterPayload>({
     mutationFn: registerApi,
     onSuccess: (data) => {
-      // ✅ ĐÚNG THỨ TỰ: login(user, token)
+      
       login(data.data.user, data.data.token);
     },
     onError: (error) => {

@@ -1,4 +1,4 @@
-// src/app/(main)/layout.tsx
+
 import Header from "@/shared/components/layout/Header"
 import Footer from "@/shared/components/layout/Footer";
 

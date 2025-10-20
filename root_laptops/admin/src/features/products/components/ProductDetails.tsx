@@ -3,7 +3,7 @@ import { Product } from '@/shared/types';
 
 interface ProductDetailsProps {
   product: Product;
-  activeIndex: number; // Assuming this is for image gallery or similar
+  activeIndex: number; 
 }
 
 const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
-import { useRegister } from '@/features/auth/hooks/useRegister'; // ✅ SỬA PATH
+import { useRegister } from '@/features/auth/hooks/useRegister'; 
 import { RegisterPayload } from '@/features/auth/types';
 
 export default function RegisterPage() {

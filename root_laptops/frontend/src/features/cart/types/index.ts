@@ -5,7 +5,7 @@ export interface CartItem {
   product_image: string;
   price: number;
   quantity: number;
-  stock: number; // Số lượng tồn kho
+  stock: number; 
 }
 
 export interface Cart {

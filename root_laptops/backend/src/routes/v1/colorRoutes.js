@@ -11,11 +11,11 @@ import { adminAuth } from '../../middlewares/adminAuth.js';
 
 const router = express.Router();
 
-// Public routes
+
 router.get('/', getColors);
 router.get('/:id', getColorById);
 
-// Admin routes
+
 router.post('/', authenticateToken, adminAuth, createColor);
 router.put('/:id', authenticateToken, adminAuth, updateColor);
 router.delete('/:id', authenticateToken, adminAuth, deleteColor);

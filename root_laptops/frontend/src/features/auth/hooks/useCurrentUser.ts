@@ -8,6 +8,6 @@ export function useCurrentUser() {
   return useQuery({
     queryKey: ["currentUser", token],
     queryFn: () => getCurrentUserApi(token!),
-    enabled: !!token, // chỉ gọi khi có token
+    enabled: !!token, 
   })
 }

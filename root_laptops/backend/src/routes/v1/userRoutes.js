@@ -4,6 +4,7 @@ import {
   login,
   getProfile,
   updateProfile,
+  changePassword,
   getUsers,
   getUserById,
   updateUser,
@@ -14,15 +15,16 @@ import { adminAuth } from '../../middlewares/adminAuth.js';
 
 const router = express.Router();
 
-// Public routes
+
 router.post('/register', register);
 router.post('/login', login);
 
-// User routes (require authentication)
+
 router.get('/profile', authenticateToken, getProfile);
 router.put('/profile', authenticateToken, updateProfile);
+router.put('/change-password', authenticateToken, changePassword);
 
-// ✅ Admin routes (require admin authentication)
+
 router.get('/', authenticateToken, adminAuth, getUsers);
 router.get('/:id', authenticateToken, adminAuth, getUserById);
 router.put('/:id', authenticateToken, adminAuth, updateUser);

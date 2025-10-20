@@ -1,31 +1,44 @@
 import Product from '../models/Product.js';
 import mongoose from 'mongoose';
 
-// 🟢 Tạo sản phẩm mới
+
 export const createProduct = async (req, res) => {
   try {
-    const product = new Product(req.body);
+    
+    const lastProduct = await Product.findOne().sort({ id: -1 });
+    const newId = lastProduct ? lastProduct.id + 1 : 1;
+    
+    const product = new Product({
+      ...req.body,
+      id: newId
+    });
+    
     await product.save();
+    
+    
+    await product.populate("color_id");
+    await product.populate("category_id");
+    
     res.status(201).json({ success: true, data: product });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }
 };
 
-// 🟢 Lấy danh sách sản phẩm (có thể phân trang)
+
 export const getProducts = async (req, res) => {
   try {
     const { page = 1, limit = 10, category, color, minPrice, maxPrice, search, sort } = req.query;
     let query = {};
     let sortOptions = {};
 
-    // Xử lý filter theo category (category_id là array)
+    
     if (category) {
-      // Kiểm tra xem category có phải là ObjectId hợp lệ không
-      if (mongoose.Types.ObjectId.isValid(category)) {
-        const categoryObjectId = new mongoose.Types.ObjectId(category);
-        // Sử dụng $in vì category_id là array
-        query.category_id = { $in: [categoryObjectId] };
+      const categoryIds = category.split(',').map(id => id.trim());
+      const validCategoryIds = categoryIds.filter(id => mongoose.Types.ObjectId.isValid(id));
+      
+      if (validCategoryIds.length > 0) {
+        query.category_id = { $in: validCategoryIds.map(id => new mongoose.Types.ObjectId(id)) };
       } else {
         return res.status(400).json({ 
           success: false, 
@@ -34,11 +47,13 @@ export const getProducts = async (req, res) => {
       }
     }
 
-    // Xử lý filter theo color (color_id là single ObjectId)
+    
     if (color) {
-      // Kiểm tra xem color có phải là ObjectId hợp lệ không
-      if (mongoose.Types.ObjectId.isValid(color)) {
-        query.color_id = new mongoose.Types.ObjectId(color);
+      const colorIds = color.split(',').map(id => id.trim());
+      const validColorIds = colorIds.filter(id => mongoose.Types.ObjectId.isValid(id));
+      
+      if (validColorIds.length > 0) {
+        query.color_id = { $in: validColorIds.map(id => new mongoose.Types.ObjectId(id)) };
       } else {
         return res.status(400).json({ 
           success: false, 
@@ -47,14 +62,14 @@ export const getProducts = async (req, res) => {
       }
     }
 
-    // Xử lý filter theo giá
+    
     if (minPrice || maxPrice) {
       query.price = {};
       if (minPrice) query.price.$gte = parseFloat(minPrice);
       if (maxPrice) query.price.$lte = parseFloat(maxPrice);
     }
 
-    // Xử lý tìm kiếm theo tên hoặc mô tả
+    
     if (search) {
       query.$or = [
         { title: { $regex: search, $options: 'i' } },
@@ -62,7 +77,7 @@ export const getProducts = async (req, res) => {
       ];
     }
 
-    // Xử lý sắp xếp
+    
     if (sort) {
       switch (sort) {
         case 'price_asc':
@@ -91,6 +106,7 @@ export const getProducts = async (req, res) => {
     }
 
     const products = await Product.find(query)
+      .select('-categories_id')  
       .populate("color_id")
       .populate("category_id")
       .sort(sortOptions)
@@ -113,10 +129,10 @@ export const getProducts = async (req, res) => {
   }
 };
 
-// 🟢 Lấy chi tiết sản phẩm theo ID
+
 export const getProductById = async (req, res) => {
   try {
-    // Kiểm tra xem ID có phải là ObjectId hợp lệ không
+    
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
       return res.status(400).json({ 
         success: false, 
@@ -139,10 +155,10 @@ export const getProductById = async (req, res) => {
   }
 };
 
-// 🟢 Cập nhật sản phẩm
+
 export const updateProduct = async (req, res) => {
   try {
-    // Kiểm tra xem ID có phải là ObjectId hợp lệ không
+    
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
       return res.status(400).json({ 
         success: false, 
@@ -150,10 +166,10 @@ export const updateProduct = async (req, res) => {
       });
     }
 
-    // Log request body để debug
+    
     console.log('Update Product Request Body:', JSON.stringify(req.body, null, 2));
     
-    // Validate category_id nếu có
+    
     if (req.body.category_id) {
       if (Array.isArray(req.body.category_id)) {
         const invalidIds = req.body.category_id.filter(id => !mongoose.Types.ObjectId.isValid(id));
@@ -166,20 +182,25 @@ export const updateProduct = async (req, res) => {
       }
     }
 
-    // Validate color_id nếu có
-    if (req.body.color_id && req.body.color_id !== '') {
-      if (!mongoose.Types.ObjectId.isValid(req.body.color_id)) {
-        return res.status(400).json({
-          success: false,
-          message: 'Invalid color ID'
-        });
+    
+    if (req.body.color_id) {
+      if (Array.isArray(req.body.color_id)) {
+        const invalidIds = req.body.color_id.filter(id => !mongoose.Types.ObjectId.isValid(id));
+        if (invalidIds.length > 0) {
+          return res.status(400).json({
+            success: false,
+            message: `Invalid color IDs: ${invalidIds.join(', ')}`
+          });
+        }
       }
     }
 
     const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
-    });
+    })
+      .populate("color_id")
+      .populate("category_id");
 
     if (!product) {
       return res.status(404).json({ success: false, message: "Không tìm thấy sản phẩm" });
@@ -192,10 +213,10 @@ export const updateProduct = async (req, res) => {
   }
 };
 
-// 🟢 Xóa sản phẩm
+
 export const deleteProduct = async (req, res) => {
   try {
-    // Kiểm tra xem ID có phải là ObjectId hợp lệ không
+    
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
       return res.status(400).json({ 
         success: false, 

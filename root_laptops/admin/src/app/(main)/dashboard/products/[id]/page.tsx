@@ -1,5 +1,5 @@
 'use client';
-import React, { use, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Product, ProductFormData } from '@/shared/types';
 import { getProductById, updateProduct } from '@/features/products/api';
@@ -15,18 +15,13 @@ import {
   Edit, ArrowLeft, Package, DollarSign, Hash, Tag, MapPin, User, 
   Save, X, Plus, Trash2, Check 
 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { toast } from '@/hooks/use-toast';
 import Image from 'next/image';
 
-interface ProductDetailPageProps {
-  params: Promise<{
-    id: string;
-  }>;
-}
-
-export default function ProductDetailPage({ params }: ProductDetailPageProps) {
-  const { id } = use(params);
+export default function ProductDetailPage() {
+  const params = useParams();
+  const id = params.id as string;
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -40,7 +35,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
     enabled: !!id,
   });
 
-  // Fetch categories and colors for editing
+  
   const { data: categoriesData } = useQuery({
     queryKey: ['categories'],
     queryFn: () => getCategories({ limit: 100 }),
@@ -54,7 +49,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
   const categories = categoriesData || [];
   const colors = colorsData || [];
 
-  // Initialize form data when product loads
+  
   useEffect(() => {
     if (product && !isEditing) {
       setFormData(product);
@@ -62,17 +57,17 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
     }
   }, [product, isEditing]);
 
-  // Update mutation
+  
   const updateMutation = useMutation({
     mutationFn: (data: Partial<Product>) => {
-      // Convert Product type to ProductFormData for API
+      
       const formattedData: Partial<ProductFormData> = {
         ...data,
         category_id: Array.isArray(data.category_id) 
           ? data.category_id.map(cat => typeof cat === 'string' ? cat : cat._id)
           : undefined,
-        color_id: data.color_id 
-          ? (typeof data.color_id === 'string' ? data.color_id : data.color_id._id)
+        color_id: Array.isArray(data.color_id) 
+          ? data.color_id.map(col => typeof col === 'string' ? col : col._id)
           : undefined,
       };
       return updateProduct(id, formattedData);
@@ -81,7 +76,9 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
       toast.success('Cập nhật sản phẩm thành công', {
         description: 'Thông tin sản phẩm đã được lưu',
       });
+      
       queryClient.invalidateQueries({ queryKey: ['product', id] });
+      queryClient.invalidateQueries({ queryKey: ['products'] });
       setIsEditing(false);
       setHasChanges(false);
     },
@@ -159,8 +156,16 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
     setHasChanges(true);
   };
 
-  const handleColorChange = (colorId: string) => {
-    setFormData(prev => ({ ...prev, color_id: colorId || undefined as any }));
+  const handleColorToggle = (colorId: string) => {
+    const currentColors = Array.isArray(formData.color_id) 
+      ? formData.color_id.map(col => typeof col === 'string' ? col : col._id)
+      : [];
+    
+    const newColors = currentColors.includes(colorId)
+      ? currentColors.filter((id) => id !== colorId)
+      : [...currentColors, colorId];
+    
+    setFormData(prev => ({ ...prev, color_id: newColors as any }));
     setHasChanges(true);
   };
 
@@ -206,7 +211,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
     );
   }
 
-  // Helper để lấy category names
+  
   const getCategoryNames = () => {
     if (!product.category_id || product.category_id.length === 0) return 'Chưa phân loại';
     return product.category_id
@@ -214,18 +219,31 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
       .join(', ');
   };
 
-  // Helper để lấy color name
-  const getColorName = () => {
-    if (!product.color_id) return 'Chưa xác định';
-    return typeof product.color_id === 'string' ? product.color_id : product.color_id.color;
+  
+  const getColorNames = () => {
+    if (!product.color_id || product.color_id.length === 0) return 'Chưa xác định';
+    return product.color_id
+      .map(col => typeof col === 'string' ? col : col.color)
+      .join(', ');
   };
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button variant="outline" size="sm" onClick={() => router.push('/dashboard/products')}>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={async () => {
+              
+              await queryClient.invalidateQueries({ queryKey: ['products'] });
+              await queryClient.refetchQueries({ queryKey: ['products'] });
+              
+              router.push('/dashboard/products');
+              router.refresh();
+            }}
+          >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Quay lại
           </Button>
@@ -259,13 +277,13 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        {/* Images Card */}
+        {}
         <Card>
           <CardHeader>
             <CardTitle>Hình ảnh sản phẩm</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {/* Main Image */}
+            {}
             <div className="relative aspect-square rounded-lg border overflow-hidden bg-muted">
               <Image
                 src={product.images.mainImg.url}
@@ -276,7 +294,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
               />
             </div>
 
-            {/* Slider Images */}
+            {}
             {product.images.sliderImg && product.images.sliderImg.length > 0 && (
               <div className="grid grid-cols-4 gap-2">
                 {product.images.sliderImg.map((img, index) => (
@@ -294,14 +312,14 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
           </CardContent>
         </Card>
 
-        {/* Product Info Card */}
+        {}
         <div className="space-y-6">
           <Card>
             <CardHeader>
               <CardTitle>Thông tin cơ bản</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {/* Price */}
+              {}
               <div className="flex items-center gap-2">
                 <DollarSign className="h-4 w-4 text-muted-foreground" />
                 <span className="font-semibold min-w-[100px]">Giá:</span>
@@ -319,7 +337,46 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
                 )}
               </div>
 
-              {/* Stock */}
+              {}
+              <div className="flex items-center gap-2">
+                <DollarSign className="h-4 w-4 text-muted-foreground" />
+                <span className="font-semibold min-w-[100px]">Giá khuyến mãi:</span>
+                {isEditing ? (
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="number"
+                      value={formData.sale_price || ''}
+                      onChange={(e) => {
+                        const value = e.target.value === '' ? null : Number(e.target.value);
+                        handleFieldChange('sale_price', value);
+                      }}
+                      className="max-w-[200px]"
+                      placeholder="Để trống nếu không giảm giá"
+                    />
+                    {formData.sale_price && formData.price && formData.sale_price < formData.price && (
+                      <Badge variant="destructive">
+                        -{Math.round((1 - formData.sale_price / formData.price) * 100)}%
+                      </Badge>
+                    )}
+                  </div>
+                ) : product.sale_price ? (
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl font-bold text-destructive">
+                      {product.sale_price.toLocaleString('vi-VN')}đ
+                    </span>
+                    <Badge variant="destructive">
+                      -{Math.round((1 - product.sale_price / product.price) * 100)}%
+                    </Badge>
+                    <span className="text-sm line-through text-muted-foreground">
+                      {product.price.toLocaleString('vi-VN')}đ
+                    </span>
+                  </div>
+                ) : (
+                  <span className="text-sm text-muted-foreground">Không có</span>
+                )}
+              </div>
+
+              {}
               <div className="flex items-center gap-2">
                 <Package className="h-4 w-4 text-muted-foreground" />
                 <span className="font-semibold min-w-[100px]">Tồn kho:</span>
@@ -343,7 +400,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
                 <span>{product.id}</span>
               </div>
 
-              {/* Brand */}
+              {}
               <div className="flex items-center gap-2">
                 <Tag className="h-4 w-4 text-muted-foreground" />
                 <span className="font-semibold min-w-[100px]">Thương hiệu:</span>
@@ -358,7 +415,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
                 )}
               </div>
 
-              {/* Gender */}
+              {}
               <div className="flex items-center gap-2">
                 <User className="h-4 w-4 text-muted-foreground" />
                 <span className="font-semibold min-w-[100px]">Giới tính:</span>
@@ -376,7 +433,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
                 )}
               </div>
 
-              {/* Origin */}
+              {}
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-muted-foreground" />
                 <span className="font-semibold min-w-[100px]">Xuất xứ:</span>
@@ -391,7 +448,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
                 )}
               </div>
 
-              {/* Categories */}
+              {}
               <div className="flex items-start gap-2">
                 <Tag className="h-4 w-4 text-muted-foreground mt-1" />
                 <div className="flex-1">
@@ -428,37 +485,46 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
                 </div>
               </div>
 
-              {/* Color */}
-              <div className="flex items-center gap-2">
-                <div className="h-4 w-4 rounded-full border bg-muted" />
-                <span className="font-semibold min-w-[100px]">Màu sắc:</span>
-                {isEditing ? (
-                  <select
-                    value={
-                      formData.color_id 
-                        ? typeof formData.color_id === 'string' 
-                          ? formData.color_id 
-                          : formData.color_id._id
-                        : ''
-                    }
-                    onChange={(e) => handleColorChange(e.target.value)}
-                    className="flex h-10 w-[200px] rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  >
-                    <option value="">Không có</option>
-                    {colors.map((color: any) => (
-                      <option key={color._id} value={color._id}>
-                        {color.color}
-                      </option>
-                    ))}
-                  </select>
-                ) : (
-                  <span>{getColorName()}</span>
-                )}
+              {}
+              <div className="flex items-start gap-2">
+                <div className="h-4 w-4 rounded-full border bg-muted mt-1" />
+                <div className="flex-1">
+                  <span className="font-semibold">Màu sắc:</span>
+                  {isEditing ? (
+                    <div className="flex flex-wrap gap-2 mt-2 border rounded-md p-3">
+                      {colors.map((color: any) => {
+                        const currentColorIds = Array.isArray(formData.color_id) 
+                          ? formData.color_id.map(col => typeof col === 'string' ? col : col._id)
+                          : [];
+                        const isSelected = currentColorIds.includes(color._id);
+                        
+                        return (
+                          <button
+                            key={color._id}
+                            type="button"
+                            onClick={() => handleColorToggle(color._id)}
+                            className={`px-3 py-1 rounded-full text-sm transition-colors ${
+                              isSelected
+                                ? 'bg-primary text-primary-foreground'
+                                : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                            }`}
+                          >
+                            {color.color}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {getColorNames()}
+                    </div>
+                  )}
+                </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Tags */}
+          {}
           {((product.tags && product.tags.length > 0) || isEditing) && (
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
@@ -504,7 +570,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
         </div>
       </div>
 
-      {/* Description */}
+      {}
       {((product.description && product.description.length > 0) || isEditing) && (
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
@@ -559,7 +625,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
         </Card>
       )}
 
-      {/* Specifications */}
+      {}
       {product.specifications && Object.keys(product.specifications).length > 0 && (
         <Card>
           <CardHeader>
@@ -567,7 +633,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
           </CardHeader>
           <CardContent>
             <dl className="grid grid-cols-2 gap-4">
-              {/* Weight */}
+              {}
               {(product.specifications.weight || isEditing) && (
                 <>
                   <dt className="font-semibold">Trọng lượng:</dt>
@@ -584,7 +650,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
                   </dd>
                 </>
               )}
-              {/* Movement */}
+              {}
               {(product.specifications.movement || isEditing) && (
                 <>
                   <dt className="font-semibold">Bộ máy:</dt>
@@ -601,7 +667,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
                   </dd>
                 </>
               )}
-              {/* Size */}
+              {}
               {(product.specifications.size || isEditing) && (
                 <>
                   <dt className="font-semibold">Kích thước:</dt>
@@ -618,7 +684,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
                   </dd>
                 </>
               )}
-              {/* Thickness */}
+              {}
               {(product.specifications.thickness || isEditing) && (
                 <>
                   <dt className="font-semibold">Độ dày:</dt>
@@ -635,7 +701,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
                   </dd>
                 </>
               )}
-              {/* Band Variation */}
+              {}
               {(product.specifications.band_variation || isEditing) && (
                 <>
                   <dt className="font-semibold">Loại dây:</dt>
@@ -652,7 +718,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
                   </dd>
                 </>
               )}
-              {/* Glass Material */}
+              {}
               {(product.specifications.glass_material || isEditing) && (
                 <>
                   <dt className="font-semibold">Chất liệu kính:</dt>
@@ -669,7 +735,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
                   </dd>
                 </>
               )}
-              {/* Water Resistance */}
+              {}
               {(product.specifications.water_resistance_level || isEditing) && (
                 <>
                   <dt className="font-semibold">Chống nước:</dt>
@@ -686,7 +752,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
                   </dd>
                 </>
               )}
-              {/* Dial Shape */}
+              {}
               {(product.specifications.dial_shape || isEditing) && (
                 <>
                   <dt className="font-semibold">Hình dạng mặt:</dt>
@@ -708,7 +774,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
         </Card>
       )}
 
-      {/* Save Button - Fixed at bottom when editing */}
+      {}
       {isEditing && hasChanges && (
         <div className="fixed bottom-0 left-0 right-0 bg-background border-t shadow-lg z-50">
           <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -721,14 +787,14 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
               </Button>
               <Button onClick={handleSave} disabled={updateMutation.isPending}>
                 {updateMutation.isPending ? (
-                  <>
+                  <span className="flex items-center justify-center">
                     <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
                     Đang lưu...
-                  </>
+                  </span>
                 ) : (
-                  <>
+                  <span className="flex items-center justify-center">
                     <Save className="mr-2 h-4 w-4" /> Lưu thay đổi
-                  </>
+                  </span>
                 )}
               </Button>
             </div>

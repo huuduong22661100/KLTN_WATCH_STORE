@@ -33,10 +33,14 @@ export const useCartStore = create<CartState>()(
       setIsCartDirty: (dirty: boolean) => set({ isCartDirty: dirty }),
 
       loadCartFromServer: async () => {
-        set({ items: [] }); // Clear local state first
         const token = useAuthStore.getState().token;
+        
+        
         if (!token) {
           set({ items: [] });
+          if (typeof window !== 'undefined') {
+            localStorage.removeItem('cart-storage');
+          }
           return;
         }
 
@@ -55,7 +59,7 @@ export const useCartStore = create<CartState>()(
 
           const data = await response.json();
           const serverItems = data.data.items.map((item: any) => ({
-            product: item.watch_id, // Backend returns populated watch_id as product
+            product: item.watch_id, 
             quantity: item.quantity,
           }));
           set({ items: serverItems });
@@ -73,7 +77,7 @@ export const useCartStore = create<CartState>()(
         }
 
         const originalItems = get().items;
-        // Optimistic update
+        
         const existingItemIndex = originalItems.findIndex(item => item.product._id === product._id);
         let updatedItems;
         if (existingItemIndex > -1) {
@@ -92,7 +96,7 @@ export const useCartStore = create<CartState>()(
           toast.success("Sản phẩm đã được thêm vào giỏ hàng!");
         } catch (error) {
           toast.error("Thêm vào giỏ hàng thất bại. Vui lòng thử lại.");
-          set({ items: originalItems }); // Revert
+          set({ items: originalItems }); 
         }
       },
 
@@ -110,7 +114,7 @@ export const useCartStore = create<CartState>()(
         if (existingItemIndex > -1) {
           let updatedItems;
           if (quantity <= 0) {
-            // Remove item if quantity is 0 or less
+            
             updatedItems = state.items.filter(item => item.product._id !== productId);
           } else {
             updatedItems = state.items.map((item, index) =>
@@ -127,8 +131,28 @@ export const useCartStore = create<CartState>()(
       },
 
       clearCart: async () => {
-        set({ items: [] });
-        get().setIsCartDirty(true);
+        
+        set({ items: [], isCartDirty: false });
+        
+        
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('cart-storage');
+        }
+        
+        
+        const token = useAuthStore.getState().token;
+        if (token) {
+          try {
+            await fetch(`${API_BASE_URL}/cart/clear`, {
+              method: 'DELETE',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+              },
+            });
+          } catch (error) {
+            console.error("Error clearing cart on server:", error);
+          }
+        }
       },
 
       updateCartOnServer: async (items: CartItem[]) => {
@@ -158,7 +182,7 @@ export const useCartStore = create<CartState>()(
             throw new Error(errorData.message || 'Failed to update cart on server.');
           }
 
-          get().setIsCartDirty(false); // Reset dirty state after successful update
+          get().setIsCartDirty(false); 
         } catch (error) {
           console.error("Error updating cart on server:", error);
           throw error;
@@ -174,8 +198,16 @@ export const useCartStore = create<CartState>()(
       },
     }),
     {
-      name: 'cart-storage', // unique name
-      storage: createJSONStorage(() => localStorage), // (optional) by default, 'localStorage' is used
+      name: 'cart-storage',
+      storage: createJSONStorage(() => localStorage),
+      
+      partialize: (state) => {
+        const isAuthenticated = useAuthStore.getState().isAuthenticated;
+        if (!isAuthenticated) {
+          return { items: [], isCartDirty: false };
+        }
+        return state;
+      },
     }
   )
 );

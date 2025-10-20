@@ -15,7 +15,7 @@ const router = express.Router();
 router.get('/', getProducts);
 router.get('/:id', getProductById);
 
-// yêu cầu xác thưcj
+
 router.post('/', authenticateToken, adminAuth, createProduct);
 router.put('/:id', authenticateToken, adminAuth, updateProduct);
 router.delete('/:id', authenticateToken, adminAuth, deleteProduct);

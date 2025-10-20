@@ -1,13 +1,32 @@
+
+export type PaymentStatus = 
+  | 'unpaid'      
+  | 'paid'        
+  | 'refunded';   
+
+
 export type OrderStatus = 
-  | 'pending' 
-  | 'confirmed' 
-  | 'processing' 
-  | 'shipping' 
-  | 'delivered' 
-  | 'cancelled';
+  | 'pending'        
+  | 'confirmed'      
+  | 'processing'     
+  | 'ready_to_ship'  
+  | 'completed'      
+  | 'cancelled';     
+
+
+export type ShippingStatus = 
+  | 'not_shipped'      
+  | 'picking'          
+  | 'in_transit'       
+  | 'out_for_delivery' 
+  | 'delivered'        
+  | 'failed_delivery'  
+  | 'returning'        
+  | 'returned';        
 
 export interface OrderItem {
-  id: string;
+  _id?: string;
+  id?: string;
   order_id: string;
   product_id: string;
   product_name: string;
@@ -18,17 +37,25 @@ export interface OrderItem {
 }
 
 export interface Order {
-  id: string;
+  _id?: string;
+  id?: string;
   order_number: string;
   user_id: string;
-  status: OrderStatus;
   
-  // Pricing
+  
+  payment_status: PaymentStatus;
+  order_status: OrderStatus;
+  shipping_status: ShippingStatus;
+  
+  
+  status?: OrderStatus;
+  
+  
   total: number;
   subtotal?: number;
   shipping_fee: number;
   
-  // Shipping info
+  
   shipping_name: string;
   shipping_phone: string;
   shipping_address: string;
@@ -36,21 +63,48 @@ export interface Order {
   shipping_city: string;
   shipping_ward?: string;
   
-  // Payment
+  
   payment_method: 'cod' | 'bank_transfer' | 'momo' | 'vnpay';
   
-  // Additional
+  
   note?: string;
   items?: OrderItem[];
   
-  // Timestamps
-  created_at: string;
-  updated_at: string;
+  
+  status_history?: StatusHistory[];
+  
+  
+  shipping_info?: ShippingInfo;
+  
+  
+  created_at?: string;
+  updated_at?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
-// ✅ THÊM: Payload để tạo đơn hàng
+
+export interface StatusHistory {
+  status_type: 'payment_status' | 'order_status' | 'shipping_status';
+  old_value: string | null;
+  new_value: string;
+  changed_by: string;
+  changed_at: string;
+  note?: string;
+}
+
+
+export interface ShippingInfo {
+  shipper_name?: string;
+  shipper_phone?: string;
+  tracking_number?: string;
+  estimated_delivery?: string;
+  actual_delivery?: string;
+}
+
+
 export interface CreateOrderPayload {
-  // Shipping info
+  
   shipping_name: string;
   shipping_phone: string;
   shipping_email?: string;
@@ -59,14 +113,14 @@ export interface CreateOrderPayload {
   shipping_district: string;
   shipping_ward?: string;
   
-  // Payment
+  
   payment_method: 'cod' | 'bank_transfer' | 'momo' | 'vnpay';
   
-  // Additional
+  
   note?: string;
 }
 
-// ✅ THÊM: Response khi lấy danh sách đơn hàng
+
 export interface OrdersResponse {
   success: boolean;
   data: {
@@ -78,7 +132,7 @@ export interface OrdersResponse {
   };
 }
 
-// ✅ THÊM: Response khi lấy chi tiết đơn hàng
+
 export interface OrderDetailResponse {
   success: boolean;
   data: {
@@ -86,7 +140,7 @@ export interface OrderDetailResponse {
   };
 }
 
-// ✅ THÊM: Response khi tạo đơn hàng
+
 export interface CreateOrderResponse {
   success: boolean;
   data: {
@@ -95,7 +149,7 @@ export interface CreateOrderResponse {
   message?: string;
 }
 
-// ✅ THÊM: Response khi hủy đơn hàng
+
 export interface CancelOrderResponse {
   success: boolean;
   data: {

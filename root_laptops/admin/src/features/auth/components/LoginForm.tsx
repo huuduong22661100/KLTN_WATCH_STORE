@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 import { useLogin } from '../hooks/useLogin'; 
 import { LoginPayload } from '../types';
 
-// Schema validation với Zod
+
 const loginSchema = z.object({
   email: z.string().email({ message: "Email không hợp lệ." }),
   password: z.string().min(6, { message: "Mật khẩu phải có ít nhất 6 ký tự." }),

@@ -5,7 +5,7 @@ import cors from "cors";
 import v1Routes from "./routes/v1/index.js";
 import { errorHandler, notFound } from "./middlewares/errorHandler.js";
 
-// Import all models to ensure they are registered with Mongoose
+
 import "./models/Cart.js";
 import "./models/CartItem.js";
 import "./models/Category.js";
@@ -22,19 +22,19 @@ dotenv.config();
 
 const app = express();
 
-// Middleware
+
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 const PORT = process.env.PORT || 5000;
 
-// Kết nối MongoDB
+
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log("✅ MongoDB connected"))
   .catch(err => console.error("❌ MongoDB error:", err));
 
-// Routes
+
 app.get("/", (req, res) => {
   res.json({
     success: true,
@@ -49,10 +49,10 @@ app.get("/", (req, res) => {
   });
 });
 
-// Các route API
+
 app.use("/api/v1", v1Routes);
 
-// Middleware xử lý lỗi
+
 app.use(notFound);
 app.use(errorHandler);
 

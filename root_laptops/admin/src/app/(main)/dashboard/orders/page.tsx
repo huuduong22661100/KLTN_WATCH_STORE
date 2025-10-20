@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useOrders, useUpdateOrderStatus } from '@/features/orders/hooks/useOrders';
 import { Button } from '@/shared/components/ui/button';
 import { Badge } from '@/shared/components/ui/badge';
@@ -21,40 +22,77 @@ import {
 } from '@/shared/components/ui/select';
 import { Pagination } from '@/shared/components/ui/pagination';
 import { Eye } from 'lucide-react';
-import { Order } from '@/shared/types';
+import { Order, PaymentStatus, OrderStatus, ShippingStatus } from '@/shared/types';
 import { Input } from '@/shared/components/ui/input';
 
-const statusColors = {
+const paymentStatusColors = {
+  unpaid: 'bg-yellow-100 text-yellow-800',
+  paid: 'bg-green-100 text-green-800',
+  refunded: 'bg-gray-100 text-gray-800',
+};
+
+const paymentStatusLabels = {
+  unpaid: 'Chưa thanh toán',
+  paid: 'Đã thanh toán',
+  refunded: 'Đã hoàn tiền',
+};
+
+const orderStatusColors = {
   pending: 'bg-yellow-100 text-yellow-800',
   confirmed: 'bg-blue-100 text-blue-800',
   processing: 'bg-purple-100 text-purple-800',
-  shipping: 'bg-indigo-100 text-indigo-800',
-  delivered: 'bg-green-100 text-green-800',
+  ready_to_ship: 'bg-indigo-100 text-indigo-800',
+  completed: 'bg-green-100 text-green-800',
   cancelled: 'bg-red-100 text-red-800',
 };
 
-const statusLabels = {
+const orderStatusLabels = {
   pending: 'Chờ xác nhận',
   confirmed: 'Đã xác nhận',
   processing: 'Đang xử lý',
-  shipping: 'Đang giao',
-  delivered: 'Đã giao',
+  ready_to_ship: 'Sẵn sàng giao',
+  completed: 'Hoàn thành',
   cancelled: 'Đã hủy',
 };
-const payment_methodLabels = {
-  credit_card: 'Thẻ tín dụng',
-  paypal: 'PayPal',
-  bank_transfer: 'Chuyển khoản ngân hàng',
-  cash_on_delivery: 'Thanh toán khi nhận hàng',
+
+const shippingStatusColors = {
+  not_shipped: 'bg-gray-100 text-gray-800',
+  picking: 'bg-yellow-100 text-yellow-800',
+  in_transit: 'bg-blue-100 text-blue-800',
+  out_for_delivery: 'bg-indigo-100 text-indigo-800',
+  delivered: 'bg-green-100 text-green-800',
+  failed_delivery: 'bg-red-100 text-red-800',
+  returning: 'bg-orange-100 text-orange-800',
+  returned: 'bg-gray-100 text-gray-800',
 };
 
-type PaymentMethodKey = keyof typeof payment_methodLabels;
+const shippingStatusLabels = {
+  not_shipped: 'Chưa giao',
+  picking: 'Đang lấy hàng',
+  in_transit: 'Đang vận chuyển',
+  out_for_delivery: 'Đang giao',
+  delivered: 'Đã giao',
+  failed_delivery: 'Giao thất bại',
+  returning: 'Đang hoàn',
+  returned: 'Đã hoàn',
+};
+
+const paymentMethodLabels = {
+  cod: 'COD',
+  bank_transfer: 'Chuyển khoản',
+  credit_card: 'Thẻ tín dụng',
+};
+
+type PaymentMethodKey = keyof typeof paymentMethodLabels;
 
 
 
 export default function OrdersPage() {
+  const router = useRouter();
   const [page, setPage] = useState(1);
-  const [statusFilter, setStatusFilter] = useState<Order['status'] | 'all'>('all');
+  const [paymentStatusFilter, setPaymentStatusFilter] = useState<PaymentStatus | 'all'>('all');
+  const [orderStatusFilter, setOrderStatusFilter] = useState<OrderStatus | 'all'>('all');
+  const [shippingStatusFilter, setShippingStatusFilter] = useState<ShippingStatus | 'all'>('all');
   const [customerNameFilter, setCustomerNameFilter] = useState('');
   const [dateFilter, setDateFilter] = useState('');
   const [orderCodeFilter, setOrderCodeFilter] = useState('');
@@ -63,7 +101,9 @@ export default function OrdersPage() {
   const { data, isLoading, isError } = useOrders({
     page,
     limit: 10,
-    ...(statusFilter !== 'all' && { status: statusFilter }),
+    ...(paymentStatusFilter !== 'all' && { paymentStatus: paymentStatusFilter }),
+    ...(orderStatusFilter !== 'all' && { orderStatus: orderStatusFilter }),
+    ...(shippingStatusFilter !== 'all' && { shippingStatus: shippingStatusFilter }),
     ...(customerNameFilter && { customerName: customerNameFilter }),
     ...(dateFilter && { date: dateFilter }),
     ...(orderCodeFilter && { orderCode: orderCodeFilter }),
@@ -72,13 +112,8 @@ export default function OrdersPage() {
 
   const updateStatus = useUpdateOrderStatus();
 
-  const handleStatusChange = (orderId: string, newStatus: Order['status']) => {
-    updateStatus.mutate({ id: orderId, status: newStatus });
-  };
-
   const handleViewDetail = (order: Order) => {
-    // TODO: Navigate to order detail
-    console.log('View order:', order);
+    router.push(`/dashboard/orders/${order._id}`);
   };
 
   return (
@@ -112,15 +147,47 @@ export default function OrdersPage() {
           className="w-[180px]"
         />
         <Select 
-          value={statusFilter} 
-          onValueChange={(value) => setStatusFilter(value as Order['status'] | 'all')}
+          value={paymentStatusFilter} 
+          onValueChange={(value) => setPaymentStatusFilter(value as PaymentStatus | 'all')}
         >
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Lọc theo trạng thái" />
+            <SelectValue placeholder="TT Thanh toán" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Tất cả trạng thái</SelectItem>
-            {Object.entries(statusLabels).map(([value, label]) => (
+            <SelectItem value="all">Tất cả TT thanh toán</SelectItem>
+            {Object.entries(paymentStatusLabels).map(([value, label]) => (
+              <SelectItem key={value} value={value}>
+                {label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select 
+          value={orderStatusFilter} 
+          onValueChange={(value) => setOrderStatusFilter(value as OrderStatus | 'all')}
+        >
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="TT Đơn hàng" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tất cả TT đơn hàng</SelectItem>
+            {Object.entries(orderStatusLabels).map(([value, label]) => (
+              <SelectItem key={value} value={value}>
+                {label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select 
+          value={shippingStatusFilter} 
+          onValueChange={(value) => setShippingStatusFilter(value as ShippingStatus | 'all')}
+        >
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="TT Vận chuyển" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tất cả TT vận chuyển</SelectItem>
+            {Object.entries(shippingStatusLabels).map(([value, label]) => (
               <SelectItem key={value} value={value}>
                 {label}
               </SelectItem>
@@ -129,11 +196,11 @@ export default function OrdersPage() {
         </Select>
         <Select value={paymentMethodFilter} onValueChange={setPaymentMethodFilter}>
           <SelectTrigger className="w-[200px]">
-            <SelectValue placeholder="Lọc theo phương thức TT" />
+            <SelectValue placeholder="Phương thức TT" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Tất cả phương thức TT</SelectItem>
-            {Object.entries(payment_methodLabels).map(([value, label]) => (
+            {Object.entries(paymentMethodLabels).map(([value, label]) => (
               <SelectItem key={value} value={value}>
                 {label}
               </SelectItem>
@@ -163,8 +230,10 @@ export default function OrdersPage() {
                   <TableHead>Mã đơn hàng</TableHead>
                   <TableHead>Khách hàng</TableHead>
                   <TableHead>Tổng tiền</TableHead>
-                  <TableHead>Phương thức thanh toán</TableHead>
-                  <TableHead>Trạng thái</TableHead>
+                  <TableHead>Phương thức TT</TableHead>
+                  <TableHead>TT Thanh toán</TableHead>
+                  <TableHead>TT Đơn hàng</TableHead>
+                  <TableHead>TT Vận chuyển</TableHead>
                   <TableHead>Ngày đặt</TableHead>
                   <TableHead className="text-right">Thao tác</TableHead>
                 </TableRow>
@@ -172,7 +241,7 @@ export default function OrdersPage() {
               <TableBody>
                 {data.data.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                    <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
                       Không có đơn hàng nào
                     </TableCell>
                   </TableRow>
@@ -187,25 +256,25 @@ export default function OrdersPage() {
                         </div>
                       </TableCell>
                       <TableCell>{order.total.toLocaleString('vi-VN')}đ</TableCell>
-                      <TableCell>{payment_methodLabels[order.payment_method as PaymentMethodKey]}</TableCell>
                       <TableCell>
-                        <Select
-                          value={order.status}
-                          onValueChange={(value: string) => handleStatusChange(order._id, value as Order['status'])}
-                        >
-                          <SelectTrigger className="w-[140px]">
-                            <Badge className={statusColors[order.status]}>
-                              {statusLabels[order.status]}
-                            </Badge>
-                          </SelectTrigger>
-                          <SelectContent>
-                            {Object.entries(statusLabels).map(([value, label]) => (
-                              <SelectItem key={value} value={value}>
-                                {label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <Badge variant="outline">
+                          {paymentMethodLabels[order.payment_method as PaymentMethodKey] || order.payment_method}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge className={paymentStatusColors[order.payment_status]}>
+                          {paymentStatusLabels[order.payment_status]}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge className={orderStatusColors[order.order_status]}>
+                          {orderStatusLabels[order.order_status]}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge className={shippingStatusColors[order.shipping_status]}>
+                          {shippingStatusLabels[order.shipping_status]}
+                        </Badge>
                       </TableCell>
                       <TableCell>
                         {new Date(order.createdAt).toLocaleDateString('vi-VN')}

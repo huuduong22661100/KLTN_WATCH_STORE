@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react';
 import { CheckoutFormData, CheckoutSummary } from '../types';
 import { useCart } from '@/features/cart';
 import { calculateShippingFeeApi } from '../api';
+import { useAuthStore } from '@/store/authStore';
 
 export function useCheckoutForm() {
   const { data: cart } = useCart();
+  const { user } = useAuthStore();
   
   const [formData, setFormData] = useState<CheckoutFormData>({
     shipping_name: '',
@@ -18,26 +20,41 @@ export function useCheckoutForm() {
     note: '',
   });
 
+  // Auto-fill user information
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        shipping_name: user.name || '',
+        shipping_phone: user.phone || '',
+        shipping_email: user.email || '',
+        shipping_address: user.address || '',
+      }));
+    }
+  }, [user]);
+
   const [shippingFee, setShippingFee] = useState(0);
   const [isCalculatingFee, setIsCalculatingFee] = useState(false);
 
-  // Tính phí vận chuyển khi thay đổi địa chỉ
+  
   useEffect(() => {
-    if (formData.shipping_city && formData.shipping_district) {
-      setIsCalculatingFee(true);
-      calculateShippingFeeApi(formData.shipping_city, formData.shipping_district)
-        .then(fee => setShippingFee(fee))
-        .catch(() => setShippingFee(0))
-        .finally(() => setIsCalculatingFee(false));
-    }
-  }, [formData.shipping_city, formData.shipping_district]);
+    
+    setShippingFee(0); 
+  }, []);
 
-  // Tính tổng
+  
+  const calculatedSubtotal = cart?.items.reduce((total: number, item: any) => {
+    const product = item.watch_id;
+    const price = product.sale_price || product.price;
+    return total + (price * item.quantity);
+  }, 0) || 0;
+
+  
   const summary: CheckoutSummary = {
-    subtotal: cart?.total || 0,
+    subtotal: calculatedSubtotal,
     shipping_fee: shippingFee,
     discount: 0,
-    total: (cart?.total || 0) + shippingFee,
+    total: calculatedSubtotal + shippingFee,
     itemCount: cart?.itemCount || 0,
   };
 
@@ -55,10 +72,10 @@ export function useCheckoutForm() {
     if (!formData.shipping_address.trim()) {
       return false;
     }
-    if (!formData.shipping_city) {
+    if (!formData.shipping_city.trim()) {
       return false;
     }
-    if (!formData.shipping_district) {
+    if (!formData.shipping_district.trim()) {
       return false;
     }
     return true;

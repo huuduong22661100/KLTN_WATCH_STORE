@@ -1,1 +1,0 @@
-// AI controller will be updated for Watch products in the future.

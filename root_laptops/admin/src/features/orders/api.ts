@@ -10,7 +10,17 @@ export const getOrders = async (params?: QueryParams): Promise<PaginatedResponse
     throw new Error('Failed to fetch orders');
   }
 
-  return await res.json();
+  const data = await res.json();
+  
+  
+  
+  return {
+    success: true,
+    data: data.data, 
+    total: data.total,
+    page: data.page,
+    totalPages: data.totalPages
+  };
 };
 
 export const getOrderById = async (id: string): Promise<Order> => {
@@ -21,16 +31,16 @@ export const getOrderById = async (id: string): Promise<Order> => {
   }
 
   const data = await res.json();
-  return data.data;
+  return data.data.order; 
 };
 
 export const updateOrderStatus = async (
   id: string,
-  status: Order['status']
+  order_status: Order['order_status']
 ): Promise<Order> => {
-  const res = await fetchWithAuth(ORDER_ENDPOINTS.UPDATE_STATUS(id), {
-    method: 'PATCH',
-    body: JSON.stringify({ status }),
+  const res = await fetchWithAuth(ORDER_ENDPOINTS.UPDATE_ORDER_STATUS(id), {
+    method: 'PUT',
+    body: JSON.stringify({ order_status }),
   });
 
   if (!res.ok) {
@@ -38,5 +48,44 @@ export const updateOrderStatus = async (
   }
 
   const data = await res.json();
-  return data.data;
+  return data.data.order;
+};
+
+
+export const updatePaymentStatus = async (
+  id: string,
+  payment_status: Order['payment_status'],
+  note?: string
+): Promise<Order> => {
+  const res = await fetchWithAuth(ORDER_ENDPOINTS.UPDATE_PAYMENT_STATUS(id), {
+    method: 'PUT',
+    body: JSON.stringify({ payment_status, note }),
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to update payment status');
+  }
+
+  const data = await res.json();
+  return data.data.order;
+};
+
+
+export const updateShippingStatus = async (
+  id: string,
+  shipping_status: Order['shipping_status'],
+  shipping_info?: Order['shipping_info'],
+  note?: string
+): Promise<Order> => {
+  const res = await fetchWithAuth(ORDER_ENDPOINTS.UPDATE_SHIPPING_STATUS(id), {
+    method: 'PUT',
+    body: JSON.stringify({ shipping_status, shipping_info, note }),
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to update shipping status');
+  }
+
+  const data = await res.json();
+  return data.data.order;
 };

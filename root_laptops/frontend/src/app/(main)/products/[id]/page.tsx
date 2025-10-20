@@ -2,37 +2,33 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
-// Types & API
 import { Product } from '@/features/products/types';
 import { ProductTopBar } from '@/features/products/components/ProductTopBar';
 import { ProductDetails } from '@/features/products/components/ProductDetails';
 import { ProductGallery } from '@/features/products/components/ProductGallery';
 
-// API fetcher function
 const fetchProductById = async (id: string): Promise<Product> => {
-  // The user's API seems to use the numeric ID in the path, not the MongoDB _id
   const res = await fetch(`http://localhost:5000/api/v1/products/${id}`);
   if (!res.ok) {
     throw new Error('Network response was not ok');
   }
   const data = await res.json();
-  // Assuming the backend returns the single product object under the 'data' key
   return data.data;
 };
 
 interface ProductDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default function ProductDetailPage({ params }: ProductDetailPageProps) {
-  const { id } = params;
+  const { id } = React.use(params);
 
   const { data: product, isLoading, isError } = useQuery<Product>({
     queryKey: ['product', id],
     queryFn: () => fetchProductById(id),
-    enabled: !!id, // Ensures the query runs only when the id is available
+    enabled: !!id,
   });
 
   const [quantity, setQuantity] = useState(1);
@@ -55,20 +51,26 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
 
   return (
     <>
-      <ProductTopBar
-        activeIndex={activeIndex}
-        setActiveIndex={setActiveIndex}
-        totalPrice={totalPrice}
-        quantity={quantity}
-        setQuantity={setQuantity}
-        product={product}
-      />
-
-      <main className="container mx-auto py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <ProductDetails product={product} activeIndex={activeIndex} />
+      <main className="container mx-auto py-8 px-4">
+        {}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-12">
+          {}
           <ProductGallery images={allImages} productTitle={product.title} />
+          
+          {}
+          <ProductDetails 
+            product={product} 
+            quantity={quantity}
+            setQuantity={setQuantity}
+          />
         </div>
+
+        {}
+        <ProductTopBar
+          activeIndex={activeIndex}
+          setActiveIndex={setActiveIndex}
+          product={product}
+        />
       </main>
     </>
   );

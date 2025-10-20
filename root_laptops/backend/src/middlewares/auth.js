@@ -4,7 +4,7 @@ import User from '../models/User.js';
 export const authenticateToken = async (req, res, next) => {
   try {
     const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+    const token = authHeader && authHeader.split(' ')[1]; 
 
     if (!token) {
       return res.status(401).json({
@@ -15,7 +15,7 @@ export const authenticateToken = async (req, res, next) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
     
-    // Lấy thông tin người dùng từ database
+    
     const user = await User.findById(decoded.userId).select('-password_hash');
     if (!user) {
       return res.status(401).json({
@@ -64,7 +64,7 @@ export const optionalAuth = async (req, res, next) => {
 
     next();
   } catch (error) {
-    // Tiếp tục mà không cần xác thực cho optional auth
+    
     next();
   }
 };

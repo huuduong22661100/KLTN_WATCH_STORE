@@ -9,7 +9,7 @@ import newsRoutes from './newsRoutes.js';
 
 const router = express.Router();
 
-// Các route API
+
 router.use('/products', productRoutes);
 router.use('/users', userRoutes);
 router.use('/cart', cartRoutes);

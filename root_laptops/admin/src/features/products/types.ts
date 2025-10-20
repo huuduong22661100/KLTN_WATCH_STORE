@@ -11,11 +11,11 @@ export interface Product {
   stock: number;
   brand: string;
   sku: string;
-  category_id: string[]; // Assuming these are ObjectIds represented as strings
+  category_id: string[]; 
   tags: string[];
   gender: 'Nam' | 'Nữ';
   origin: string;
-  color_id: string; // Assuming this is an ObjectId represented as a string
+  color_id: string[]; 
   specifications: {
     weight: string;
     movement: string;

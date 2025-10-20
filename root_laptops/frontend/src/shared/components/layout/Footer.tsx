@@ -119,7 +119,7 @@ const hotlineIcons = [
 const Footer = () => {
   return (
     <footer className="bg-black text-white pt-0 pb-4">
-      {/* Banner thông tin và logo Casio */}
+      {}
       <div className="bg-[#575781] w-full border-b border-gray-800">
         <div className="container mx-auto  py-4">
           <ul className="flex align-center  gap-28 justify-center">
@@ -139,7 +139,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="container mx-auto max-w-7xl px-4">
-        {/* Top: Hotline & Logo */}
+        {}
         <div className="flex flex-col md:flex-row md:justify-between md:items-center border-b border-gray-700 pb-6 mb-6">
           <div className="flex-1 flex flex-col gap-2">
             <span className="font-bold text-lg">
@@ -166,7 +166,7 @@ const Footer = () => {
             ))}
           </div>
         </div>
-        {/* Middle: Info & Columns */}
+        {}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div>
             <h4 className="font-bold mb-3 text-yellow-400">
@@ -186,18 +186,27 @@ const Footer = () => {
                 {col.title}
               </h4>
               <ul className="text-sm space-y-1">
-                {col.items.map((item, i) => (
-                  <li key={i}>
-                    <a href="#" className="hover:text-yellow-400">
-                      {item}
-                    </a>
-                  </li>
-                ))}
+                {col.items.map((item, i) => {
+                  
+                  let href = "#";
+                  if (item === "Giới thiệu về Watch Store") href = "/about";
+                  else if (item === "Kiến thức về Watch") href = "/news";
+                  else if (item === "Bản tin công nghệ") href = "/news";
+                  else if (item === "Tin khuyến mại") href = "/news";
+                  
+                  return (
+                    <li key={i}>
+                      <a href={href} className="hover:text-yellow-400">
+                        {item}
+                      </a>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           ))}
         </div>
-        {/* Bottom: Payment & Copyright */}
+        {}
         <div className="flex flex-col md:flex-row md:justify-between md:items-center border-t border-gray-700 pt-4">
           <div className="flex items-center gap-2 mb-2 md:mb-0">
             {footerData.payments.map((p, i) => (

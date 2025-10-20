@@ -28,6 +28,7 @@ export interface Product {
   title: string;
   description: ProductDescription[];
   price: number;
+  sale_price?: number | null;
   sku: string;
   images: {
     mainImg: ProductImage;
@@ -36,9 +37,9 @@ export interface Product {
   specifications: {
     [key: string]: string;
   };
-  color_id: ProductColor;
+  color_id: ProductColor[]; 
   brand: string;
-  category_id: ProductCategory[];
+  category_id: ProductCategory[]; 
   tags: string[];
   gender: string;
   origin: string;

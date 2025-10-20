@@ -4,7 +4,7 @@ export interface News {
   slug: string;
   content: string;
   thumbnail_img: string;
-  author_id: string; // Assuming this is an ObjectId represented as a string
+  author_id: string; 
   createdAt: string;
   updatedAt: string;
 }

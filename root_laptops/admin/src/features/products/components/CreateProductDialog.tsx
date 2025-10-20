@@ -29,7 +29,7 @@ interface CreateProductDialogProps {
 export function CreateProductDialog({ open, onOpenChange }: CreateProductDialogProps) {
   const queryClient = useQueryClient();
 
-  // Initial form state
+  
   const [formData, setFormData] = useState<Partial<ProductFormData>>({
     title: '',
     brand: '',
@@ -71,7 +71,7 @@ export function CreateProductDialog({ open, onOpenChange }: CreateProductDialogP
   const categories = categoriesData || [];
   const colors = colorsData || [];
 
-  // Create mutation
+  
   const createMutation = useMutation({
     mutationFn: createProduct,
     onSuccess: () => {
@@ -149,6 +149,15 @@ export function CreateProductDialog({ open, onOpenChange }: CreateProductDialogP
     setFormData((prev) => ({ ...prev, category_id: newCategories }));
   };
 
+  const handleColorToggle = (colorId: string) => {
+    const currentColors = formData.color_id || [];
+    const newColors = currentColors.includes(colorId)
+      ? currentColors.filter((id) => id !== colorId)
+      : [...currentColors, colorId];
+    
+    setFormData((prev) => ({ ...prev, color_id: newColors }));
+  };
+
   const resetForm = () => {
     setFormData({
       title: '',
@@ -208,7 +217,7 @@ export function CreateProductDialog({ open, onOpenChange }: CreateProductDialogP
         </DialogHeader>
 
         <div className="space-y-6 py-4">
-          {/* Basic Information */}
+          {}
           <div className="space-y-4">
             <h3 className="font-semibold text-lg">Thông tin cơ bản</h3>
             
@@ -273,6 +282,25 @@ export function CreateProductDialog({ open, onOpenChange }: CreateProductDialogP
               </div>
 
               <div className="space-y-2">
+                <Label htmlFor="sale_price">Giá khuyến mãi</Label>
+                <Input
+                  id="sale_price"
+                  type="number"
+                  value={formData.sale_price || ''}
+                  onChange={(e) => {
+                    const value = e.target.value === '' ? undefined : Number(e.target.value);
+                    handleFieldChange('sale_price', value);
+                  }}
+                  placeholder="Để trống nếu không giảm giá"
+                />
+                {formData.sale_price && formData.price && formData.sale_price < formData.price && (
+                  <p className="text-sm text-destructive">
+                    💰 Giảm {Math.round((1 - formData.sale_price / formData.price) * 100)}%
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
                 <Label htmlFor="stock">
                   Tồn kho <span className="text-destructive">*</span>
                 </Label>
@@ -297,27 +325,10 @@ export function CreateProductDialog({ open, onOpenChange }: CreateProductDialogP
                   <option value="Nữ">Nữ</option>
                 </select>
               </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="color">Màu sắc</Label>
-                <select
-                  id="color"
-                  value={formData.color_id || ''}
-                  onChange={(e) => handleFieldChange('color_id', e.target.value || undefined)}
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                >
-                  <option value="">Chọn màu sắc</option>
-                  {colors.map((color: any) => (
-                    <option key={color._id} value={color._id}>
-                      {color.color}
-                    </option>
-                  ))}
-                </select>
-              </div>
             </div>
           </div>
 
-          {/* Categories */}
+          {}
           <div className="space-y-2">
             <Label>Danh mục</Label>
             <div className="flex flex-wrap gap-2 border rounded-md p-3 min-h-[60px]">
@@ -338,7 +349,28 @@ export function CreateProductDialog({ open, onOpenChange }: CreateProductDialogP
             </div>
           </div>
 
-          {/* Images */}
+          {}
+          <div className="space-y-2">
+            <Label>Màu sắc</Label>
+            <div className="flex flex-wrap gap-2 border rounded-md p-3 min-h-[60px]">
+              {colors.map((color: any) => (
+                <button
+                  key={color._id}
+                  type="button"
+                  onClick={() => handleColorToggle(color._id)}
+                  className={`px-3 py-1 rounded-full text-sm transition-colors ${
+                    formData.color_id?.includes(color._id)
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                  }`}
+                >
+                  {color.color}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {}
           <div className="space-y-4">
             <h3 className="font-semibold text-lg">Hình ảnh</h3>
             
@@ -442,7 +474,7 @@ export function CreateProductDialog({ open, onOpenChange }: CreateProductDialogP
             </div>
           </div>
 
-          {/* Specifications */}
+          {}
           <div className="space-y-4">
             <h3 className="font-semibold text-lg">Thông số kỹ thuật</h3>
             

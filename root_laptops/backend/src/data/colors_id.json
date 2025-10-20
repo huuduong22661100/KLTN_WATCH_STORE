@@ -1,0 +1,119 @@
+[{
+  "_id": {
+    "$oid": "68d5762d8eeaf6e58e8aaa46"
+  },
+  "id": 2,
+  "color": "Đen"
+},
+{
+  "_id": {
+    "$oid": "68d5762d8eeaf6e58e8aaa4b"
+  },
+  "id": 7,
+  "color": "Vàng"
+},
+{
+  "_id": {
+    "$oid": "68d5762d8eeaf6e58e8aaa4f"
+  },
+  "id": 11,
+  "color": "Trong suốt"
+},
+{
+  "_id": {
+    "$oid": "68d5762d8eeaf6e58e8aaa4a"
+  },
+  "id": 6,
+  "color": "Bạc"
+},
+{
+  "_id": {
+    "$oid": "68d5762d8eeaf6e58e8aaa4c"
+  },
+  "id": 8,
+  "color": "Tím"
+},
+{
+  "_id": {
+    "$oid": "68d5762d8eeaf6e58e8aaa54"
+  },
+  "id": 16,
+  "color": "Xanh Đen"
+},
+{
+  "_id": {
+    "$oid": "68d5762d8eeaf6e58e8aaa55"
+  },
+  "id": 17,
+  "color": "Màu be"
+},
+{
+  "_id": {
+    "$oid": "68d5762d8eeaf6e58e8aaa56"
+  },
+  "id": 18,
+  "color": "Xanh dương sáng"
+},
+{
+  "_id": {
+    "$oid": "68d5762d8eeaf6e58e8aaa50"
+  },
+  "id": 12,
+  "color": "Vàng hồng"
+},
+{
+  "_id": {
+    "$oid": "68d5762d8eeaf6e58e8aaa52"
+  },
+  "id": 14,
+  "color": "Nâu"
+},
+{
+  "_id": {
+    "$oid": "68d5762d8eeaf6e58e8aaa45"
+  },
+  "id": 1,
+  "color": "Xanh"
+},
+{
+  "_id": {
+    "$oid": "68d5762d8eeaf6e58e8aaa47"
+  },
+  "id": 3,
+  "color": "Xanh Dương"
+},
+{
+  "_id": {
+    "$oid": "68d5762d8eeaf6e58e8aaa48"
+  },
+  "id": 4,
+  "color": "Hồng"
+},
+{
+  "_id": {
+    "$oid": "68d5762d8eeaf6e58e8aaa49"
+  },
+  "id": 5,
+  "color": "Trắng"
+},
+{
+  "_id": {
+    "$oid": "68d5762d8eeaf6e58e8aaa4d"
+  },
+  "id": 9,
+  "color": "Xanh Lá"
+},
+{
+  "_id": {
+    "$oid": "68d5762d8eeaf6e58e8aaa51"
+  },
+  "id": 13,
+  "color": "Xám"
+},
+{
+  "_id": {
+    "$oid": "68d5762d8eeaf6e58e8aaa53"
+  },
+  "id": 15,
+  "color": "Ghi xám"
+}]

@@ -32,7 +32,7 @@ export default function OrderSuccessPage({
   return (
     <div className="container mx-auto py-8">
       <div className="max-w-2xl mx-auto text-center">
-        {/* Success Icon */}
+        {}
         <div className="mb-6">
           <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -47,7 +47,7 @@ export default function OrderSuccessPage({
           </p>
         </div>
 
-        {/* Order Info */}
+        {}
         <div className="bg-white p-6 rounded-lg shadow mb-6">
           <div className="grid grid-cols-2 gap-4 text-left">
             <div>
@@ -76,7 +76,7 @@ export default function OrderSuccessPage({
           </div>
         </div>
 
-        {/* Actions */}
+        {}
         <div className="flex gap-4 justify-center">
           <a
             href={`/orders/${order.id}`}
@@ -92,7 +92,7 @@ export default function OrderSuccessPage({
           </a>
         </div>
 
-        {/* Note */}
+        {}
         {order.payment_method === 'bank_transfer' && (
           <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-left">
             <p className="font-semibold text-yellow-800 mb-2">

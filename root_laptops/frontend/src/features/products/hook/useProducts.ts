@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 
-const API_URL = "http://localhost:5000/api/v1"
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"
 
 const fetchProducts = async (filters: any) => {
   const params = new URLSearchParams();
@@ -14,7 +14,9 @@ const fetchProducts = async (filters: any) => {
   if (filters.sort) params.append("sort", filters.sort);
 
   const url = `${API_URL}/products?${params.toString()}`;
-  const res = await fetch(url);
+  const res = await fetch(url, {
+    cache: 'no-store', 
+  });
   if (!res.ok) throw new Error("Network response was not ok");
   const response = await res.json();
   return response;
@@ -24,5 +26,7 @@ export function useProducts(filters: any) {
   return useQuery({
     queryKey: ["products", filters],
     queryFn: () => fetchProducts(filters),
+    staleTime: 0, 
+    gcTime: 1000 * 60 * 5, 
   })
 }

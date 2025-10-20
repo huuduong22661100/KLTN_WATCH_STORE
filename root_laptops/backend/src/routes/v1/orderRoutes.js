@@ -4,6 +4,9 @@ import {
   getUserOrders,
   getOrderById,
   updateOrderStatus,
+  updatePaymentStatus,
+  updateShippingStatus,
+  cancelOrder,
   getAllOrders
 } from '../../controllers/orderController.js';
 import { authenticateToken } from '../../middlewares/auth.js';
@@ -11,16 +14,26 @@ import { adminAuth } from '../../middlewares/adminAuth.js';
 
 const router = express.Router();
 
-// User-specific routes (require login)
-router.post('/', authenticateToken, createOrder);
-router.get('/my-orders', authenticateToken, getUserOrders);
 
-// Admin-only routes (require admin login)
-router.get('/', authenticateToken, adminAuth, getAllOrders);
+router.post('/', authenticateToken, createOrder);
+router.get('/', authenticateToken, getUserOrders); 
+
+
+router.get('/admin/all', authenticateToken, adminAuth, getAllOrders); 
+
+
+router.put('/:id/payment-status', authenticateToken, adminAuth, updatePaymentStatus);
+router.put('/:id/order-status', authenticateToken, adminAuth, updateOrderStatus);
+router.put('/:id/shipping-status', authenticateToken, adminAuth, updateShippingStatus);
+
+
 router.put('/:id/status', authenticateToken, adminAuth, updateOrderStatus);
 
-// Mixed access route (logic is handled in controller)
-// An admin can see any order, a user can only see their own.
+
+router.put('/:id/cancel', authenticateToken, cancelOrder);
+
+
+
 router.get('/:id', authenticateToken, getOrderById);
 
 

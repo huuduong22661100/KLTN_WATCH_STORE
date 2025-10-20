@@ -10,16 +10,16 @@ export function useLogin() {
   return useMutation<AuthResponse, Error, LoginPayload>({
     mutationFn: loginApi,
     onSuccess: (data) => {
-      // ✅ Backend trả về: { success, message, data: { user, token } }
+      
       const { user, token } = data.data;
 
-      // ✅ Kiểm tra role phải là admin
+      
       if (user.role !== 'admin') {
         toast.error('Bạn không có quyền truy cập trang admin. Vui lòng đăng nhập bằng tài khoản admin.');
         return;
       }
 
-      // ✅ Lưu trạng thái auth
+      
       login(user, token);
       toast.success('Đăng nhập thành công!');
     },

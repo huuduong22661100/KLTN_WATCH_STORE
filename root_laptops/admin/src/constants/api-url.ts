@@ -1,8 +1,8 @@
-// ✅ Lấy từ biến môi trường
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
-export const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'; // Admin app runs on 3001
 
-// ✅ Auth endpoints
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+export const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'; 
+
+
 export const AUTH_ENDPOINTS = {
   LOGIN: `${API_BASE_URL}/users/login`,
   REGISTER: `${API_BASE_URL}/users/register`,
@@ -11,7 +11,7 @@ export const AUTH_ENDPOINTS = {
   ME: `${API_BASE_URL}/users/profile`,
 } as const;
 
-// ✅ Products endpoints
+
 export const PRODUCT_ENDPOINTS = {
   LIST: `${API_BASE_URL}/products`,
   DETAIL: (id: string) => `${API_BASE_URL}/products/${id}`,
@@ -20,7 +20,7 @@ export const PRODUCT_ENDPOINTS = {
   DELETE: (id: string) => `${API_BASE_URL}/products/${id}`,
 } as const;
 
-// ✅ News endpoints
+
 export const NEWS_ENDPOINTS = {
   LIST: `${API_BASE_URL}/news`,
   DETAIL: (id: string) => `${API_BASE_URL}/news/${id}`,
@@ -28,7 +28,7 @@ export const NEWS_ENDPOINTS = {
   UPDATE: (id: string) => `${API_BASE_URL}/news/${id}`,
 } as const;
 
-// ✅ Color endpoints
+
 export const COLOR_ENDPOINTS = {
   LIST: `${API_BASE_URL}/colors`,
   DETAIL: (id: string) => `${API_BASE_URL}/colors/${id}`,
@@ -37,7 +37,7 @@ export const COLOR_ENDPOINTS = {
   DELETE: (id: string) => `${API_BASE_URL}/colors/${id}`,
 } as const;
 
-// ✅ Category endpoints
+
 export const CATEGORY_ENDPOINTS = {
   LIST: `${API_BASE_URL}/categories`,
   DETAIL: (id: string) => `${API_BASE_URL}/categories/${id}`,
@@ -46,14 +46,17 @@ export const CATEGORY_ENDPOINTS = {
   DELETE: (id: string) => `${API_BASE_URL}/categories/${id}`,
 } as const;
 
-// ✅ Order endpoints
+
 export const ORDER_ENDPOINTS = {
-  LIST: `${API_BASE_URL}/orders`,
+  LIST: `${API_BASE_URL}/orders/admin/all`, 
   DETAIL: (id: string) => `${API_BASE_URL}/orders/${id}`,
   UPDATE_STATUS: (id: string) => `${API_BASE_URL}/orders/${id}/status`,
+  UPDATE_PAYMENT_STATUS: (id: string) => `${API_BASE_URL}/orders/${id}/payment-status`,
+  UPDATE_ORDER_STATUS: (id: string) => `${API_BASE_URL}/orders/${id}/order-status`,
+  UPDATE_SHIPPING_STATUS: (id: string) => `${API_BASE_URL}/orders/${id}/shipping-status`,
 } as const;
 
-// ✅ User endpoints
+
 export const USER_ENDPOINTS = {
   LIST: `${API_BASE_URL}/users`,
   DETAIL: (id: string) => `${API_BASE_URL}/users/${id}`,
