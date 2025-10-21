@@ -18,6 +18,7 @@ import {
 } from '@/shared/components/ui/select';
 import { useCategories } from '@/features/categories/hooks/useCategories';
 import { useColors } from '@/features/colors/hooks/useColors';
+import styles from './page.module.css';
 
 export default function ProductsPage() {
   const [page, setPage] = useState(1);
@@ -50,34 +51,34 @@ export default function ProductsPage() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Quản lý sản phẩm</h1>
-          <p className="text-muted-foreground">
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <div className={styles.headerContent}>
+          <h1 className={styles.title}>Quản lý sản phẩm</h1>
+          <p className={styles.description}>
             Quản lý danh sách sản phẩm trong cửa hàng
           </p>
         </div>
         <Button onClick={() => setIsCreateDialogOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" /> Thêm sản phẩm
+          <Plus className={styles.buttonIcon} /> Thêm sản phẩm
         </Button>
       </div>
 
-      <div className="flex flex-wrap gap-2 mb-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+      <div className={styles.filtersContainer}>
+        <div className={styles.searchContainer}>
+          <Search className={styles.searchIcon} />
           <Input
             placeholder="Tìm kiếm sản phẩm..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-            className="pl-8"
+            className={styles.searchInput}
           />
         </div>
         <Button onClick={handleSearch}>Tìm kiếm</Button>
 
         <Select value={categoryFilter} onValueChange={(value) => setCategoryFilter(value)}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className={styles.filterSelect}>
             <SelectValue placeholder="Lọc theo danh mục" />
           </SelectTrigger>
           <SelectContent>
@@ -91,7 +92,7 @@ export default function ProductsPage() {
         </Select>
 
         <Select value={colorFilter} onValueChange={(value) => setColorFilter(value)}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className={styles.filterSelect}>
             <SelectValue placeholder="Lọc theo màu sắc" />
           </SelectTrigger>
           <SelectContent>
@@ -109,18 +110,18 @@ export default function ProductsPage() {
           placeholder="Giá từ..."
           value={minPriceFilter}
           onChange={(e) => setMinPriceFilter(e.target.value)}
-          className="w-[120px]"
+          className={styles.priceInput}
         />
         <Input
           type="number"
           placeholder="Giá đến..."
           value={maxPriceFilter}
           onChange={(e) => setMaxPriceFilter(e.target.value)}
-          className="w-[120px]"
+          className={styles.priceInput}
         />
 
         <Select value={sortFilter} onValueChange={setSortFilter}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className={styles.filterSelect}>
             <SelectValue placeholder="Sắp xếp theo" />
           </SelectTrigger>
           <SelectContent>
@@ -135,14 +136,14 @@ export default function ProductsPage() {
       </div>
 
       {isLoading && (
-        <div className="flex justify-center py-8">
-          <div className="text-muted-foreground">Đang tải...</div>
+        <div className={styles.loadingContainer}>
+          <div className={styles.loadingText}>Đang tải...</div>
         </div>
       )}
       
       {isError && (
-        <div className="flex justify-center py-8">
-          <div className="text-red-500">Lỗi khi tải dữ liệu sản phẩm</div>
+        <div className={styles.errorContainer}>
+          <div className={styles.errorText}>Lỗi khi tải dữ liệu sản phẩm</div>
         </div>
       )}
       
@@ -159,7 +160,6 @@ export default function ProductsPage() {
         </>
       )}
 
-      {}
       <CreateProductDialog 
         open={isCreateDialogOpen} 
         onOpenChange={setIsCreateDialogOpen} 

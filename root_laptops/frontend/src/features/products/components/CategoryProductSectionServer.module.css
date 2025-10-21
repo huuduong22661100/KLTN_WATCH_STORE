@@ -1,0 +1,100 @@
+.skeletonProductCard {
+    background-color: hsl(var(--muted));
+    border-radius: 0.5rem; /* rounded-lg */
+    padding: 1rem; /* p-4 */
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.skeletonImage {
+    height: 12rem; /* h-48 */
+    background-color: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 0.25rem; /* rounded */
+    margin-bottom: 1rem; /* mb-4 */
+}
+
+.skeletonLine1 {
+    height: 1rem; /* h-4 */
+    background-color: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 0.25rem; /* rounded */
+    margin-bottom: 0.5rem; /* mb-2 */
+}
+
+.skeletonLine2 {
+    height: 1rem; /* h-4 */
+    background-color: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 0.25rem; /* rounded */
+    width: 75%; /* w-3/4 */
+}
+
+.productsGrid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1.5rem; /* gap-6 */
+}
+
+.emptyProductsMessage {
+    text-align: center;
+    color: hsl(var(--muted-foreground));
+    padding-top: 2rem; /* py-8 */
+    padding-bottom: 2rem; /* py-8 */
+}
+
+.errorProductsMessage {
+    text-align: center;
+    color: #ef4444; /* text-red-500 */
+    padding-top: 2rem; /* py-8 */
+    padding-bottom: 2rem; /* py-8 */
+}
+
+.sectionWrapper {
+    max-width: 80rem; /* container */
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem; /* px-4 */
+    padding-right: 1rem; /* px-4 */
+    padding-top: 2rem; /* py-8 */
+    padding-bottom: 2rem; /* py-8 */
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem; /* mb-6 */
+}
+
+.title {
+    font-size: 1.875rem; /* text-3xl */
+    font-weight: 700; /* font-bold */
+}
+
+.viewAllLink {
+    color: hsl(var(--primary));
+    text-decoration: none;
+    font-size: 1.125rem; /* text-lg */
+}
+
+.viewAllLink:hover {
+    text-decoration: underline;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+}
+
+@media (min-width: 640px) {
+    .productsGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .productsGrid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}

@@ -24,6 +24,7 @@ import { Pagination } from '@/shared/components/ui/pagination';
 import { Eye } from 'lucide-react';
 import { Order, PaymentStatus, OrderStatus, ShippingStatus } from '@/shared/types';
 import { Input } from '@/shared/components/ui/input';
+import styles from './page.module.css';
 
 const paymentStatusColors = {
   unpaid: 'bg-yellow-100 text-yellow-800',
@@ -85,8 +86,6 @@ const paymentMethodLabels = {
 
 type PaymentMethodKey = keyof typeof paymentMethodLabels;
 
-
-
 export default function OrdersPage() {
   const router = useRouter();
   const [page, setPage] = useState(1);
@@ -117,40 +116,40 @@ export default function OrdersPage() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Quản lý đơn hàng</h1>
-          <p className="text-muted-foreground">
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <div className={styles.headerContent}>
+          <h1 className={styles.title}>Quản lý đơn hàng</h1>
+          <p className={styles.description}>
             Quản lý và theo dõi trạng thái đơn hàng
           </p>
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-2 mb-4">
+      <div className={styles.filtersContainer}>
         <Input
           placeholder="Tìm kiếm theo tên khách hàng..."
           value={customerNameFilter}
           onChange={(e) => setCustomerNameFilter(e.target.value)}
-          className="max-w-xs"
+          className={styles.filterInput}
         />
         <Input
           placeholder="Tìm kiếm theo mã đơn hàng..."
           value={orderCodeFilter}
           onChange={(e) => setOrderCodeFilter(e.target.value)}
-          className="max-w-xs"
+          className={styles.filterInput}
         />
         <Input
           type="date"
           value={dateFilter}
           onChange={(e) => setDateFilter(e.target.value)}
-          className="w-[180px]"
+          className={styles.dateInput}
         />
         <Select 
           value={paymentStatusFilter} 
           onValueChange={(value) => setPaymentStatusFilter(value as PaymentStatus | 'all')}
         >
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className={styles.filterSelect}>
             <SelectValue placeholder="TT Thanh toán" />
           </SelectTrigger>
           <SelectContent>
@@ -166,7 +165,7 @@ export default function OrdersPage() {
           value={orderStatusFilter} 
           onValueChange={(value) => setOrderStatusFilter(value as OrderStatus | 'all')}
         >
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className={styles.filterSelect}>
             <SelectValue placeholder="TT Đơn hàng" />
           </SelectTrigger>
           <SelectContent>
@@ -182,7 +181,7 @@ export default function OrdersPage() {
           value={shippingStatusFilter} 
           onValueChange={(value) => setShippingStatusFilter(value as ShippingStatus | 'all')}
         >
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className={styles.filterSelect}>
             <SelectValue placeholder="TT Vận chuyển" />
           </SelectTrigger>
           <SelectContent>
@@ -195,7 +194,7 @@ export default function OrdersPage() {
           </SelectContent>
         </Select>
         <Select value={paymentMethodFilter} onValueChange={setPaymentMethodFilter}>
-          <SelectTrigger className="w-[200px]">
+          <SelectTrigger className={styles.paymentMethodSelect}>
             <SelectValue placeholder="Phương thức TT" />
           </SelectTrigger>
           <SelectContent>
@@ -210,20 +209,20 @@ export default function OrdersPage() {
       </div>
 
       {isLoading && (
-        <div className="flex justify-center py-8">
-          <div className="text-muted-foreground">Đang tải...</div>
+        <div className={styles.loadingContainer}>
+          <div className={styles.loadingText}>Đang tải...</div>
         </div>
       )}
 
       {isError && (
-        <div className="flex justify-center py-8">
-          <div className="text-red-500">Lỗi khi tải dữ liệu đơn hàng</div>
+        <div className={styles.errorContainer}>
+          <div className={styles.errorText}>Lỗi khi tải dữ liệu đơn hàng</div>
         </div>
       )}
 
       {data && (
         <>
-          <div className="rounded-md border">
+          <div className={styles.tableContainer}>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -235,24 +234,24 @@ export default function OrdersPage() {
                   <TableHead>TT Đơn hàng</TableHead>
                   <TableHead>TT Vận chuyển</TableHead>
                   <TableHead>Ngày đặt</TableHead>
-                  <TableHead className="text-right">Thao tác</TableHead>
+                  <TableHead className={styles.alignRight}>Thao tác</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {data.data.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
+                    <TableCell colSpan={9} className={styles.emptyCell}>
                       Không có đơn hàng nào
                     </TableCell>
                   </TableRow>
                 ) : (
                   data.data.map((order) => (
                     <TableRow key={order._id}>
-                      <TableCell className="font-medium">{order.order_number}</TableCell>
+                      <TableCell className={styles.fontMedium}>{order.order_number}</TableCell>
                       <TableCell>
-                        <div>
-                          <p className="font-medium">{typeof order.user_id === 'object' ? order.user_id.name : 'N/A'}</p>
-                          <p className="text-sm text-muted-foreground">{typeof order.user_id === 'object' ? order.user_id.email : ''}</p>
+                        <div className={styles.customerInfo}>
+                          <p className={styles.customerName}>{typeof order.user_id === 'object' ? order.user_id.name : 'N/A'}</p>
+                          <p className={styles.customerEmail}>{typeof order.user_id === 'object' ? order.user_id.email : ''}</p>
                         </div>
                       </TableCell>
                       <TableCell>{order.total.toLocaleString('vi-VN')}đ</TableCell>
@@ -279,13 +278,13 @@ export default function OrdersPage() {
                       <TableCell>
                         {new Date(order.createdAt).toLocaleDateString('vi-VN')}
                       </TableCell>
-                      <TableCell className="text-right">
+                      <TableCell className={styles.alignRight}>
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => handleViewDetail(order)}
                         >
-                          <Eye className="h-4 w-4" />
+                          <Eye className={styles.actionIcon} />
                         </Button>
                       </TableCell>
                     </TableRow>

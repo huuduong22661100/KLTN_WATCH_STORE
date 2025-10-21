@@ -11,6 +11,7 @@ import { Separator } from "@/shared/components/ui/separator";
 import { User } from "@/features/auth/types";
 import { Loader2, User as UserIcon, Mail, Phone, MapPin, Camera, Edit, X, Lock } from "lucide-react";
 import Image from "next/image";
+import styles from './ProfileForm.module.css';
 
 interface ProfileFormProps {
   user: User;
@@ -66,11 +67,10 @@ export default function ProfileForm({ user, onOpenPasswordDialog }: ProfileFormP
   };
 
   return (
-    <div className="space-y-6">
-      {}
+    <div className={styles.profileFormWrapper}>
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className={styles.cardHeaderContent}>
             <div>
               <CardTitle>Ảnh đại diện</CardTitle>
               <CardDescription>
@@ -80,25 +80,25 @@ export default function ProfileForm({ user, onOpenPasswordDialog }: ProfileFormP
           </div>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center gap-6">
-            <div className="relative">
-              <div className="w-24 h-24 rounded-full overflow-hidden bg-muted flex items-center justify-center border-2 border-border">
+          <div className={styles.avatarSection}>
+            <div className={styles.avatarWrapper}>
+              <div className={styles.avatarContainer}>
                 {(isEditing ? formData.avatar_url : user.avatar_url) && !imageError ? (
                   <Image
                     src={isEditing ? formData.avatar_url : user.avatar_url || ""}
                     alt={user.name}
                     width={96}
                     height={96}
-                    className="object-cover"
+                    className={styles.avatarImage}
                     onError={() => setImageError(true)}
                     unoptimized
                   />
                 ) : (
-                  <UserIcon className="w-12 h-12 text-muted-foreground" />
+                  <UserIcon className={styles.avatarPlaceholderIcon} />
                 )}
               </div>
             </div>
-            <div className="flex-1">
+            <div className={styles.avatarInputArea}>
               {isEditing ? (
                 <>
                   <Label htmlFor="avatar_url">URL ảnh đại diện</Label>
@@ -108,16 +108,16 @@ export default function ProfileForm({ user, onOpenPasswordDialog }: ProfileFormP
                     value={formData.avatar_url}
                     onChange={handleChange}
                     placeholder="https://example.com/avatar.jpg"
-                    className="mt-2"
+                    className={styles.avatarInput}
                   />
-                  <p className="text-sm text-muted-foreground mt-2">
+                  <p className={styles.avatarInputHint}>
                     Nhập URL ảnh đại diện
                   </p>
                 </>
               ) : (
-                <div className="space-y-1">
-                  <p className="text-sm font-medium">URL ảnh</p>
-                  <p className="text-sm text-muted-foreground break-all">
+                <div className={styles.avatarDisplayInfo}>
+                  <p className={styles.avatarInfoLabel}>URL ảnh</p>
+                  <p className={styles.avatarInfoValue}>
                     {user.avatar_url || "Chưa có ảnh đại diện"}
                   </p>
                 </div>
@@ -127,10 +127,9 @@ export default function ProfileForm({ user, onOpenPasswordDialog }: ProfileFormP
         </CardContent>
       </Card>
 
-      {}
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className={styles.cardHeaderContent}>
             <div>
               <CardTitle>Thông tin cá nhân</CardTitle>
               <CardDescription>
@@ -144,19 +143,18 @@ export default function ProfileForm({ user, onOpenPasswordDialog }: ProfileFormP
                 size="sm"
                 onClick={() => setIsEditing(true)}
               >
-                <Edit className="w-4 h-4 mr-2" />
+                <Edit className={styles.editIcon} />
                 Chỉnh sửa
               </Button>
             )}
           </div>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid gap-6 md:grid-cols-2">
-              {}
-              <div className="space-y-2">
-                <Label htmlFor="name" className="flex items-center gap-2">
-                  <UserIcon className="w-4 h-4" />
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <div className={styles.formGrid}>
+              <div className={styles.formGroup}>
+                <Label htmlFor="name" className={styles.labelWithIcon}>
+                  <UserIcon className={styles.labelIcon} />
                   Họ và tên
                 </Label>
                 {isEditing ? (
@@ -169,32 +167,30 @@ export default function ProfileForm({ user, onOpenPasswordDialog }: ProfileFormP
                     required
                   />
                 ) : (
-                  <p className="text-sm font-medium py-2 px-3 bg-muted rounded-md">
+                  <p className={styles.readOnlyInput}>
                     {user.name || "Chưa cập nhật"}
                   </p>
                 )}
               </div>
 
-              {}
-              <div className="space-y-2">
-                <Label htmlFor="email" className="flex items-center gap-2">
-                  <Mail className="w-4 h-4" />
+              <div className={styles.formGroup}>
+                <Label htmlFor="email" className={styles.labelWithIcon}>
+                  <Mail className={styles.labelIcon} />
                   Email
                 </Label>
-                <p className="text-sm font-medium py-2 px-3 bg-muted rounded-md text-muted-foreground">
+                <p className={styles.readOnlyEmail}>
                   {user.email}
                 </p>
                 {!isEditing && (
-                  <p className="text-xs text-muted-foreground">
+                  <p className={styles.emailHint}>
                     Email không thể thay đổi
                   </p>
                 )}
               </div>
 
-              {}
-              <div className="space-y-2">
-                <Label htmlFor="phone" className="flex items-center gap-2">
-                  <Phone className="w-4 h-4" />
+              <div className={styles.formGroup}>
+                <Label htmlFor="phone" className={styles.labelWithIcon}>
+                  <Phone className={styles.labelIcon} />
                   Số điện thoại
                 </Label>
                 {isEditing ? (
@@ -206,7 +202,7 @@ export default function ProfileForm({ user, onOpenPasswordDialog }: ProfileFormP
                     placeholder="0123456789"
                   />
                 ) : (
-                  <p className="text-sm font-medium py-2 px-3 bg-muted rounded-md">
+                  <p className={styles.readOnlyInput}>
                     {user.phone || "Chưa cập nhật"}
                   </p>
                 )}
@@ -215,14 +211,13 @@ export default function ProfileForm({ user, onOpenPasswordDialog }: ProfileFormP
 
             <Separator />
 
-            {}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold flex items-center gap-2">
-                <MapPin className="w-5 h-5" />
+            <div className={styles.addressSection}>
+              <h3 className={styles.addressTitle}>
+                <MapPin className={styles.addressIcon} />
                 Thông tin địa chỉ
               </h3>
               
-              <div className="space-y-2">
+              <div className={styles.formGroup}>
                 <Label htmlFor="address">Địa chỉ chi tiết</Label>
                 {isEditing ? (
                   <Textarea
@@ -232,10 +227,10 @@ export default function ProfileForm({ user, onOpenPasswordDialog }: ProfileFormP
                     onChange={handleChange}
                     placeholder="Nhập địa chỉ chi tiết (số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố)"
                     rows={3}
-                    className="resize-none"
+                    className={styles.addressTextarea}
                   />
                 ) : (
-                  <p className="text-sm py-2 px-3 bg-muted rounded-md min-h-[80px]">
+                  <p className={styles.readOnlyAddress}>
                     {user.address || "Chưa cập nhật"}
                   </p>
                 )}
@@ -245,9 +240,9 @@ export default function ProfileForm({ user, onOpenPasswordDialog }: ProfileFormP
             {isEditing && (
               <>
                 <Separator />
-                <div className="flex gap-3">
-                  <Button type="submit" disabled={isPending} className="flex-1">
-                    {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                <div className={styles.actionButtons}>
+                  <Button type="submit" disabled={isPending} className={styles.actionButton}>
+                    {isPending && <Loader2 className={styles.spinner} />}
                     Lưu thông tin
                   </Button>
                   <Button
@@ -255,9 +250,9 @@ export default function ProfileForm({ user, onOpenPasswordDialog }: ProfileFormP
                     variant="outline"
                     onClick={handleCancel}
                     disabled={isPending}
-                    className="flex-1"
+                    className={styles.actionButton}
                   >
-                    <X className="w-4 h-4 mr-2" />
+                    <X className={styles.buttonIcon} />
                     Hủy
                   </Button>
                 </div>
@@ -267,16 +262,16 @@ export default function ProfileForm({ user, onOpenPasswordDialog }: ProfileFormP
           
           {!isEditing && (
             <>
-              <Separator className="my-6" />
-              <div className="flex gap-3">
+              <Separator className={styles.separator} />
+              <div className={styles.actionButtons}>
                 {onOpenPasswordDialog && (
                   <Button
                     type="button"
                     variant="outline"
                     onClick={onOpenPasswordDialog}
-                    className="w-full"
+                    className={styles.changePasswordButton}
                   >
-                    <Lock className="w-4 h-4 mr-2" />
+                    <Lock className={styles.buttonIcon} />
                     Đổi mật khẩu
                   </Button>
                 )}

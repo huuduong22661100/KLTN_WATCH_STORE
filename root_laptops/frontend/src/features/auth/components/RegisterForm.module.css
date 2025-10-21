@@ -1,0 +1,97 @@
+.wrapper {
+    width: 100%;
+    max-width: 28rem; /* max-w-md */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.formCard {
+    background-color: white;
+    padding: 2rem; /* p-8 */
+    border-radius: 0.5rem; /* rounded-lg */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+}
+
+.title {
+    font-size: 1.5rem; /* text-2xl */
+    font-weight: 700; /* font-bold */
+    text-align: center;
+    margin-bottom: 1.5rem; /* mb-6 */
+}
+
+.error {
+    background-color: #fef2f2; /* bg-red-50 */
+    border: 1px solid #fecaca; /* border-red-200 */
+    color: #dc2626; /* text-red-600 */
+    padding: 0.75rem 1rem; /* px-4 py-3 */
+    border-radius: 0.25rem; /* rounded */
+    margin-bottom: 1rem; /* mb-4 */
+    font-size: 0.875rem; /* text-sm */
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* space-y-4 */
+}
+
+.label {
+    display: block;
+    font-size: 0.875rem; /* text-sm */
+    font-weight: 500; /* font-medium */
+    color: #374151; /* text-gray-700 */
+    margin-bottom: 0.25rem; /* mb-1 */
+}
+
+.input {
+    width: 100%;
+    padding: 0.5rem 1rem; /* px-4 py-2 */
+    border: 1px solid #d1d5db; /* border-gray-300 */
+    border-radius: 0.5rem; /* rounded-lg */
+}
+
+.input:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+    --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+    box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+    --tw-ring-color: #3b82f6; /* focus:ring-blue-500 */
+}
+
+.submitButton {
+    width: 100%;
+    background-color: #2563eb; /* bg-blue-600 */
+    color: white;
+    padding: 0.5rem 1rem; /* py-2 px-4 */
+    border-radius: 0.5rem; /* rounded-lg */
+    transition: background-color 0.2s;
+    border: none;
+    cursor: pointer;
+}
+
+.submitButton:hover {
+    background-color: #1d4ed8; /* hover:bg-blue-700 */
+}
+
+.submitButton:disabled {
+    background-color: #9ca3af; /* disabled:bg-gray-400 */
+    cursor: not-allowed;
+}
+
+.footer {
+    margin-top: 1.5rem; /* mt-6 */
+    text-align: center;
+    font-size: 0.875rem; /* text-sm */
+    color: #4b5563; /* text-gray-600 */
+}
+
+.footerLink {
+    color: #2563eb; /* text-blue-600 */
+    font-weight: 500; /* font-medium */
+    text-decoration: none;
+}
+
+.footerLink:hover {
+    text-decoration: underline;
+}

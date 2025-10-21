@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/ui/select";
+import styles from './ProductSort.module.css';
 
 interface ProductSortProps {
   onSortChange: (filterName: string, value: string) => void;
@@ -24,7 +25,7 @@ const sortOptions = [
 export default function ProductSort({ onSortChange }: ProductSortProps) {
   return (
     <Select onValueChange={(value) => onSortChange("sort", value)} defaultValue="default">
-      <SelectTrigger className="w-[180px]">
+      <SelectTrigger className={styles.selectTrigger}>
         <SelectValue placeholder="Sắp xếp theo" />
       </SelectTrigger>
       <SelectContent>

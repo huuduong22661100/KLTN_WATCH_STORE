@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import { Product } from '@/features/products/types';
+import styles from './ProductTopBar.module.css';
 
 interface ProductTopBarProps {
   activeIndex: number;
@@ -19,12 +20,12 @@ export function ProductTopBar({
     switch (activeIndex) {
       case 0: 
         return (
-          <div className="mt-6 space-y-6 text-foreground leading-relaxed prose prose-lg max-w-none">
+          <div className={styles.descriptionContent}>
             {description.map((descItem, index) => (
-              <div key={index} className="bg-card rounded-lg p-6 border">
-                <h3 className="font-bold text-2xl mb-4 text-primary">{descItem.title}</h3>
+              <div key={index} className={styles.descriptionItem}>
+                <h3 className={styles.descriptionTitle}>{descItem.title}</h3>
                 <div 
-                  className="text-muted-foreground"
+                  className={styles.descriptionText}
                   dangerouslySetInnerHTML={{ __html: descItem.description }} 
                 />
               </div>
@@ -33,20 +34,20 @@ export function ProductTopBar({
         );
       case 1: 
         return (
-          <div className="mt-6 bg-card rounded-lg border overflow-hidden">
-            <div className="bg-muted/50 px-6 py-4 border-b">
-              <h3 className="font-bold text-xl">Technical Specifications</h3>
+          <div className={styles.specificationsTable}>
+            <div className={styles.specificationsHeader}>
+              <h3 className={styles.specificationsTitle}>Technical Specifications</h3>
             </div>
-            <div className="divide-y">
+            <div className={styles.specificationsBody}>
               {Object.entries(specifications).map(([key, value], index) => (
                 <div 
                   key={key} 
-                  className={`flex px-6 py-4 ${index % 2 === 0 ? 'bg-muted/10' : 'bg-background'}`}
+                  className={`${styles.specificationsRow} ${index % 2 === 0 ? styles.specificationsRowEven : styles.specificationsRowOdd}`}
                 >
-                  <span className="font-semibold capitalize text-foreground w-1/3">
+                  <span className={styles.specificationsLabel}>
                     {key.replace(/_/g, ' ')}
                   </span>
-                  <span className="text-muted-foreground w-2/3">{value}</span>
+                  <span className={styles.specificationsValue}>{value}</span>
                 </div>
               ))}
             </div>
@@ -54,14 +55,14 @@ export function ProductTopBar({
         );
       case 2: 
         return (
-          <div className="mt-6 bg-card rounded-lg p-8 border text-center">
-            <div className="max-w-md mx-auto space-y-4">
-              <div className="text-6xl">⭐</div>
-              <h3 className="font-bold text-2xl">No Reviews Yet</h3>
-              <p className="text-muted-foreground">
+          <div className={styles.reviewsSection}>
+            <div className={styles.reviewsContent}>
+              <div className={styles.reviewsIcon}>⭐</div>
+              <h3 className={styles.reviewsTitle}>No Reviews Yet</h3>
+              <p className={styles.reviewsText}>
                 Be the first to review this product and share your experience with others.
               </p>
-              <button className="mt-4 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">
+              <button className={styles.writeReviewButton}>
                 Write a Review
               </button>
             </div>
@@ -73,43 +74,41 @@ export function ProductTopBar({
   };
 
   return (
-    <div className="border-t border-border mt-12 pt-8">
-      {}
-      <div className="flex gap-1 mb-8 border-b">
+    <div className={styles.topBarWrapper}>
+      <div className={styles.tabsContainer}>
         <button
           onClick={() => setActiveIndex(0)}
-          className={`px-6 py-3 font-semibold text-base transition-all relative ${
+          className={`${styles.tabButton} ${
             activeIndex === 0 
-              ? 'text-primary border-b-2 border-primary' 
-              : 'text-muted-foreground hover:text-foreground'
+              ? styles.tabActive 
+              : styles.tabInactive
           }`}
         >
           About Product
         </button>
         <button
           onClick={() => setActiveIndex(1)}
-          className={`px-6 py-3 font-semibold text-base transition-all relative ${
+          className={`${styles.tabButton} ${
             activeIndex === 1 
-              ? 'text-primary border-b-2 border-primary' 
-              : 'text-muted-foreground hover:text-foreground'
+              ? styles.tabActive 
+              : styles.tabInactive
           }`}
         >
           Specifications
         </button>
         <button
           onClick={() => setActiveIndex(2)}
-          className={`px-6 py-3 font-semibold text-base transition-all relative ${
+          className={`${styles.tabButton} ${
             activeIndex === 2 
-              ? 'text-primary border-b-2 border-primary' 
-              : 'text-muted-foreground hover:text-foreground'
+              ? styles.tabActive 
+              : styles.tabInactive
           }`}
         >
           Reviews
         </button>
       </div>
 
-      {}
-      <div className="min-h-[400px]">
+      <div className={styles.contentArea}>
         {renderContent()}
       </div>
     </div>

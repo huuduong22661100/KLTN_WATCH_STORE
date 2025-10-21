@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Cart } from '../types';
 import { Button } from '@/shared/components/ui/button';
+import styles from './CartSummary.module.css';
 
 interface CartSummaryProps {
   cart: Cart;
@@ -10,41 +11,39 @@ interface CartSummaryProps {
 export function CartSummary({ cart, onCheckout }: CartSummaryProps) {
   
   const calculatedTotal = cart.items.reduce((total: number, item: any) => {
-    const product = item.watch_id;
-    const price = product.sale_price || product.price;
-    return total + (price * item.quantity);
+    return total + (item.price * item.quantity);
   }, 0);
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow">
-      <h2 className="text-xl font-bold mb-4">Tổng đơn hàng</h2>
+    <div className={styles.summaryCard}>
+      <h2 className={styles.title}>Tổng đơn hàng</h2>
 
-      <div className="space-y-2 mb-4">
-        <div className="flex justify-between">
+      <div className={styles.details}>
+        <div className={styles.detailRow}>
           <span>Tạm tính ({cart.itemCount} sản phẩm):</span>
           <span>{calculatedTotal.toLocaleString('vi-VN')} đ</span>
         </div>
-        <div className="flex justify-between">
+        <div className={styles.detailRow}>
           <span>Phí vận chuyển:</span>
-          <span className="text-green-600">Miễn phí</span>
+          <span className={styles.shippingFee}>Miễn phí</span>
         </div>
-        <div className="border-t pt-2 flex justify-between font-bold text-lg">
+        <div className={styles.totalRow}>
           <span>Tổng cộng:</span>
-          <span className="text-blue-600">
+          <span className={styles.totalPrice}>
             {calculatedTotal.toLocaleString('vi-VN')} đ
           </span>
         </div>
       </div>
 
-      <div className="mt-6 space-y-3">
+      <div className={styles.actions}>
         <Button
           onClick={onCheckout}
-          className="w-full bg-blue-600 text-white hover:bg-blue-700"
+          className={styles.checkoutButton}
         >
           Tiến hành đặt hàng
         </Button>
         <Link href="/products" passHref>
-          <Button variant="outline" className="w-full">
+          <Button variant="outline" className={styles.continueButton}>
             Tiếp tục mua sắm
           </Button>
         </Link>

@@ -1,0 +1,112 @@
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.loadingContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+}
+
+.centerContent {
+  text-align: center;
+}
+
+.spinner {
+  height: 2rem;
+  width: 2rem;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+.errorTitle {
+  font-size: 1.25rem;
+  color: hsl(var(--destructive));
+  margin-bottom: 1rem;
+}
+
+.errorMessage {
+  color: hsl(var(--muted-foreground));
+  margin-bottom: 1rem;
+}
+
+.retryButton {
+  color: hsl(var(--primary));
+  text-decoration: none;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 1rem;
+}
+
+.retryButton:hover {
+  text-decoration: underline;
+}
+
+.emptyTitle {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.emptyLink {
+  color: hsl(var(--primary));
+  text-decoration: none;
+}
+
+.emptyLink:hover {
+  text-decoration: underline;
+}
+
+.title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+}
+
+.ordersList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+
+.paginationButton {
+  padding: 0.5rem 1rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.5rem;
+  background: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.paginationButton:hover:not(:disabled) {
+  background-color: hsl(var(--muted));
+}
+
+.paginationButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.paginationInfo {
+  padding: 0.5rem 1rem;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

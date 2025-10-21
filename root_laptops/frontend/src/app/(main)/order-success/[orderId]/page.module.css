@@ -1,0 +1,159 @@
+.container {
+    max-width: 80rem; /* container */
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 4rem; /* py-16 */
+    padding-bottom: 4rem; /* py-16 */
+    padding-left: 1rem; /* px-4 */
+    padding-right: 1rem; /* px-4 */
+}
+
+.contentWrapper {
+    max-width: 42rem; /* max-w-2xl */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.successHeader {
+    text-align: center;
+    margin-bottom: 2rem; /* mb-8 */
+}
+
+.successIconWrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 6rem; /* w-24 */
+    height: 6rem; /* h-24 */
+    background-color: #dcfce7; /* bg-green-100 */
+    border-radius: 9999px; /* rounded-full */
+    margin-bottom: 1rem; /* mb-4 */
+}
+
+.successIcon {
+    width: 4rem; /* w-16 */
+    height: 4rem; /* h-16 */
+    color: #16a34a; /* text-green-600 */
+}
+
+.successTitle {
+    font-size: 1.875rem; /* text-3xl */
+    font-weight: 700; /* font-bold */
+    color: #111827; /* text-gray-900 */
+    margin-bottom: 0.5rem; /* mb-2 */
+}
+
+.successMessage {
+    color: #4b5563; /* text-gray-600 */
+}
+
+.orderDetailsCard {
+    background-color: white;
+    border-radius: 0.5rem; /* rounded-lg */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+    padding: 1.5rem; /* p-6 */
+    margin-bottom: 1.5rem; /* mb-6 */
+}
+
+.orderIdHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem; /* mb-4 */
+}
+
+.orderIdLabel {
+    font-size: 0.875rem; /* text-sm */
+    color: #4b5563; /* text-gray-600 */
+}
+
+.orderIdValue {
+    font-size: 1.125rem; /* text-lg */
+    font-weight: 600; /* font-semibold */
+    color: #111827; /* text-gray-900 */
+}
+
+.packageIcon {
+    width: 2rem; /* w-8 */
+    height: 2rem; /* h-8 */
+    color: #2563eb; /* text-blue-600 */
+}
+
+.orderInfoSection {
+    border-top: 1px solid #e5e7eb; /* border-t */
+    padding-top: 1rem; /* pt-4 */
+}
+
+.orderInfoTitle {
+    font-weight: 600; /* font-semibold */
+    color: #111827; /* text-gray-900 */
+    margin-bottom: 0.5rem; /* mb-2 */
+}
+
+.orderInfoList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem; /* space-y-2 */
+    font-size: 0.875rem; /* text-sm */
+    color: #4b5563; /* text-gray-600 */
+}
+
+.orderInfoListItem {
+    display: flex;
+    align-items: flex-start;
+}
+
+.bullet {
+    margin-right: 0.5rem; /* mr-2 */
+}
+
+.actionButtonsGrid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1rem; /* gap-4 */
+}
+
+.viewOrderButton {
+    width: 100%;
+    background-color: #2563eb; /* bg-blue-600 */
+    color: white;
+}
+
+.viewOrderButton:hover {
+    background-color: #1d4ed8; /* hover:bg-blue-700 */
+}
+
+.homeButton {
+    width: 100%;
+}
+
+.buttonIcon {
+    width: 1.25rem; /* w-5 */
+    height: 1.25rem; /* h-5 */
+    margin-right: 0.5rem; /* mr-2 */
+}
+
+.helpSection {
+    margin-top: 2rem; /* mt-8 */
+    text-align: center;
+}
+
+.helpText {
+    font-size: 0.875rem; /* text-sm */
+    color: #4b5563; /* text-gray-600 */
+}
+
+.contactLink {
+    color: #2563eb; /* text-blue-600 */
+    text-decoration: none;
+}
+
+.contactLink:hover {
+    text-decoration: underline;
+}
+
+@media (min-width: 768px) {
+    .actionButtonsGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/store/cartStore";
 import { useWishlistStore } from "@/features/wishlist/store/wishlistStore";
 import { useState, useEffect } from "react";
-
 import { Product } from "@/features/products/types";
+import styles from './ProductCard.module.css';
 
 interface ProductCardProps {
     product: Product;
@@ -34,66 +34,65 @@ const ProductCard = ({ product }: ProductCardProps) => {
     };
 
     return (
-        <Card className="w-full flex flex-col overflow-hidden transition-all hover:shadow-xl hover:-translate-y-1 relative group bg-white">
-            {}
+        <Card className={styles.card}>
             <Button
                 variant="ghost"
                 size="icon"
-                className="absolute top-3 right-3 z-10 bg-white/90 hover:bg-white shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                className={styles.wishlistButton}
                 onClick={handleWishlistToggle}
             >
                 <Heart 
-                    className={`w-5 h-5 ${isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} 
+                    className={`${styles.heartIcon} ${isFavorite ? styles.heartIconFavorite : styles.heartIconDefault}`} 
                 />
             </Button>
 
-            <CardHeader className="p-0">
+            <CardHeader className={styles.cardHeader}>
                 <a href={`/products/${product._id}`}>
-                    <div className="relative w-full h-64 bg-gray-100 overflow-hidden">
+                    <div className={styles.imageWrapper}>
                         <Image 
                             src={product.images.mainImg.url} 
                             alt={product.images.mainImg.alt_text} 
                             fill 
-                            className="object-cover group-hover:scale-110 transition-transform duration-500" 
+                            className={styles.image} 
                         />
                     </div>
                 </a>
             </CardHeader>
             
-            <CardContent className="p-4 flex-grow">
+            <CardContent className={styles.cardContent}>
                 <a href={`/products/${product._id}`}>
-                    <h3 className="font-semibold text-sm leading-relaxed mb-3 line-clamp-2 min-h-[2.5rem] hover:text-blue-600 cursor-pointer transition-colors">
+                    <h3 className={styles.title}>
                         {product.title}
                     </h3>
                 </a>
-                <div className="flex items-baseline gap-2">
+                <div className={styles.priceWrapper}>
                     {product.sale_price ? (
                         <>
-                            <p className="text-lg font-bold text-red-600">
+                            <p className={styles.salePrice}>
                                 {product.sale_price.toLocaleString('vi-VN')}đ
                             </p>
-                            <p className="text-sm text-gray-500 line-through">
+                            <p className={styles.originalPrice}>
                                 {product.price.toLocaleString('vi-VN')}đ
                             </p>
-                            <span className="text-xs font-semibold text-red-600 bg-red-50 px-2 py-1 rounded">
+                            <span className={styles.discountBadge}>
                                 -{Math.round((1 - product.sale_price / product.price) * 100)}%
                             </span>
                         </>
                     ) : (
-                        <p className="text-lg font-bold text-blue-600">
+                        <p className={styles.regularPrice}>
                             {product.price.toLocaleString('vi-VN')}đ
                         </p>
                     )}
                 </div>
             </CardContent>
             
-            <CardFooter className="p-4 pt-0">
+            <CardFooter className={styles.cardFooter}>
                 <Button 
-                    className="w-full bg-black hover:bg-gray-800 transition-colors" 
+                    className={styles.addToCartButton} 
                     size="default" 
                     onClick={() => useCartStore.getState().addToCart(product, 1)}
                 >
-                    <ShoppingCart className="w-4 h-4 mr-2" />
+                    <ShoppingCart className={styles.cartIcon} />
                     Thêm vào giỏ
                 </Button>
             </CardFooter>

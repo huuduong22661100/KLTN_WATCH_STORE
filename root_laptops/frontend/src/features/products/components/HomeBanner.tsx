@@ -12,6 +12,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import image from "next/image";
+import styles from './HomeBanner.module.css';
 
 type Banner = {
   id: number;
@@ -270,7 +271,7 @@ const HomeBanner = ({ name }: { name: string }) => {
   return (
     <Carousel
       plugins={[plugin.current]}
-      className="w-full -mt-4"
+      className={styles.carouselWrapper}
       onMouseEnter={() => {
         plugin.current.stop();
       }}
@@ -282,19 +283,19 @@ const HomeBanner = ({ name }: { name: string }) => {
       <CarouselContent>
         {selectedBanner.map((banner) => (
           <CarouselItem key={banner.id}>
-            <div className="h-140 relative">
+            <div className={styles.carouselItemContent}>
               <Image
                 src={banner.image}
                 alt={`Banner ${banner.id}`}
                 fill
-                className="object-cover"
+                className={styles.bannerImage}
               />
             </div>
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious className="absolute left-8 bg-black/50 text-white border-none hover:bg-black/70 cursor-pointer" />
-      <CarouselNext className="absolute right-8 bg-black/50 text-white border-none hover:bg-black/70 cursor-pointer" />
+      <CarouselPrevious className={`${styles.carouselPrevious} ${styles.carouselNavButton}`} />
+      <CarouselNext className={`${styles.carouselNext} ${styles.carouselNavButton}`} />
     </Carousel>
   );
 };

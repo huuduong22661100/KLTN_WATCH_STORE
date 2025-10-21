@@ -1,0 +1,86 @@
+/* Categories Page Styles */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.headerContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.description {
+  color: hsl(var(--muted-foreground));
+}
+
+.addButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.buttonIcon {
+  margin-right: 0.5rem;
+  height: 1rem;
+  width: 1rem;
+}
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
+}
+
+.loadingText {
+  color: hsl(var(--muted-foreground));
+}
+
+.errorContainer {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
+}
+
+.errorText {
+  color: rgb(239 68 68);
+}
+
+.tableContainer {
+  border-radius: 0.375rem;
+  border: 1px solid hsl(var(--border));
+}
+
+.emptyCell {
+  text-align: center;
+  padding: 2rem 0;
+  color: hsl(var(--muted-foreground));
+}
+
+.alignRight {
+  text-align: right;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.actionIcon {
+  height: 1rem;
+  width: 1rem;
+}

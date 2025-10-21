@@ -9,6 +9,7 @@ import ProductFilters from "@/features/products/components/ProductFilters";
 import ProductSort from "@/features/products/components/ProductSort";
 import { useProducts } from "@/features/products/hook/useProducts";
 import { DOTS, usePagination } from "@/hook/usePagination";
+import styles from './page.module.css';
 import {
   Pagination,
   PaginationContent,
@@ -27,7 +28,13 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import type { Product } from "@/features/products/types";
 
 export default function ProductPage() {
@@ -45,7 +52,6 @@ export default function ProductPage() {
   });
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  // Load filters from URL params on mount
   useEffect(() => {
     const categoryFromUrl = searchParams.get('category') || '';
     const colorFromUrl = searchParams.get('color') || '';
@@ -100,34 +106,34 @@ export default function ProductPage() {
   const products: Product[] = data?.data || [];
 
   return (
-    <main className="min-h-screen bg-gray-50">
-      {}
-      <div className="bg-white border-b">
-        <div className="container mx-auto px-4 py-6">
-          <Breadcrumb className="mb-4">
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link href="/">Trang chủ</Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage className="font-semibold">Sản phẩm</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-          <h1 className="text-3xl font-bold">Danh sách sản phẩm</h1>
+    <main className={styles.main}>
+      <div className={styles.header}>
+        <div className={styles.headerContent}>
+          <div className={styles.breadcrumbWrapper}>
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink asChild>
+                    <Link href="/">Trang chủ</Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage style={{ fontWeight: 600 }}>Sản phẩm</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
+          <h1 className={styles.title}>Danh sách sản phẩm</h1>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col lg:flex-row gap-6">
-          {}
-          <aside className="hidden lg:block w-64 flex-shrink-0">
-            <div className="bg-white rounded-lg shadow-sm p-6 sticky top-4">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-bold">Bộ lọc</h2>
+      <div className={styles.container}>
+        <div className={styles.layout}>
+          <aside className={styles.sidebar}>
+            <div className={styles.sidebarCard}>
+              <div className={styles.sidebarHeader}>
+                <h2 className={styles.sidebarTitle}>Bộ lọc</h2>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -141,7 +147,7 @@ export default function ProductPage() {
                     search: "",
                     sort: "",
                   })}
-                  className="text-xs"
+                  style={{ fontSize: '0.75rem' }}
                 >
                   Xóa tất cả
                 </Button>
@@ -156,19 +162,18 @@ export default function ProductPage() {
             </div>
           </aside>
 
-          {}
           <Sheet open={isFilterOpen} onOpenChange={setIsFilterOpen}>
-            <SheetTrigger asChild className="lg:hidden fixed bottom-4 right-4 z-50">
-              <Button size="lg" className="rounded-full shadow-lg">
-                <SlidersHorizontal className="w-5 h-5 mr-2" />
+            <SheetTrigger asChild className={styles.fixedFilterButton}>
+              <Button size="lg" style={{ borderRadius: '9999px', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)' }}>
+                <SlidersHorizontal style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.5rem' }} />
                 Bộ lọc
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-80 overflow-y-auto">
+            <SheetContent side="left" style={{ width: '20rem', overflowY: 'auto' }}>
               <SheetHeader>
                 <SheetTitle>Bộ lọc sản phẩm</SheetTitle>
               </SheetHeader>
-              <div className="mt-6">
+              <div style={{ marginTop: '1.5rem' }}>
                 <ProductFilters 
                   onFilterChange={handleFilterChange}
                   initialCategory={filters.category}
@@ -180,52 +185,47 @@ export default function ProductPage() {
             </SheetContent>
           </Sheet>
 
-          {}
-          <section className="flex-1">
-            {}
-            <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div className="flex items-center gap-4">
-                  <p className="text-sm text-gray-600">
-                    <span className="font-semibold">{totalCount}</span> sản phẩm
+          <section className={styles.mainContent}>
+            <div className={styles.toolbar}>
+              <div className={styles.toolbarContent}>
+                <div className={styles.toolbarLeft}>
+                  <p className={styles.productCount}>
+                    <span className={styles.productCountBold}>{totalCount}</span> sản phẩm
                   </p>
                   
-                  {}
                   <Button
                     variant="outline"
                     size="sm"
-                    className="lg:hidden"
+                    className={styles.fixedFilterButton}
                     onClick={() => setIsFilterOpen(true)}
                   >
-                    <SlidersHorizontal className="w-4 h-4 mr-2" />
+                    <SlidersHorizontal style={{ width: '1rem', height: '1rem', marginRight: '0.5rem' }} />
                     Lọc
                   </Button>
                 </div>
 
-                <div className="flex items-center gap-3">
-                  {}
+                <div className={styles.toolbarRight}>
                   <ProductSort onSortChange={handleFilterChange} />
                 </div>
               </div>
             </div>
 
-            {}
             {isLoading ? (
-              <div className="flex flex-col items-center justify-center py-20">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mb-4"></div>
-                <p className="text-gray-600">Đang tải sản phẩm...</p>
+              <div className={styles.loadingContainer}>
+                <div className={styles.spinner}></div>
+                <p className={styles.loadingText}>Đang tải sản phẩm...</p>
               </div>
             ) : error ? (
-              <div className="flex flex-col items-center justify-center py-20">
-                <div className="text-red-500 text-5xl mb-4">⚠️</div>
-                <p className="text-gray-900 font-semibold mb-2">Có lỗi xảy ra</p>
-                <p className="text-gray-600">{(error as Error).message}</p>
+              <div className={styles.errorContainer}>
+                <div className={styles.errorIcon}>⚠️</div>
+                <p className={styles.errorTitle}>Có lỗi xảy ra</p>
+                <p className={styles.errorMessage}>{(error as Error).message}</p>
               </div>
             ) : products.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-20">
-                <div className="text-gray-400 text-6xl mb-4">🔍</div>
-                <p className="text-gray-900 font-semibold mb-2">Không tìm thấy sản phẩm</p>
-                <p className="text-gray-600 mb-4">Thử điều chỉnh bộ lọc của bạn</p>
+              <div className={styles.emptyContainer}>
+                <div className={styles.emptyIcon}>🔍</div>
+                <p className={styles.emptyTitle}>Không tìm thấy sản phẩm</p>
+                <p className={styles.emptyMessage}>Thử điều chỉnh bộ lọc của bạn</p>
                 <Button
                   variant="outline"
                   onClick={() => setFilters({
@@ -244,7 +244,7 @@ export default function ProductPage() {
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div className={styles.productsGrid}>
                   {products.map((product) => (
                     <ProductCard
                       key={product._id}
@@ -253,19 +253,18 @@ export default function ProductPage() {
                   ))}
                 </div>
 
-                {}
                 {totalPages > 1 && (
-                  <div className="mt-8 flex justify-center">
+                  <div className={styles.paginationWrapper}>
                     <Pagination>
                       <PaginationContent>
                         <PaginationItem>
                           <PaginationPrevious
                             onClick={() => handlePageChange(currentPage - 1)}
-                            className={
-                              currentPage <= 1
-                                ? "pointer-events-none opacity-50"
-                                : "cursor-pointer"
-                            }
+                            style={{
+                              pointerEvents: currentPage <= 1 ? 'none' : 'auto',
+                              opacity: currentPage <= 1 ? 0.5 : 1,
+                              cursor: currentPage <= 1 ? 'default' : 'pointer'
+                            }}
                           />
                         </PaginationItem>
                         {paginationRange?.map(
@@ -284,7 +283,7 @@ export default function ProductPage() {
                                     handlePageChange(pageNumber as number)
                                   }
                                   isActive={pageNumber === currentPage}
-                                  className="cursor-pointer"
+                                  style={{ cursor: 'pointer' }}
                                 >
                                   {pageNumber}
                                 </PaginationLink>
@@ -295,11 +294,11 @@ export default function ProductPage() {
                         <PaginationItem>
                           <PaginationNext
                             onClick={() => handlePageChange(currentPage + 1)}
-                            className={
-                              currentPage >= totalPages
-                                ? "pointer-events-none opacity-50"
-                                : "cursor-pointer"
-                            }
+                            style={{
+                              pointerEvents: currentPage >= totalPages ? 'none' : 'auto',
+                              opacity: currentPage >= totalPages ? 0.5 : 1,
+                              cursor: currentPage >= totalPages ? 'default' : 'pointer'
+                            }}
                           />
                         </PaginationItem>
                       </PaginationContent>

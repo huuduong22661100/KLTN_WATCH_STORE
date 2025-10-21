@@ -1,0 +1,101 @@
+.cancelledWrapper {
+    background-color: #fef2f2; /* bg-red-50 */
+    border: 1px solid #fecaca; /* border-red-200 */
+    border-radius: 0.5rem; /* rounded-lg */
+    padding: 1rem; /* p-4 */
+}
+
+.cancelledContent {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* gap-2 */
+    color: #dc2626; /* text-red-600 */
+}
+
+.cancelledIcon {
+    width: 1.5rem; /* w-6 */
+    height: 1.5rem; /* h-6 */
+}
+
+.cancelledText {
+    font-weight: 600; /* font-semibold */
+}
+
+.statusTracker {
+    position: relative;
+}
+
+.stepsWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1 1 0%;
+}
+
+.line {
+    position: absolute;
+    height: 2px; /* h-0.5 */
+    top: 12px;
+    z-index: 0;
+}
+
+.lineCompleted {
+    background-color: #2563eb; /* bg-blue-600 */
+}
+
+.lineDefault {
+    background-color: #d1d5db; /* bg-gray-300 */
+}
+
+.dot {
+    position: relative;
+    z-index: 10;
+    width: 1.5rem; /* w-6 */
+    height: 1.5rem; /* h-6 */
+    border-radius: 9999px; /* rounded-full */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dotActive {
+    background-color: #2563eb; /* bg-blue-600 */
+}
+
+.dotDefault {
+    background-color: #d1d5db; /* bg-gray-300 */
+}
+
+.checkIcon {
+    width: 1rem; /* w-4 */
+    height: 1rem; /* h-4 */
+    color: white;
+}
+
+.innerDot {
+    width: 0.5rem; /* w-2 */
+    height: 0.5rem; /* h-2 */
+    background-color: white;
+    border-radius: 9999px; /* rounded-full */
+}
+
+.stepLabel {
+    font-size: 0.75rem; /* text-xs */
+    margin-top: 0.5rem; /* mt-2 */
+    text-align: center;
+}
+
+.stepLabelActive {
+    color: #2563eb; /* text-blue-600 */
+    font-weight: 600; /* font-semibold */
+}
+
+.stepLabelDefault {
+    color: #6b7280; /* text-gray-500 */
+}

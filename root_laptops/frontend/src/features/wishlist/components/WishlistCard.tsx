@@ -7,6 +7,7 @@ import { Button } from "@/shared/components/ui/button";
 import { Trash2, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import styles from './WishlistCard.module.css';
 
 interface WishlistCardProps {
   item: WishlistItem;
@@ -22,51 +23,48 @@ export default function WishlistCard({ item }: WishlistCardProps) {
   };
 
   return (
-    <div className="bg-white border rounded-lg p-4 flex flex-col sm:flex-row gap-4 hover:shadow-lg transition-shadow">
-      {}
-      <Link href={`/products/${item.product._id}`} className="flex-shrink-0">
-        <div className="relative w-full sm:w-32 h-32">
+    <div className={styles.card}>
+      <Link href={`/products/${item.product._id}`} className={styles.imageLink}>
+        <div className={styles.imageWrapper}>
           <Image
             src={item.product.images.mainImg.url}
             alt={item.product.title}
             fill
-            className="object-cover rounded-md"
+            className={styles.productImage}
             sizes="128px"
           />
         </div>
       </Link>
 
-      {}
-      <div className="flex-grow">
+      <div className={styles.details}>
         <Link href={`/products/${item.product._id}`}>
-          <h3 className="font-semibold text-lg hover:text-primary transition-colors line-clamp-2">
+          <h3 className={styles.title}>
             {item.product.title}
           </h3>
         </Link>
 
-        <p className="text-sm text-muted-foreground mt-1">
+        <p className={styles.brand}>
           Thương hiệu: {item.product.brand}
         </p>
 
-        <div className="mt-2">
-          <p className="text-2xl font-bold text-primary">
+        <div className={styles.priceSection}>
+          <p className={styles.price}>
             {item.product.price.toLocaleString("vi-VN")} đ
           </p>
         </div>
 
-        <p className="text-xs text-muted-foreground mt-2">
+        <p className={styles.addedAt}>
           Đã thêm: {new Date(item.addedAt).toLocaleDateString("vi-VN")}
         </p>
       </div>
 
-      {}
-      <div className="flex sm:flex-col gap-2 justify-end">
+      <div className={styles.actions}>
         <Button
           onClick={handleAddToCart}
-          className="flex-1 sm:flex-none"
+          className={styles.addToCartButton}
           variant="default"
         >
-          <ShoppingCart className="w-4 h-4 mr-2" />
+          <ShoppingCart className={styles.cartIcon} />
           Thêm vào giỏ
         </Button>
 
@@ -75,7 +73,7 @@ export default function WishlistCard({ item }: WishlistCardProps) {
           variant="destructive"
           size="icon"
         >
-          <Trash2 className="w-4 h-4" />
+          <Trash2 className={styles.removeIcon} />
         </Button>
       </div>
     </div>

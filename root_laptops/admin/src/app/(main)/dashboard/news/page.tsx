@@ -38,6 +38,7 @@ import {
   SelectValue,
 } from '@/shared/components/ui/select';
 import { useUsersForSelection } from '@/features/users/hooks/useUsers';
+import styles from './page.module.css';
 
 export default function NewsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -116,33 +117,33 @@ export default function NewsPage() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Quản lý tin tức</h1>
-          <p className="text-muted-foreground">
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <div className={styles.headerContent}>
+          <h1 className={styles.title}>Quản lý tin tức</h1>
+          <p className={styles.description}>
             Quản lý và chỉnh sửa các bài viết tin tức
           </p>
         </div>
         <Button onClick={() => handleOpenDialog()}>
-          <Plus className="mr-2 h-4 w-4" /> Thêm bài viết
+          <Plus className={styles.buttonIcon} /> Thêm bài viết
         </Button>
       </div>
 
       {isLoading && (
-        <div className="flex justify-center py-8">
-          <div className="text-muted-foreground">Đang tải...</div>
+        <div className={styles.loadingContainer}>
+          <div className={styles.loadingText}>Đang tải...</div>
         </div>
       )}
 
       {isError && (
-        <div className="flex justify-center py-8">
-          <div className="text-red-500">Lỗi khi tải dữ liệu tin tức</div>
+        <div className={styles.errorContainer}>
+          <div className={styles.errorText}>Lỗi khi tải dữ liệu tin tức</div>
         </div>
       )}
 
       {news && (
-        <div className="rounded-md border">
+        <div className={styles.tableContainer}>
           <Table>
             <TableHeader>
               <TableRow>
@@ -150,39 +151,38 @@ export default function NewsPage() {
                 <TableHead>Tác giả</TableHead>
                 <TableHead>Trạng thái</TableHead>
                 <TableHead>Ngày tạo</TableHead>
-                <TableHead className="text-right">Thao tác</TableHead>
+                <TableHead className={styles.alignRight}>Thao tác</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {news.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={5} className={styles.emptyCell}>
                     Không có bài viết nào
                   </TableCell>
                 </TableRow>
               ) : (
                 news.map((newsItem) => (
                   <TableRow key={newsItem._id}>
-                    <TableCell className="font-medium">{newsItem.title}</TableCell>
+                    <TableCell>{newsItem.title}</TableCell>
                     <TableCell>{newsItem.author_id.name}</TableCell>
                     <TableCell>{newsItem.status === 'draft' ? 'Bản nháp' : 'Đã xuất bản'}</TableCell>
                     <TableCell>{new Date(newsItem.createdAt).toLocaleDateString('vi-VN')}</TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
+                    <TableCell className={styles.alignRight}>
+                      <div className={styles.actions}>
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => handleOpenDialog(newsItem)}
                         >
-                          <Edit className="h-4 w-4" />
+                          <Edit className={styles.actionIcon} />
                         </Button>
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => setDeleteId(newsItem._id)}
-                          className="text-red-500 hover:text-red-700"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash2 className={styles.actionIcon} />
                         </Button>
                       </div>
                     </TableCell>

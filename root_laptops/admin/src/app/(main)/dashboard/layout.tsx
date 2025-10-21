@@ -19,6 +19,7 @@ import {
 import { Button } from "@/shared/components/ui/button";
 import { useAuthStore } from "@/store/authStore";
 import { toast } from "@/hooks/use-toast";
+import styles from "./layout.module.css";
 
 const navLinks = [
   { href: "/dashboard", icon: Home, label: "Dashboard" },
@@ -43,11 +44,9 @@ const NavLink = ({ href, icon: Icon, label }: NavLinkProps) => {
   return (
     <Link
       href={href}
-      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
-        isActive ? "bg-muted text-primary" : "text-muted-foreground"
-      }`}
+      className={`${styles.navLink} ${isActive ? styles.active : ""}`}
     >
-      <Icon className="h-4 w-4" />
+      <Icon className={styles.navIcon} />
       {label}
     </Link>
   );
@@ -64,18 +63,15 @@ export default function DashboardLayout({
 
   
   useEffect(() => {
-    
     const storedToken = localStorage.getItem("token");
     const storedUser = localStorage.getItem("user");
 
     if (!storedToken || !storedUser) {
-      
       router.replace("/login");
     } else {
-      
       setIsAuthChecked(true);
     }
-  }, []); 
+  }, [router]); 
 
   const handleLogout = () => {
     logout();
@@ -85,33 +81,32 @@ export default function DashboardLayout({
     router.replace("/login");
   };
 
-  
   if (!isAuthChecked) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-muted-foreground">Đang tải...</p>
+      <div className={styles.loadingContainer}>
+        <div className={styles.loadingContent}>
+          <div className={styles.spinner}></div>
+          <p className={styles.loadingText}>Đang tải...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
-      <div className="hidden border-r bg-muted/40 md:block">
-        <div className="flex h-full max-h-screen flex-col gap-2">
-          <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
-            <Link href="/" className="flex items-center gap-2 font-semibold">
-              <span className="">Admin Panel</span>
+    <div className={styles.dashboardGrid}>
+      <div className={styles.sidebar}>
+        <div className={styles.sidebarContent}>
+          <div className={styles.sidebarHeader}>
+            <Link href="/" className={styles.logoLink}>
+              <span>Admin Panel</span>
             </Link>
-            <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
-              <Bell className="h-4 w-4" />
-              <span className="sr-only">Toggle notifications</span>
+            <Button variant="outline" size="icon" className={styles.notificationButton}>
+              <Bell className={styles.navIcon} />
+              <span className={styles.srOnly}>Toggle notifications</span>
             </Button>
           </div>
-          <div className="flex-1">
-            <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
+          <div className={styles.navContainer}>
+            <nav className={styles.nav}>
               {navLinks.map((link) => (
                 <NavLink key={link.href} {...link} />
               ))}
@@ -119,27 +114,27 @@ export default function DashboardLayout({
           </div>
         </div>
       </div>
-      <div className="flex flex-col">
-        <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
-          <div className="w-full flex-1">
-            <h2 className="text-lg font-semibold">
+      <div className={styles.mainContent}>
+        <header className={styles.header}>
+          <div className={styles.headerTitle}>
+            <h2 className={styles.welcomeText}>
               Welcome, {user?.name || user?.email || "Admin"}
             </h2>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2 text-sm">
-              <UserCircle className="h-5 w-5 text-muted-foreground" />
-              <span className="hidden md:inline text-muted-foreground">
+          <div className={styles.userInfo}>
+            <div className={styles.userDetails}>
+              <UserCircle className={styles.userIcon} />
+              <span className={styles.userEmail}>
                 {user?.email || "admin@example.com"}
               </span>
             </div>
             <Button onClick={handleLogout} variant="outline" size="sm">
-              <LogOut className="h-4 w-4 mr-2" />
+              <LogOut className={styles.logoutIcon} />
               Đăng xuất
             </Button>
           </div>
         </header>
-        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
+        <main className={styles.main}>
           {children}
         </main>
       </div>

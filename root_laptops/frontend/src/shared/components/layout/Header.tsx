@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,7 +12,7 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { Input } from "@/components/ui/input";
-import { ChevronDown, Clock, Heart, LogOut, Search, ShoppingCart, User } from "lucide-react";
+import { Clock, Heart, LogOut, Search, ShoppingCart, User } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
 import { useAuthStore } from "@/store/authStore";
 import { useWishlistStore } from "@/features/wishlist/store/wishlistStore";
@@ -26,6 +26,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/ui/avatar";
 import { DropdownMenuGroup, DropdownMenuLabel } from "@/shared/components/ui/dropdown-menu";
 import { useCategories } from "@/features/products/hook/useCategories";
+import styles from './Header.module.css';
 
 const headerData = {
   logoUrl: "/assets/image/Logo.jpg",
@@ -50,18 +51,15 @@ const Header = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [showSearchResults, setShowSearchResults] = useState(false);
   
-  // Fetch categories for dynamic menu
   const { data: categoriesData } = useCategories();
   const categories = categoriesData?.data || [];
 
   const { isAuthenticated: isLoggedIn, user, logout } = useAuthStore();
-  console.log("User object in Header:", user);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  // Search products when user types
   useEffect(() => {
     const searchProducts = async () => {
       if (searchQuery.trim().length < 2) {
@@ -73,7 +71,7 @@ const Header = () => {
       setIsSearching(true);
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL || "http:
+          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/v1"}/products?search=${searchQuery}`
         );
         const data = await response.json();
         setSearchResults(data.data || []);
@@ -99,18 +97,15 @@ const Header = () => {
   };
 
   return (
-    <header className=" bg-black h-full text-white shadow">
-      <div className="container mx-auto flex items-center justify-between py-4 bg-black px-4 h-28">
-        {}
-        <a href="/" className="flex items-center gap-2">
-          <img src={headerData.logoUrl} alt="Logo" className="h-10 w-auto" />
-          <span className="font-bold text-xl tracking-widest">Watch Store</span>
+    <header className={styles.header}>
+      <div className={styles.container}>
+        <a href="/" className={styles.logoLink}>
+          <img src={headerData.logoUrl} alt="Logo" className={styles.logoImage} />
+          <span className={styles.logoText}>Watch Store</span>
         </a>
 
-        {}
-        <NavigationMenu className="hidden lg:flex items-center gap-8" delayDuration={0}>
-          <NavigationMenuList className=" gap-4 ">
-            {}
+        <NavigationMenu className={styles.navigation} delayDuration={0}>
+          <NavigationMenuList className="gap-4">
             <NavigationMenuItem>
               <NavigationMenuTrigger className="font-semibold text-sm text-white flex items-center gap-1 bg-transparent hover:bg-gray-800 data-[state=open]:bg-gray-800">
                 Sản phẩm
@@ -134,7 +129,6 @@ const Header = () => {
               </NavigationMenuContent>
             </NavigationMenuItem>
             
-            {}
             {headerData.navItems.map((item) => (
               <NavigationMenuItem key={item.name}>
                 <NavigationMenuLink asChild >
@@ -150,9 +144,8 @@ const Header = () => {
           </NavigationMenuList>
         </NavigationMenu>
 
-        {}
-        <div className="hidden md:flex items-center mx-6 w-96 relative">
-          <form onSubmit={handleSearchSubmit} className="relative w-full">
+        <div className={styles.searchWrapper}>
+          <form onSubmit={handleSearchSubmit} className={styles.searchForm}>
             <Input
               type="text"
               placeholder="Tìm kiếm sản phẩm..."
@@ -160,108 +153,104 @@ const Header = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => searchQuery.trim().length >= 2 && setShowSearchResults(true)}
               onBlur={() => setTimeout(() => setShowSearchResults(false), 200)}
-              className="w-full h-11 pl-4 pr-10 rounded-full bg-gray-900 text-white border border-gray-700 focus:border-yellow-400 text-base"
+              className={styles.searchInput}
             />
-            <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2">
-              <Search className="w-5 h-5 text-gray-400 hover:text-yellow-400 transition-colors" />
+            <button type="submit" className={styles.searchButton}>
+              <Search className={styles.searchIcon} />
             </button>
           </form>
 
-          {}
           {showSearchResults && (
-            <div className="absolute top-full left-0 right-0 mt-2 bg-black border border-gray-700 rounded-lg shadow-xl z-50 max-h-[450px] overflow-y-auto">
+            <div className={styles.searchResultsWrapper}>
               {isSearching ? (
-                <div className="p-4 text-center text-gray-400">
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-yellow-400 mx-auto"></div>
-                  <p className="mt-2 text-sm">Đang tìm kiếm...</p>
+                <div className={styles.searchLoading}>
+                  <div className={styles.searchSpinner}></div>
+                  <p className={styles.searchLoadingText}>Đang tìm kiếm...</p>
                 </div>
               ) : searchResults.length > 0 ? (
                 <>
-                  <div className="p-2">
+                  <div className={styles.searchResultList}>
                     {searchResults.map((product) => (
                       <a
                         key={product._id}
                         href={`/products/${product._id}`}
-                        className="flex items-center gap-4 p-3 hover:bg-gray-800 rounded transition-colors"
+                        className={styles.searchResultItem}
                       >
                         <img
                           src={product.images?.mainImg?.url || "/placeholder.jpg"}
                           alt={product.title}
-                          className="w-16 h-16 object-cover rounded flex-shrink-0"
+                          className={styles.searchResultImage}
                         />
-                        <div className="flex-1 min-w-0">
-                          <p className="text-white text-base font-medium line-clamp-2 mb-1">
+                        <div className={styles.searchResultInfo}>
+                          <p className={styles.searchResultTitle}>
                             {product.title}
                           </p>
-                          <p className="text-yellow-400 text-base font-bold">
+                          <p className={styles.searchResultPrice}>
                             {product.price?.toLocaleString("vi-VN")}đ
                           </p>
                         </div>
                       </a>
                     ))}
                   </div>
-                  <div className="border-t border-gray-700 p-2">
+                  <div className={styles.showAllResults}>
                     <a
                       href={`/products?search=${encodeURIComponent(searchQuery)}`}
-                      className="block text-center text-yellow-400 hover:text-yellow-300 text-sm font-medium py-2"
+                      className={styles.showAllResultsLink}
                     >
                       Xem tất cả kết quả ({searchResults.length}+)
                     </a>
                   </div>
                 </>
               ) : (
-                <div className="p-4 text-center text-gray-400">
-                  <Search className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                  <p className="text-sm">Không tìm thấy sản phẩm nào</p>
+                <div className={styles.noResults}>
+                  <Search className={styles.noResultsIcon} />
+                  <p className={styles.noResultsText}>Không tìm thấy sản phẩm nào</p>
                 </div>
               )}
             </div>
           )}
         </div>
 
-        {}
-        <div className="flex items-center gap-4">
-          {}
-          <div className="relative group">
-            <a href="/cart" className="relative">
-              <ShoppingCart className="w-7 h-7" />
-              <span className="absolute -top-2 -right-2 bg-yellow-400 text-black text-xs rounded-full w-5 h-5 flex items-center justify-center">
+        <div className={styles.actionsWrapper}>
+          <div className={styles.cartWrapper}>
+            <a href="/cart" className={styles.cartLink}>
+              <ShoppingCart className={styles.cartIcon} />
+              <span className={styles.cartBadge}>
                 {isClient ? totalItems : 0}
               </span>
             </a>
-            {}
-            <div className="absolute top-full right-0 pd-2 w-80 bg-black border border-gray-700 shadow-lg rounded-md p-4 z-50 hidden group-hover:block">
-              <h3 className="font-bold text-lg mb-2">Giỏ hàng của tôi</h3>
-              <p className="text-sm text-gray-400 mb-4">
+            <div className={styles.cartDropdown}>
+              <h3 className={styles.cartDropdownTitle}>Giỏ hàng của tôi</h3>
+              <p className={styles.cartDropdownSubtitle}>
                 {isClient ? totalItems : 0} sản phẩm trong giỏ
               </p>
               {cartItems.length === 0 ? (
-                <p className="text-center text-gray-400">
+                <p className={styles.cartEmptyText}>
                   Giỏ hàng của bạn trống.
                 </p>
               ) : (
                 <>
-                  <div className="space-y-3 mb-4 max-h-48 overflow-y-auto">
+                  <div className={styles.cartItemList}>
                     {cartItems.map((item) => (
                       <div
                         key={item.product._id}
-                        className="flex items-center gap-2"
+                        className={styles.cartItem}
                       >
                         <img
                           src={item.product.images.mainImg.url}
                           alt={item.product.title}
-                          className="w-12 h-12 object-cover rounded"
+                          className={styles.cartItemImage}
                         />
-                        <div className="flex-grow">
-                          <p className="text-sm font-medium line-clamp-1">
+                        <div className={styles.cartItemInfo}>
+                          <p className={styles.cartItemTitle}>
                             {item.product.title}
                           </p>
-                          <p className="text-xs text-gray-400">
+                          <p className={styles.cartItemPrice}>
                             {item.quantity} x{" "}
                             {item.product.price.toLocaleString("vi-VN")}đ
                           </p>
                         </div>
-                        <p className="text-sm font-semibold">
+                        <p className={styles.cartItemTotalPrice}>
                           {(item.quantity * item.product.price).toLocaleString(
                             "vi-VN"
                           )}
@@ -270,31 +259,30 @@ const Header = () => {
                       </div>
                     ))}
                   </div>
-                  <hr className="my-3 border-gray-700" />
-                  <div className="flex justify-between font-bold">
+                  <hr className={styles.divider} />
+                  <div className={styles.subtotal}>
                     <span>Tổng phụ:</span>
                     <span>{totalPrice.toLocaleString("vi-VN")}đ</span>
                   </div>
                   <Button
                     asChild
-                    className="w-full mb-2 mt-3 border-yellow-400 text-yellow-400"
+                    className={styles.viewCartButton}
                     variant="outline"
                   >
                     <a href="/cart">Xem hoặc chỉnh sửa giỏ hàng</a>
                   </Button>
-                  <Button className="w-full bg-yellow-400 text-black hover:bg-yellow-300">
+                  <Button className={styles.checkoutButton}>
                     <a href="/checkout">Tiến hành thanh toán</a>
                   </Button>
                 </>
               )}
             </div>
           </div>
-          {}
-          <div className="flex items-center gap-2 ml-4">
+          <div className={styles.userActions}>
             {isLoggedIn && user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-10 w-10 rounded-full p-0">
+                  <Button variant="ghost" className={styles.userButton}>
                     <Avatar className="h-10 w-10 cursor-pointer">
                       <AvatarImage src={user.avatar_url} alt={user.name || "User"} />
                       <AvatarFallback className="bg-yellow-400 text-black font-bold">
@@ -341,8 +329,8 @@ const Header = () => {
             ) : (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-10 w-10 rounded-full p-0">
-                    <User className="w-6 h-6 text-white" />
+                  <Button variant="ghost" className={styles.userButton}>
+                    <User className={styles.userIcon} />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56 bg-white" align="end" forceMount>

@@ -29,6 +29,7 @@ import { Label } from '@/shared/components/ui/label';
 import { ConfirmDialog } from '@/shared/components/ui/confirm-dialog';
 import { Plus, Edit, Trash2 } from 'lucide-react';
 import { Color, ColorFormData } from '@/shared/types';
+import styles from './page.module.css';
 
 export default function ColorsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -88,54 +89,53 @@ export default function ColorsPage() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Quản lý màu sắc</h1>
-          <p className="text-muted-foreground">
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <div className={styles.headerContent}>
+          <h1 className={styles.title}>Quản lý màu sắc</h1>
+          <p className={styles.description}>
             Quản lý màu sắc sản phẩm
           </p>
         </div>
         <Button onClick={() => handleOpenDialog()}>
-          <Plus className="mr-2 h-4 w-4" /> Thêm màu sắc
+          <Plus className={styles.buttonIcon} /> Thêm màu sắc
         </Button>
       </div>
 
-      <div className="flex justify-between items-center">
+      <div className={styles.header}>
         <Input
           placeholder="Tìm kiếm theo tên màu..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="max-w-sm"
         />
       </div>
 
       {isLoading && (
-        <div className="flex justify-center py-8">
-          <div className="text-muted-foreground">Đang tải...</div>
+        <div className={styles.loadingContainer}>
+          <div className={styles.loadingText}>Đang tải...</div>
         </div>
       )}
 
       {isError && (
-        <div className="flex justify-center py-8">
-          <div className="text-red-500">Lỗi khi tải dữ liệu màu sắc</div>
+        <div className={styles.errorContainer}>
+          <div className={styles.errorText}>Lỗi khi tải dữ liệu màu sắc</div>
         </div>
       )}
 
       {colors && (
-        <div className="rounded-md border">
+        <div className={styles.tableContainer}>
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Màu sắc</TableHead>
                 <TableHead>Mã màu</TableHead>
-                <TableHead className="text-right">Thao tác</TableHead>
+                <TableHead className={styles.alignRight}>Thao tác</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {colors.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={3} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={3} className={styles.emptyCell}>
                     Không có màu sắc nào
                   </TableCell>
                 </TableRow>
@@ -144,27 +144,31 @@ export default function ColorsPage() {
                   <TableRow key={color.id}>
                     <TableCell>
                       <div
-                        className="w-10 h-10 rounded border"
-                        style={{ backgroundColor: color.color }}
+                        style={{ 
+                          width: '2.5rem',
+                          height: '2.5rem',
+                          borderRadius: '0.25rem',
+                          border: '1px solid hsl(var(--border))',
+                          backgroundColor: color.color 
+                        }}
                       />
                     </TableCell>
-                    <TableCell className="font-medium">{color.color}</TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
+                    <TableCell>{color.color}</TableCell>
+                    <TableCell className={styles.alignRight}>
+                      <div className={styles.actions}>
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => handleOpenDialog(color)}
                         >
-                          <Edit className="h-4 w-4" />
+                          <Edit className={styles.actionIcon} />
                         </Button>
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => setDeleteId(color._id)}
-                          className="text-red-500 hover:text-red-700"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash2 className={styles.actionIcon} />
                         </Button>
                       </div>
                     </TableCell>

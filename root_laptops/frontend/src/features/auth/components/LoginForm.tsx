@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLogin } from '../hooks/useLogin';
 import type { LoginCredentials } from '../types';
+import styles from './LoginForm.module.css';
 
 export function LoginForm() {
   const router = useRouter();
@@ -32,24 +33,24 @@ export function LoginForm() {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto">
-      <div className="bg-white p-8 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold text-center mb-6">
+    <div className={styles.wrapper}>
+      <div className={styles.formCard}>
+        <h2 className={styles.title}>
           Đăng nhập
         </h2>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded mb-4">
-            <div className="flex items-center gap-2">
+          <div className={styles.error}>
+            <div className={styles.errorContent}>
               <span>⚠️</span>
-              <span className="text-sm">{error.message}</span>
+              <span className={styles.errorMessage}>{error.message}</span>
             </div>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className={styles.form}>
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="email" className={styles.label}>
               Email
             </label>
             <input
@@ -58,7 +59,7 @@ export function LoginForm() {
               type="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={styles.input}
               placeholder="your@email.com"
               required
               disabled={isPending}
@@ -66,7 +67,7 @@ export function LoginForm() {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="password" className={styles.label}>
               Mật khẩu
             </label>
             <input
@@ -75,7 +76,7 @@ export function LoginForm() {
               type="password"
               value={formData.password}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={styles.input}
               placeholder="••••••••"
               required
               disabled={isPending}
@@ -85,15 +86,15 @@ export function LoginForm() {
           <button
             type="submit"
             disabled={isPending}
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+            className={styles.submitButton}
           >
             {isPending ? 'Đang đăng nhập...' : 'Đăng nhập'}
           </button>
         </form>
 
-        <div className="mt-6 text-center text-sm text-gray-600">
+        <div className={styles.footer}>
           Chưa có tài khoản?{' '}
-          <a href="/register" className="text-blue-600 hover:underline font-medium">
+          <a href="/register" className={styles.footerLink}>
             Đăng ký ngay
           </a>
         </div>

@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 
 import { useRegister } from '@/features/auth/hooks/useRegister'; 
 import { RegisterPayload } from '@/features/auth/types';
+import styles from './page.module.css';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -39,88 +40,84 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+    <div className={styles.container}>
+      <div className={styles.wrapper}>
+        <div className={styles.header}>
+          <h2 className={styles.title}>
             Đăng ký tài khoản mới
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p className={styles.subtitle}>
             Hoặc{' '}
-            <a href="/login" className="font-medium text-blue-600 hover:text-blue-500">
+            <a href="/login" className={styles.registerLink}>
               đăng nhập nếu đã có tài khoản
             </a>
           </p>
         </div>
 
-        <div className="mt-8 bg-white py-8 px-6 shadow-lg rounded-lg">
+        <div className={styles.formCard}>
           {error && (
-            <div className="mb-4 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg">
-              <span className="text-sm">{error.message}</span>
+            <div className={styles.errorAlert}>
+              <div className={styles.errorContent}>
+                <span className={styles.errorText}>{error.message}</span>
+              </div>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <div className={styles.formGroup}>
+              <label htmlFor="name" className={styles.label}>
                 Họ và tên
               </label>
-              <div className="mt-1">
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  autoComplete="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  placeholder="Nguyễn Văn A"
-                  required
-                  disabled={isPending}
-                />
-              </div>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                autoComplete="name"
+                value={formData.name}
+                onChange={handleChange}
+                className={styles.input}
+                placeholder="Nguyễn Văn A"
+                required
+                disabled={isPending}
+              />
             </div>
 
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <div className={styles.formGroup}>
+              <label htmlFor="email" className={styles.label}>
                 Email
               </label>
-              <div className="mt-1">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  placeholder="your@email.com"
-                  required
-                  disabled={isPending}
-                />
-              </div>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                value={formData.email}
+                onChange={handleChange}
+                className={styles.input}
+                placeholder="your@email.com"
+                required
+                disabled={isPending}
+              />
             </div>
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <div className={styles.formGroup}>
+              <label htmlFor="password" className={styles.label}>
                 Mật khẩu
               </label>
-              <div className="mt-1">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="new-password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  placeholder="••••••••"
-                  minLength={6}
-                  required
-                  disabled={isPending}
-                />
-              </div>
-              <p className="mt-1 text-xs text-gray-500">
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autoComplete="new-password"
+                value={formData.password}
+                onChange={handleChange}
+                className={styles.input}
+                placeholder="••••••••"
+                minLength={6}
+                required
+                disabled={isPending}
+              />
+              <p className={styles.subtitle} style={{ marginTop: '0.25rem' }}>
                 Mật khẩu phải có ít nhất 6 ký tự
               </p>
             </div>
@@ -129,13 +126,13 @@ export default function RegisterPage() {
               <button
                 type="submit"
                 disabled={isPending}
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                className={styles.submitButton}
               >
                 {isPending ? (
-                  <span className="flex items-center gap-2">
-                    <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  <span className={styles.loadingContent}>
+                    <svg className={styles.spinner} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
                     Đang đăng ký...
                   </span>

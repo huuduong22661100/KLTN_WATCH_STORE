@@ -29,7 +29,7 @@ const LoginForm = () => {
   const onSubmit = (data: LoginFormValues) => {
     login(data, {
       onSuccess: (res) => {
-        toast.success(`Chào mừng ${res.user.name || res.user.email}!`, {
+        toast.success(`Chào mừng ${res.data.user.name || res.data.user.email}!`, {
           description: "Đăng nhập thành công!",
         });
         navigate('/');

@@ -1,0 +1,241 @@
+.detailsWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* space-y-6 */
+}
+
+.breadcrumb {
+    font-size: 0.875rem; /* text-sm */
+    color: hsl(var(--muted-foreground));
+}
+
+.breadcrumbLink {
+    transition: color 0.2s;
+}
+
+.breadcrumbLink:hover {
+    color: hsl(var(--primary));
+}
+
+.breadcrumbSeparator {
+    margin-left: 0.5rem; /* mx-2 */
+    margin-right: 0.5rem; /* mx-2 */
+}
+
+.breadcrumbCurrent {
+    color: hsl(var(--foreground));
+}
+
+.title {
+    font-size: 1.875rem; /* text-3xl */
+    font-weight: 700; /* font-bold */
+    color: hsl(var(--foreground));
+    margin-bottom: 0.5rem; /* mb-2 */
+}
+
+.meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem; /* gap-3 */
+    flex-wrap: wrap;
+}
+
+.reviewLink {
+    font-size: 0.875rem; /* text-sm */
+    color: hsl(var(--primary));
+    text-decoration: none;
+}
+
+.reviewLink:hover {
+    text-decoration: underline;
+}
+
+.priceBox {
+    background-color: hsla(var(--muted) / 0.3);
+    border-radius: 0.5rem; /* rounded-lg */
+    padding: 1rem; /* p-4 */
+    border: 1px solid hsl(var(--border));
+}
+
+.priceWrapper {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem; /* gap-3 */
+    flex-wrap: wrap;
+}
+
+.finalPrice {
+    font-size: 1.875rem; /* text-3xl */
+    font-weight: 700; /* font-bold */
+    color: hsl(var(--primary));
+}
+
+.originalPrice {
+    font-size: 1.25rem; /* text-xl */
+    color: hsl(var(--muted-foreground));
+    text-decoration: line-through;
+}
+
+.infoGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem; /* gap-3 */
+    font-size: 0.875rem; /* text-sm */
+}
+
+.infoItem {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem; /* space-y-1 */
+}
+
+.infoLabel {
+    color: hsl(var(--muted-foreground));
+}
+
+.infoValue {
+    font-weight: 500; /* font-medium */
+}
+
+.infoValueCapitalize {
+    font-weight: 500; /* font-medium */
+    text-transform: capitalize;
+}
+
+.badgeGroup {
+    display: flex;
+    gap: 0.5rem; /* gap-2 */
+    flex-wrap: wrap;
+}
+
+.actionsWrapper {
+    border-top: 1px solid hsl(var(--border));
+    padding-top: 1.5rem; /* pt-6 */
+}
+
+.quantitySection {
+    display: flex;
+    align-items: center;
+    gap: 1rem; /* gap-4 */
+    margin-bottom: 1rem; /* mb-4 */
+}
+
+.quantityLabel {
+    font-size: 0.875rem; /* text-sm */
+    font-weight: 500; /* font-medium */
+}
+
+.quantityControl {
+    display: flex;
+    align-items: center;
+    border: 1px solid hsl(var(--border));
+    border-radius: 0.5rem; /* rounded-lg */
+}
+
+.quantityButton {
+    height: 2.5rem; /* h-10 */
+    width: 2.5rem; /* w-10 */
+}
+
+.quantityIcon {
+    height: 1rem; /* h-4 */
+    width: 1rem; /* w-4 */
+}
+
+.quantityValue {
+    padding-left: 1.5rem; /* px-6 */
+    padding-right: 1.5rem; /* px-6 */
+    font-weight: 600; /* font-semibold */
+    font-size: 1.125rem; /* text-lg */
+    min-width: 60px;
+    text-align: center;
+}
+
+.totalPriceWrapper {
+    margin-left: auto;
+    text-align: right;
+}
+
+.totalLabel {
+    font-size: 0.875rem; /* text-sm */
+    color: hsl(var(--muted-foreground));
+    display: block;
+}
+
+.totalValue {
+    font-size: 1.25rem; /* text-xl */
+    font-weight: 700; /* font-bold */
+    color: hsl(var(--primary));
+}
+
+.mainButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem; /* gap-3 */
+}
+
+.mainButton {
+    flex: 1 1 0%;
+    height: 3rem; /* h-12 */
+    font-size: 1rem; /* text-base */
+}
+
+.buttonIcon {
+    margin-right: 0.5rem; /* mr-2 */
+    height: 1.25rem; /* h-5 */
+    width: 1.25rem; /* w-5 */
+}
+
+.buyNowButton {
+    flex: 1 1 0%;
+    height: 3rem; /* h-12 */
+    font-size: 1rem; /* text-base */
+    background-image: linear-gradient(to right, hsl(var(--primary)), hsla(var(--primary) / 0.8));
+}
+
+.secondaryButtons {
+    display: flex;
+    gap: 0.75rem; /* gap-3 */
+    margin-top: 1rem; /* mt-4 */
+}
+
+.wishlistButton {
+    flex: 1 1 0%;
+}
+
+.shareIcon {
+    height: 1.25rem; /* h-5 */
+    width: 1.25rem; /* w-5 */
+}
+
+.perks {
+    background-color: hsla(var(--muted) / 0.2);
+    border-radius: 0.5rem; /* rounded-lg */
+    padding: 1rem; /* p-4 */
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem; /* space-y-2 */
+    font-size: 0.875rem; /* text-sm */
+}
+
+.perkItem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* gap-2 */
+}
+
+.perkIcon {
+    color: #16a34a; /* text-green-600 */
+}
+
+@media (min-width: 640px) {
+    .mainButtons {
+        flex-direction: row;
+    }
+}
+
+@media (min-width: 1024px) {
+    .title {
+        font-size: 2.25rem; /* lg:text-4xl */
+    }
+}

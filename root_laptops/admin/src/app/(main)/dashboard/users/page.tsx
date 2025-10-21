@@ -23,6 +23,7 @@ import { Pagination } from '@/shared/components/ui/pagination';
 import { ConfirmDialog } from '@/shared/components/ui/confirm-dialog';
 import { Trash2, Shield, User as UserIcon } from 'lucide-react';
 import { User } from '@/shared/types';
+import styles from './page.module.css';
 
 export default function UsersPage() {
   const [page, setPage] = useState(1);
@@ -44,31 +45,31 @@ export default function UsersPage() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Quản lý người dùng</h1>
-          <p className="text-muted-foreground">
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <div className={styles.headerContent}>
+          <h1 className={styles.title}>Quản lý người dùng</h1>
+          <p className={styles.description}>
             Quản lý tài khoản và phân quyền người dùng
           </p>
         </div>
       </div>
 
       {isLoading && (
-        <div className="flex justify-center py-8">
-          <div className="text-muted-foreground">Đang tải...</div>
+        <div className={styles.loadingContainer}>
+          <div className={styles.loadingText}>Đang tải...</div>
         </div>
       )}
 
       {isError && (
-        <div className="flex justify-center py-8">
-          <div className="text-red-500">Lỗi khi tải dữ liệu người dùng</div>
+        <div className={styles.errorContainer}>
+          <div className={styles.errorText}>Lỗi khi tải dữ liệu người dùng</div>
         </div>
       )}
 
       {data && (
         <>
-          <div className="rounded-md border">
+          <div className={styles.tableContainer}>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -77,20 +78,20 @@ export default function UsersPage() {
                   <TableHead>Số điện thoại</TableHead>
                   <TableHead>Vai trò</TableHead>
                   <TableHead>Ngày tạo</TableHead>
-                  <TableHead className="text-right">Thao tác</TableHead>
+                  <TableHead className={styles.alignRight}>Thao tác</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {data.data.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                    <TableCell colSpan={6} className={styles.emptyCell}>
                       Không có người dùng nào
                     </TableCell>
                   </TableRow>
                 ) : (
                   data.data.map((user) => (
                     <TableRow key={user._id}>
-                      <TableCell className="font-medium">{user.name}</TableCell>
+                      <TableCell>{user.name}</TableCell>
                       <TableCell>{user.email}</TableCell>
                       <TableCell>{user.phone || '-'}</TableCell>
                       <TableCell>
@@ -98,15 +99,14 @@ export default function UsersPage() {
                           value={user.role}
                           onValueChange={(value: string) => handleRoleChange(user._id, value as 'user' | 'admin')}
                         >
-                          <SelectTrigger className="w-[130px]">
+                          <SelectTrigger className={styles.roleSelect}>
                             <Badge
                               variant={user.role === 'admin' ? 'default' : 'secondary'}
-                              className="flex items-center gap-1"
                             >
                               {user.role === 'admin' ? (
-                                <><Shield className="h-3 w-3" /> Admin</>
+                                <><Shield className={styles.deleteIcon} /> Admin</>
                               ) : (
-                                <><UserIcon className="h-3 w-3" /> User</>
+                                <><UserIcon className={styles.deleteIcon} /> User</>
                               )}
                             </Badge>
                           </SelectTrigger>
@@ -119,14 +119,13 @@ export default function UsersPage() {
                       <TableCell>
                         {new Date(user.created_at).toLocaleDateString('vi-VN')}
                       </TableCell>
-                      <TableCell className="text-right">
+                      <TableCell className={styles.alignRight}>
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => setDeleteId(user._id)}
-                          className="text-red-500 hover:text-red-700"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash2 className={styles.deleteIcon} />
                         </Button>
                       </TableCell>
                     </TableRow>

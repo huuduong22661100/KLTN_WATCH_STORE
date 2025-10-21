@@ -17,6 +17,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/sha
 import { useLogin } from "@/features/auth/hooks/useLogin";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
+import styles from "./page.module.css";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -40,7 +41,6 @@ export default function LoginPage() {
     },
   });
 
-  // ✅ Nếu đã login và là admin thì redirect
   useEffect(() => {
     if (isLoggedIn && user?.role === 'admin') {
       router.push('/dashboard');
@@ -56,19 +56,19 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">
+    <div className={styles.loginContainer}>
+      <Card className={styles.loginCard}>
+        <CardHeader className={styles.cardHeader}>
+          <CardTitle className={styles.cardTitle}>
             Đăng nhập Admin
           </CardTitle>
-          <CardDescription className="text-center">
+          <CardDescription className={styles.cardDescription}>
             Chỉ dành cho quản trị viên hệ thống
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={form.handleSubmit(onSubmit)} className={styles.form}>
               <FormField
                 control={form.control}
                 name="email"
@@ -105,7 +105,7 @@ export default function LoginPage() {
               />
               <Button 
                 type="submit" 
-                className="w-full" 
+                className={styles.submitButton}
                 disabled={isPending}
               >
                 {isPending ? "Đang đăng nhập..." : "Đăng nhập"}

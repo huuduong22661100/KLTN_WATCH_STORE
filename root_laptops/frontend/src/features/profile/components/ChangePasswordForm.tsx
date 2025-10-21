@@ -6,6 +6,7 @@ import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 import { Loader2, Eye, EyeOff } from "lucide-react";
+import styles from './ChangePasswordForm.module.css';
 
 interface ChangePasswordFormProps {
   onSuccess?: () => void;
@@ -59,10 +60,10 @@ export default function ChangePasswordForm({ onSuccess }: ChangePasswordFormProp
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="space-y-2">
+    <form onSubmit={handleSubmit} className={styles.form}>
+      <div className={styles.formGroup}>
         <Label htmlFor="currentPassword">Mật khẩu hiện tại</Label>
-        <div className="relative">
+        <div className={styles.inputWrapper}>
           <Input
             id="currentPassword"
             name="currentPassword"
@@ -76,23 +77,23 @@ export default function ChangePasswordForm({ onSuccess }: ChangePasswordFormProp
             type="button"
             variant="ghost"
             size="icon"
-            className="absolute right-0 top-0 h-full px-3"
+            className={styles.toggleButton}
             onClick={() =>
               setShowPassword({ ...showPassword, current: !showPassword.current })
             }
           >
             {showPassword.current ? (
-              <EyeOff className="h-4 w-4" />
+              <EyeOff className={styles.toggleIcon} />
             ) : (
-              <Eye className="h-4 w-4" />
+              <Eye className={styles.toggleIcon} />
             )}
           </Button>
         </div>
       </div>
 
-      <div className="space-y-2">
+      <div className={styles.formGroup}>
         <Label htmlFor="newPassword">Mật khẩu mới</Label>
-        <div className="relative">
+        <div className={styles.inputWrapper}>
           <Input
             id="newPassword"
             name="newPassword"
@@ -107,23 +108,23 @@ export default function ChangePasswordForm({ onSuccess }: ChangePasswordFormProp
             type="button"
             variant="ghost"
             size="icon"
-            className="absolute right-0 top-0 h-full px-3"
+            className={styles.toggleButton}
             onClick={() =>
               setShowPassword({ ...showPassword, new: !showPassword.new })
             }
           >
             {showPassword.new ? (
-              <EyeOff className="h-4 w-4" />
+              <EyeOff className={styles.toggleIcon} />
             ) : (
-              <Eye className="h-4 w-4" />
+              <Eye className={styles.toggleIcon} />
             )}
           </Button>
         </div>
       </div>
 
-      <div className="space-y-2">
+      <div className={styles.formGroup}>
         <Label htmlFor="confirmPassword">Xác nhận mật khẩu mới</Label>
-        <div className="relative">
+        <div className={styles.inputWrapper}>
           <Input
             id="confirmPassword"
             name="confirmPassword"
@@ -138,22 +139,22 @@ export default function ChangePasswordForm({ onSuccess }: ChangePasswordFormProp
             type="button"
             variant="ghost"
             size="icon"
-            className="absolute right-0 top-0 h-full px-3"
+            className={styles.toggleButton}
             onClick={() =>
               setShowPassword({ ...showPassword, confirm: !showPassword.confirm })
             }
           >
             {showPassword.confirm ? (
-              <EyeOff className="h-4 w-4" />
+              <EyeOff className={styles.toggleIcon} />
             ) : (
-              <Eye className="h-4 w-4" />
+              <Eye className={styles.toggleIcon} />
             )}
           </Button>
         </div>
       </div>
 
-      <Button type="submit" disabled={isPending} className="w-full">
-        {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+      <Button type="submit" disabled={isPending} className={styles.submitButton}>
+        {isPending && <Loader2 className={styles.spinner} />}
         Đổi mật khẩu
       </Button>
     </form>

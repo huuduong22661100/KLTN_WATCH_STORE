@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { getNewsById, getAllNews } from "@/features/news";
 import type { News } from "@/features/news";
+import styles from './page.module.css';
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -52,31 +53,30 @@ export default async function NewsDetailPage({ params }: Props) {
   }
 
   return (
-    <div className="py-8">
-      <article className="max-w-6xl mx-auto">
+    <div className={styles.container}>
+      <article className={styles.article}>
         {}
         {newsArticle.thumbnail_img && (
-          <div className="relative w-full h-[350px] md:h-[450px] mb-8">
+          <div className={styles.thumbnailWrapper}>
             <Image
               src={newsArticle.thumbnail_img}
               alt={newsArticle.title}
               fill
-              className="object-cover"
+              className={styles.thumbnail}
               priority
             />
           </div>
         )}
 
-        {}
-        <div className="max-w-3xl mx-auto px-4">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+        <div className={styles.content}>
+          <h1 className={styles.title}>
             {newsArticle.title}
           </h1>
 
-          <div className="flex items-center gap-3 text-sm text-gray-600 mb-8 pb-6 border-b border-gray-200">
-            <div className="flex items-center gap-2">
+          <div className={styles.meta}>
+            <div className={styles.metaItem}>
               <svg
-                className="w-4 h-4"
+                className={styles.metaIcon}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -88,16 +88,16 @@ export default async function NewsDetailPage({ params }: Props) {
                   d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                 />
               </svg>
-              <span className="font-medium">
+              <span className={styles.metaAuthor}>
                 {typeof newsArticle.author_id === "object"
                   ? newsArticle.author_id.name
                   : "Admin"}
               </span>
             </div>
-            <span className="text-gray-400">•</span>
-            <div className="flex items-center gap-2">
+            <span className={styles.metaDivider}>•</span>
+            <div className={styles.metaItem}>
               <svg
-                className="w-4 h-4"
+                className={styles.metaIcon}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -120,7 +120,7 @@ export default async function NewsDetailPage({ params }: Props) {
           </div>
 
           <div
-            className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-blue-600 prose-strong:text-gray-900 prose-img:rounded-lg"
+            className={styles.articleContent}
             dangerouslySetInnerHTML={{ __html: newsArticle.content }}
           />
         </div>

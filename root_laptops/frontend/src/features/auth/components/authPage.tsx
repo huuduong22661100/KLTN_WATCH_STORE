@@ -10,11 +10,12 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/shared/components/ui/breadcrumb';
+import styles from './authPage.module.css';
 
 const AuthPage = () => {
   return (
-    <div className="container mx-auto p-4">
-      <div className="mb-6">
+    <div className={styles.pageContainer}>
+      <div className={styles.headerSection}>
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -28,26 +29,25 @@ const AuthPage = () => {
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
-        <h2 className="text-3xl font-bold">Customer Login</h2>
+        <h2 className={styles.pageTitle}>Customer Login</h2>
       </div>
-      <section className="flex justify-center">
-        <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
-          <h3 className="text-xl font-semibold mb-4">Registered Customers</h3>
-          <p className="text-gray-600 mb-6">If you have an account, sign in with your email address.</p>
+      <section className={styles.contentSection}>
+        <div className={styles.loginCard}>
+          <h3 className={styles.cardTitle}>Registered Customers</h3>
+          <p className={styles.cardDescription}>If you have an account, sign in with your email address.</p>
           <LoginForm />
         </div>
-        {}
-        <div className="w-full max-w-md ml-8 p-8 rounded-lg shadow-md bg-gray-50">
-            <h3 className="text-xl font-semibold mb-4">New Customers</h3>
-            <p className="text-gray-600 mb-6">Creating an account has many benefits:</p>
-            <ul className="list-disc list-inside text-gray-600 mb-6">
+        <div className={styles.registerCard}>
+            <h3 className={styles.cardTitle}>New Customers</h3>
+            <p className={styles.cardDescription}>Creating an account has many benefits:</p>
+            <ul className={styles.benefitsList}>
                 <li>Order history</li>
                 <li>Track orders</li>
                 <li>Faster checkout</li>
                 <li>Save multiple shipping addresses</li>
             </ul>
             <Link href="/register">
-              <Button className="w-full bg-blue-600 hover:bg-blue-700">Create an Account</Button>
+              <Button className={styles.createAccountButton}>Create an Account</Button>
             </Link>
         </div>
       </section>

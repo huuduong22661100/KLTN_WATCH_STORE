@@ -1,0 +1,258 @@
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.categoriesSection {
+  padding: 3rem 1rem;
+}
+
+.categoriesWrapper {
+  background-color: hsl(var(--muted));
+  border-radius: 0.5rem;
+  padding: 2rem;
+}
+
+.categoriesTitle {
+  font-size: 1.875rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.categoriesGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.categoryCard {
+  background-color: white;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s;
+}
+
+.categoryCard:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.categoryImageWrapper {
+  position: relative;
+  height: 10rem;
+  margin-bottom: 1rem;
+}
+
+.categoryImage {
+  object-fit: cover;
+  border-radius: 0.25rem;
+}
+
+.categoryTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.categoryDescription {
+  color: hsl(var(--muted-foreground));
+  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
+}
+
+.categoryLink {
+  color: hsl(var(--primary));
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.categoryLink:hover {
+  text-decoration: underline;
+}
+
+.productSectionsWrapper {
+  padding: 2rem 1rem;
+}
+
+.productSections {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.brandsSection {
+  background-color: hsl(var(--muted));
+  padding: 3rem 0;
+}
+
+.brandsTitle {
+  font-size: 1.875rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.brandsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.brandLogoWrapper {
+  position: relative;
+  height: 4rem;
+  width: 100%;
+  opacity: 0.75;
+  transition: opacity 0.2s;
+}
+
+.brandLogoWrapper:hover {
+  opacity: 1;
+}
+
+.brandLogo {
+  object-fit: contain;
+}
+
+.promoSection {
+  padding: 3rem 1rem;
+}
+
+.promoCard {
+  position: relative;
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  padding: 3rem;
+  border-radius: 0.5rem;
+  text-align: center;
+}
+
+.promoTitle {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.promoText {
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.promoButton {
+  background-color: hsl(var(--primary-foreground));
+  color: hsl(var(--primary));
+  font-weight: 600;
+  padding: 0.75rem 2rem;
+  border-radius: 9999px;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.2s;
+}
+
+.promoButton:hover {
+  background-color: hsl(var(--muted));
+}
+
+.skeletonSection {
+  padding: 2rem 1rem;
+}
+
+.skeletonHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.skeletonTitle {
+  height: 2rem;
+  background-color: #d1d5db;
+  border-radius: 0.25rem;
+  width: 12rem;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.skeletonLink {
+  height: 1.5rem;
+  background-color: #d1d5db;
+  border-radius: 0.25rem;
+  width: 6rem;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.skeletonGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.skeletonCard {
+  background-color: hsl(var(--muted));
+  border-radius: 0.5rem;
+  padding: 1rem;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.skeletonImage {
+  height: 12rem;
+  background-color: #d1d5db;
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.skeletonText {
+  height: 1rem;
+  background-color: #d1d5db;
+  border-radius: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.skeletonTextShort {
+  height: 1rem;
+  background-color: #d1d5db;
+  border-radius: 0.25rem;
+  width: 75%;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@media (min-width: 640px) {
+  .brandsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .skeletonGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .categoriesGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .categoriesGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .brandsGrid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  .skeletonGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

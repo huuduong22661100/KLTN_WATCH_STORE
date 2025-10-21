@@ -1,0 +1,134 @@
+.card {
+    background-color: white;
+    padding: 1.5rem; /* p-6 */
+    border-radius: 0.5rem; /* rounded-lg */
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); /* shadow */
+    transition: box-shadow 0.2s;
+}
+
+.card:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1); /* hover:shadow-md */
+}
+
+.header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 1rem; /* mb-4 */
+}
+
+.orderNumber {
+    font-weight: 600; /* font-semibold */
+    font-size: 1.125rem; /* text-lg */
+}
+
+.orderDate {
+    font-size: 0.875rem; /* text-sm */
+    color: #6b7280; /* text-gray-500 */
+}
+
+.statusWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem; /* gap-1 */
+    align-items: flex-end;
+}
+
+.statusBadge, .paymentStatusBadge {
+    padding-left: 0.5rem; /* px-2 */
+    padding-right: 0.5rem; /* px-2 */
+    border-radius: 9999px; /* rounded-full */
+    font-size: 0.75rem; /* text-xs */
+    font-weight: 500; /* font-medium */
+}
+
+.statusBadge {
+    padding-top: 0.25rem; /* py-1 */
+    padding-bottom: 0.25rem; /* py-1 */
+}
+
+.paymentStatusBadge {
+    padding-top: 0.125rem; /* py-0.5 */
+    padding-bottom: 0.125rem; /* py-0.5 */
+}
+
+.statusYellow {
+    background-color: #fef9c3; /* bg-yellow-100 */
+    color: #854d0e; /* text-yellow-800 */
+}
+
+.statusGreen {
+    background-color: #dcfce7; /* bg-green-100 */
+    color: #166534; /* text-green-800 */
+}
+
+.statusGray {
+    background-color: #f3f4f6; /* bg-gray-100 */
+    color: #1f2937; /* text-gray-800 */
+}
+
+.statusBlue {
+    background-color: #dbeafe; /* bg-blue-100 */
+    color: #1e40af; /* text-blue-800 */
+}
+
+.statusPurple {
+    background-color: #ede9fe; /* bg-purple-100 */
+    color: #5b21b6; /* text-purple-800 */
+}
+
+.statusIndigo {
+    background-color: #e0e7ff; /* bg-indigo-100 */
+    color: #3730a3; /* text-indigo-800 */
+}
+
+.statusRed {
+    background-color: #fee2e2; /* bg-red-100 */
+    color: #991b1b; /* text-red-800 */
+}
+
+.statusOrange {
+    background-color: #ffedd5; /* bg-orange-100 */
+    color: #9a3412; /* text-orange-800 */
+}
+
+.details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem; /* space-y-2 */
+    margin-bottom: 1rem; /* mb-4 */
+}
+
+.detailRow {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem; /* text-sm */
+}
+
+.detailLabel {
+    color: #4b5563; /* text-gray-600 */
+}
+
+.detailValue {
+    font-weight: 500; /* font-medium */
+}
+
+.totalPrice {
+    font-weight: 700; /* font-bold */
+    color: #2563eb; /* text-blue-600 */
+}
+
+.detailsButton {
+    width: 100%;
+    padding: 0.5rem 1rem; /* px-4 py-2 */
+    background-color: #2563eb; /* bg-blue-600 */
+    color: white;
+    border-radius: 0.5rem; /* rounded-lg */
+    transition: background-color 0.2s;
+    border: none;
+    cursor: pointer;
+}
+
+.detailsButton:hover {
+    background-color: #1d4ed8; /* hover:bg-blue-700 */
+}

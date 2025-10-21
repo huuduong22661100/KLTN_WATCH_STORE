@@ -11,6 +11,7 @@ import {
 } from '@/features/checkout';
 import { useCreateOrder } from '@/features/orders';
 import { useCart } from '@/features/cart';
+import styles from './page.module.css';
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -60,18 +61,18 @@ const handleSubmit = async (e: React.FormEvent) => {
 
   if (isLoadingCart) {
     return (
-      <div className="container mx-auto py-8">
-        <div className="text-center">Đang tải...</div>
+      <div className={styles.container}>
+        <div className={styles.loadingContainer}>Đang tải...</div>
       </div>
     );
   }
 
   if (!cart || cart.items.length === 0) {
     return (
-      <div className="container mx-auto py-8">
-        <div className="text-center">
-          <p className="text-xl mb-4">Giỏ hàng trống</p>
-          <a href="/products" className="text-blue-600 hover:underline">
+      <div className={styles.container}>
+        <div className={styles.emptyContainer}>
+          <p className={styles.emptyText}>Giỏ hàng trống</p>
+          <a href="/products" className={styles.emptyLink}>
             Tiếp tục mua sắm
           </a>
         </div>
@@ -80,13 +81,12 @@ const handleSubmit = async (e: React.FormEvent) => {
   }
 
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-8">Thanh toán</h1>
+    <div className={styles.container}>
+      <h1 className={styles.title}>Thanh toán</h1>
 
       <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {}
-          <div className="lg:col-span-2 space-y-6">
+        <div className={styles.grid}>
+          <div className={styles.formColumn}>
             <CheckoutForm
               formData={formData}
               onFieldChange={updateField}
@@ -98,8 +98,7 @@ const handleSubmit = async (e: React.FormEvent) => {
             />
           </div>
 
-          {}
-          <div className="lg:col-span-1">
+          <div className={styles.reviewColumn}>
             <OrderReview
               summary={summary}
               isCalculatingFee={isCalculatingFee}

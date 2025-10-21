@@ -1,0 +1,36 @@
+.loadingContainer {
+    max-width: 80rem; /* container */
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem; /* px-4 */
+    padding-right: 1rem; /* px-4 */
+    padding-top: 3rem; /* py-12 */
+    padding-bottom: 3rem; /* py-12 */
+}
+
+.loadingContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh;
+}
+
+.spinner {
+    width: 3rem; /* w-12 */
+    height: 3rem; /* h-12 */
+    animation: spin 1s linear infinite;
+    color: hsl(var(--primary));
+    margin-bottom: 1rem; /* mb-4 */
+}
+
+.loadingText {
+    font-size: 1.125rem; /* text-lg */
+    color: hsl(var(--muted-foreground));
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -4,6 +4,7 @@ import { use } from 'react';
 import { useOrderDetail, useCancelOrder, OrderStatusComponent, OrderSummary } from '@/features/orders';
 import type { OrderItem } from '@/features/orders';
 import { toast } from 'sonner';
+import styles from './page.module.css';
 
 export default function OrderDetailPage({ 
   params 
@@ -29,16 +30,16 @@ export default function OrderDetailPage({
 
   if (isLoading) {
     return (
-      <div className="container mx-auto py-8">
-        <div className="text-center">Đang tải...</div>
+      <div className={styles.container}>
+        <div className={styles.loadingContainer}>Đang tải...</div>
       </div>
     );
   }
 
   if (!order) {
     return (
-      <div className="container mx-auto py-8">
-        <div className="text-center text-red-600">
+      <div className={styles.container}>
+        <div className={styles.errorContainer}>
           Không tìm thấy đơn hàng
         </div>
       </div>
@@ -46,30 +47,27 @@ export default function OrderDetailPage({
   }
 
   return (
-    <div className="container mx-auto py-8">
-      <div className="mb-6">
-        <a href="/orders" className="text-blue-600 hover:underline mb-4 inline-block">
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <a href="/orders" className={styles.backLink}>
           ← Quay lại danh sách đơn hàng
         </a>
-        <h1 className="text-3xl font-bold">Chi tiết đơn hàng</h1>
-        <p className="text-gray-600 mt-2">Mã đơn hàng: {order.order_number}</p>
+        <h1 className={styles.title}>Chi tiết đơn hàng</h1>
+        <p className={styles.orderNumber}>Mã đơn hàng: {order.order_number}</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {}
-        <div className="lg:col-span-2 space-y-6">
-          {}
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="font-semibold mb-4">Trạng thái đơn hàng</h3>
+      <div className={styles.grid}>
+        <div className={styles.mainColumn}>
+          <div className={styles.card}>
+            <h3 className={styles.cardTitle}>Trạng thái đơn hàng</h3>
             
-            {}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">💰 Thanh toán:</span>
-                <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                  order.payment_status === 'paid' ? 'bg-green-100 text-green-800' :
-                  order.payment_status === 'refunded' ? 'bg-gray-100 text-gray-800' :
-                  'bg-yellow-100 text-yellow-800'
+            <div className={styles.statusList}>
+              <div className={styles.statusRow}>
+                <span className={styles.statusLabel}>💰 Thanh toán:</span>
+                <span className={`${styles.statusBadge} ${
+                  order.payment_status === 'paid' ? styles.statusBadgeGreen :
+                  order.payment_status === 'refunded' ? styles.statusBadgeGray :
+                  styles.statusBadgeYellow
                 }`}>
                   {order.payment_status === 'paid' ? 'Đã thanh toán' :
                    order.payment_status === 'refunded' ? 'Đã hoàn tiền' :
@@ -77,14 +75,14 @@ export default function OrderDetailPage({
                 </span>
               </div>
 
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">📋 Đơn hàng:</span>
-                <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                  order.order_status === 'completed' ? 'bg-green-100 text-green-800' :
-                  order.order_status === 'cancelled' ? 'bg-red-100 text-red-800' :
-                  order.order_status === 'processing' ? 'bg-purple-100 text-purple-800' :
-                  order.order_status === 'confirmed' ? 'bg-blue-100 text-blue-800' :
-                  'bg-yellow-100 text-yellow-800'
+              <div className={styles.statusRow}>
+                <span className={styles.statusLabel}>📋 Đơn hàng:</span>
+                <span className={`${styles.statusBadge} ${
+                  order.order_status === 'completed' ? styles.statusBadgeGreen :
+                  order.order_status === 'cancelled' ? styles.statusBadgeRed :
+                  order.order_status === 'processing' ? styles.statusBadgePurple :
+                  order.order_status === 'confirmed' ? styles.statusBadgeBlue :
+                  styles.statusBadgeYellow
                 }`}>
                   {order.order_status === 'pending' ? 'Chờ xác nhận' :
                    order.order_status === 'confirmed' ? 'Đã xác nhận' :
@@ -95,14 +93,14 @@ export default function OrderDetailPage({
                 </span>
               </div>
 
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">🚚 Giao hàng:</span>
-                <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                  order.shipping_status === 'delivered' ? 'bg-green-100 text-green-800' :
-                  order.shipping_status === 'out_for_delivery' ? 'bg-indigo-100 text-indigo-800' :
-                  order.shipping_status === 'in_transit' ? 'bg-blue-100 text-blue-800' :
-                  order.shipping_status === 'failed_delivery' ? 'bg-red-100 text-red-800' :
-                  'bg-gray-100 text-gray-800'
+              <div className={styles.statusRow}>
+                <span className={styles.statusLabel}>🚚 Giao hàng:</span>
+                <span className={`${styles.statusBadge} ${
+                  order.shipping_status === 'delivered' ? styles.statusBadgeGreen :
+                  order.shipping_status === 'out_for_delivery' ? styles.statusBadgeIndigo :
+                  order.shipping_status === 'in_transit' ? styles.statusBadgeBlue :
+                  order.shipping_status === 'failed_delivery' ? styles.statusBadgeRed :
+                  styles.statusBadgeGray
                 }`}>
                   {order.shipping_status === 'not_shipped' ? 'Chưa giao' :
                    order.shipping_status === 'picking' ? 'Đang lấy hàng' :
@@ -115,10 +113,9 @@ export default function OrderDetailPage({
             </div>
           </div>
 
-          {}
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="font-semibold mb-4">Thông tin giao hàng</h3>
-            <div className="space-y-2 text-sm">
+          <div className={styles.card}>
+            <h3 className={styles.cardTitle}>Thông tin giao hàng</h3>
+            <div className={styles.shippingInfo}>
               <p><strong>Người nhận:</strong> {order.shipping_name}</p>
               <p><strong>Số điện thoại:</strong> {order.shipping_phone}</p>
               <p><strong>Địa chỉ:</strong> {order.shipping_address}</p>
@@ -127,22 +124,21 @@ export default function OrderDetailPage({
             </div>
           </div>
 
-          {}
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="font-semibold mb-4">Sản phẩm</h3>
-            <div className="space-y-4">
+          <div className={styles.card}>
+            <h3 className={styles.cardTitle}>Sản phẩm</h3>
+            <div className={styles.productList}>
               {order.items?.map((item: OrderItem, index: number) => (
-                <div key={item._id || item.id || index} className="flex items-center gap-4 pb-4 border-b last:border-0">
+                <div key={item._id || item.id || index} className={styles.productItem}>
                   <img
                     src={item.product_image}
                     alt={item.product_name}
-                    className="w-20 h-20 object-cover rounded"
+                    className={styles.productImage}
                   />
-                  <div className="flex-1">
-                    <p className="font-medium">{item.product_name}</p>
-                    <p className="text-sm text-gray-500">x{item.quantity}</p>
+                  <div className={styles.productInfo}>
+                    <p className={styles.productName}>{item.product_name}</p>
+                    <p className={styles.productQuantity}>x{item.quantity}</p>
                   </div>
-                  <p className="font-semibold">
+                  <p className={styles.productPrice}>
                     {item.subtotal.toLocaleString('vi-VN')} đ
                   </p>
                 </div>
@@ -151,16 +147,14 @@ export default function OrderDetailPage({
           </div>
         </div>
 
-        {}
-        <div className="lg:col-span-1">
+        <div className={styles.sideColumn}>
           <OrderSummary order={order} />
 
-          {}
           {(order.order_status === 'pending' || order.order_status === 'confirmed') && (
             <button
               onClick={handleCancel}
               disabled={isPending}
-              className="w-full mt-4 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition disabled:bg-gray-400"
+              className={styles.cancelButton}
             >
               {isPending ? 'Đang hủy...' : 'Hủy đơn hàng'}
             </button>

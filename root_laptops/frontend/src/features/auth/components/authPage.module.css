@@ -1,0 +1,63 @@
+.pageContainer {
+    max-width: 80rem; /* container */
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1rem; /* p-4 */
+}
+
+.headerSection {
+    margin-bottom: 1.5rem; /* mb-6 */
+}
+
+.pageTitle {
+    font-size: 1.875rem; /* text-3xl */
+    font-weight: 700; /* font-bold */
+}
+
+.contentSection {
+    display: flex;
+    justify-content: center;
+    gap: 2rem; /* Added gap for spacing between cards */
+}
+
+.loginCard, .registerCard {
+    width: 100%;
+    max-width: 28rem; /* max-w-md */
+    background-color: white;
+    padding: 2rem; /* p-8 */
+    border-radius: 0.5rem; /* rounded-lg */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+}
+
+.registerCard {
+    background-color: #f9fafb; /* bg-gray-50 */
+    margin-left: 2rem; /* ml-8 */
+}
+
+.cardTitle {
+    font-size: 1.25rem; /* text-xl */
+    font-weight: 600; /* font-semibold */
+    margin-bottom: 1rem; /* mb-4 */
+}
+
+.cardDescription {
+    color: #4b5563; /* text-gray-600 */
+    margin-bottom: 1.5rem; /* mb-6 */
+}
+
+.benefitsList {
+    list-style-type: disc;
+    list-style-position: inside;
+    color: #4b5563; /* text-gray-600 */
+    margin-bottom: 1.5rem; /* mb-6 */
+}
+
+.createAccountButton {
+    width: 100%;
+    background-color: #2563eb; /* bg-blue-600 */
+    color: white;
+}
+
+.createAccountButton:hover {
+    background-color: #1d4ed8; /* hover:bg-blue-700 */
+}

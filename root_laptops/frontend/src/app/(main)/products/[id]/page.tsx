@@ -6,6 +6,7 @@ import { Product } from '@/features/products/types';
 import { ProductTopBar } from '@/features/products/components/ProductTopBar';
 import { ProductDetails } from '@/features/products/components/ProductDetails';
 import { ProductGallery } from '@/features/products/components/ProductGallery';
+import styles from './page.module.css';
 
 const fetchProductById = async (id: string): Promise<Product> => {
   const res = await fetch(`http://localhost:5000/api/v1/products/${id}`);
@@ -35,15 +36,15 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   if (isLoading) {
-    return <div className="container mx-auto my-20 text-center">Loading product...</div>;
+    return <div className={styles.loadingMessage}>Loading product...</div>;
   }
 
   if (isError) {
-    return <div className="container mx-auto my-20 text-center text-red-500">Failed to fetch product. Please ensure the backend server is running and the product ID is correct.</div>;
+    return <div className={styles.errorMessage}>Failed to fetch product. Please ensure the backend server is running and the product ID is correct.</div>;
   }
 
   if (!product) {
-    return <div className="container mx-auto my-20 text-center">Product not found.</div>;
+    return <div className={styles.notFoundMessage}>Product not found.</div>;
   }
 
   const totalPrice = product.price * quantity;
@@ -51,13 +52,10 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
 
   return (
     <>
-      <main className="container mx-auto py-8 px-4">
-        {}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-12">
-          {}
+      <main className={styles.mainContent}>
+        <div className={styles.productLayout}>
           <ProductGallery images={allImages} productTitle={product.title} />
           
-          {}
           <ProductDetails 
             product={product} 
             quantity={quantity}
@@ -65,7 +63,6 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
           />
         </div>
 
-        {}
         <ProductTopBar
           activeIndex={activeIndex}
           setActiveIndex={setActiveIndex}

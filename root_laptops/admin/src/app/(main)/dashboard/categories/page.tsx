@@ -29,6 +29,7 @@ import { Label } from '@/shared/components/ui/label';
 import { ConfirmDialog } from '@/shared/components/ui/confirm-dialog';
 import { Plus, Edit, Trash2 } from 'lucide-react';
 import { Category, CategoryFormData } from '@/shared/types';
+import styles from './page.module.css';
 
 export default function CategoriesPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -88,76 +89,74 @@ export default function CategoriesPage() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Quản lý danh mục</h1>
-          <p className="text-muted-foreground">
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <div className={styles.headerContent}>
+          <h1 className={styles.title}>Quản lý danh mục</h1>
+          <p className={styles.description}>
             Quản lý danh mục sản phẩm
           </p>
         </div>
         <Button onClick={() => handleOpenDialog()}>
-          <Plus className="mr-2 h-4 w-4" /> Thêm danh mục
+          <Plus className={styles.buttonIcon} /> Thêm danh mục
         </Button>
       </div>
 
-      <div className="flex justify-between items-center">
+      <div className={styles.header}>
         <Input
           placeholder="Tìm kiếm theo tên danh mục..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="max-w-sm"
         />
       </div>
 
       {isLoading && (
-        <div className="flex justify-center py-8">
-          <div className="text-muted-foreground">Đang tải...</div>
+        <div className={styles.loadingContainer}>
+          <div className={styles.loadingText}>Đang tải...</div>
         </div>
       )}
 
       {isError && (
-        <div className="flex justify-center py-8">
-          <div className="text-red-500">Lỗi khi tải dữ liệu danh mục</div>
+        <div className={styles.errorContainer}>
+          <div className={styles.errorText}>Lỗi khi tải dữ liệu danh mục</div>
         </div>
       )}
 
       {categories && (
-        <div className="rounded-md border">
+        <div className={styles.tableContainer}>
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Tên danh mục</TableHead>
-                <TableHead className="text-right">Thao tác</TableHead>
+                <TableHead className={styles.alignRight}>Thao tác</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {categories.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={2} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={2} className={styles.emptyCell}>
                     Không có danh mục nào
                   </TableCell>
                 </TableRow>
               ) : (
                 categories.map((category) => (
                   <TableRow key={category.id}>
-                    <TableCell className="font-medium">{category.category}</TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
+                    <TableCell>{category.category}</TableCell>
+                    <TableCell className={styles.alignRight}>
+                      <div className={styles.actions}>
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => handleOpenDialog(category)}
                         >
-                          <Edit className="h-4 w-4" />
+                          <Edit className={styles.actionIcon} />
                         </Button>
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => setDeleteId(category._id)}
-                          className="text-red-500 hover:text-red-700"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash2 className={styles.actionIcon} />
                         </Button>
                       </div>
                     </TableCell>

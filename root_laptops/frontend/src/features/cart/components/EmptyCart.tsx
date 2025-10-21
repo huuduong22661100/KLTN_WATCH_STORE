@@ -1,16 +1,18 @@
+import styles from './EmptyCart.module.css';
+
 export function EmptyCart() {
   return (
-    <div className="text-center py-16">
-      <div className="text-6xl mb-4">🛒</div>
-      <h2 className="text-2xl font-bold text-gray-900 mb-2">
+    <div className={styles.wrapper}>
+      <div className={styles.icon}>🛒</div>
+      <h2 className={styles.title}>
         Giỏ hàng trống
       </h2>
-      <p className="text-gray-500 mb-6">
+      <p className={styles.subtitle}>
         Bạn chưa có sản phẩm nào trong giỏ hàng
       </p>
       <a
         href="/products"
-        className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
+        className={styles.button}
       >
         Khám phá sản phẩm
       </a>

@@ -13,6 +13,7 @@ import {
   DialogTitle,
 } from "@/shared/components/ui/dialog";
 import { Loader2 } from "lucide-react";
+import styles from './page.module.css';
 
 export default function ProfilePage() {
   const { isHydrated, isAuthenticated } = useAuthGuard();
@@ -22,8 +23,8 @@ export default function ProfilePage() {
   
   if (!isHydrated) {
     return (
-      <div className="flex items-center justify-center min-h-[50vh]">
-        <Loader2 className="h-8 w-8 animate-spin" />
+      <div className={styles.loadingContainer}>
+        <Loader2 className={styles.spinner} />
       </div>
     );
   }
@@ -34,8 +35,8 @@ export default function ProfilePage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[50vh]">
-        <Loader2 className="h-8 w-8 animate-spin" />
+      <div className={styles.loadingContainer}>
+        <Loader2 className={styles.spinner} />
       </div>
     );
   }
@@ -45,11 +46,11 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Tài khoản của tôi</h1>
-          <p className="text-muted-foreground">
+    <div className={styles.container}>
+      <div className={styles.wrapper}>
+        <div className={styles.header}>
+          <h1 className={styles.title}>Tài khoản của tôi</h1>
+          <p className={styles.subtitle}>
             Quản lý thông tin cá nhân và bảo mật tài khoản của bạn
           </p>
         </div>
@@ -60,7 +61,7 @@ export default function ProfilePage() {
         />
 
         <Dialog open={isPasswordDialogOpen} onOpenChange={setIsPasswordDialogOpen}>
-          <DialogContent className="sm:max-w-[500px]">
+          <DialogContent style={{ maxWidth: '500px' }}>
             <DialogHeader>
               <DialogTitle>Đổi mật khẩu</DialogTitle>
               <DialogDescription>

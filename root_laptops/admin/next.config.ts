@@ -8,4 +8,16 @@ const nextConfig: NextConfig = {
         protocol: "http",
         hostname: "googleusercontent.com",
         port: "",
-        pathname: "
+        pathname: "**",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.casio-vietnam.vn",
+        port: "",
+        pathname: "**",
+      },
+    ],
+  },
+};
+
+export default nextConfig;

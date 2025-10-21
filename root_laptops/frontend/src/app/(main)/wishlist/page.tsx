@@ -6,6 +6,7 @@ import WishlistCard from "@/features/wishlist/components/WishlistCard";
 import { Button } from "@/shared/components/ui/button";
 import { Heart, ShoppingBag, Loader2 } from "lucide-react";
 import Link from "next/link";
+import styles from './page.module.css';
 
 export default function WishlistPage() {
   const { isHydrated, isAuthenticated } = useAuthGuard("/login");
@@ -14,8 +15,8 @@ export default function WishlistPage() {
   
   if (!isHydrated) {
     return (
-      <div className="flex items-center justify-center min-h-[50vh]">
-        <Loader2 className="h-8 w-8 animate-spin" />
+      <div className={styles.loadingContainer}>
+        <Loader2 className={styles.spinner} />
       </div>
     );
   }
@@ -27,15 +28,14 @@ export default function WishlistPage() {
   const totalItems = getTotalItems();
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      {}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-3xl font-bold flex items-center gap-2">
-            <Heart className="w-8 h-8 text-red-500" />
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <div className={styles.titleWrapper}>
+          <h1 className={styles.title}>
+            <Heart className={styles.heartIcon} />
             Sản phẩm yêu thích
           </h1>
-          <p className="text-muted-foreground mt-2">
+          <p className={styles.subtitle}>
             {totalItems} sản phẩm trong danh sách
           </p>
         </div>
@@ -54,39 +54,37 @@ export default function WishlistPage() {
         )}
       </div>
 
-      {}
       {items.length === 0 ? (
-        <div className="text-center py-16">
-          <div className="inline-block p-8 bg-muted rounded-full mb-6">
-            <Heart className="w-16 h-16 text-muted-foreground" />
+        <div className={styles.emptyContainer}>
+          <div className={styles.emptyIconWrapper}>
+            <Heart className={styles.emptyIcon} />
           </div>
-          <h2 className="text-2xl font-semibold mb-4">
+          <h2 className={styles.emptyTitle}>
             Danh sách yêu thích trống
           </h2>
-          <p className="text-muted-foreground mb-8">
+          <p className={styles.emptyText}>
             Bạn chưa có sản phẩm yêu thích nào. Hãy thêm những sản phẩm bạn thích!
           </p>
           <Link href="/products">
             <Button size="lg">
-              <ShoppingBag className="w-5 h-5 mr-2" />
+              <ShoppingBag className={styles.buttonIcon} />
               Khám phá sản phẩm
             </Button>
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-4">
+        <div className={styles.wishlistGrid}>
           {items.map((item) => (
             <WishlistCard key={item._id} item={item} />
           ))}
         </div>
       )}
 
-      {}
       {items.length > 0 && (
-        <div className="mt-8 text-center">
+        <div className={styles.continueShoppingWrapper}>
           <Link href="/products">
             <Button variant="outline" size="lg">
-              <ShoppingBag className="w-5 h-5 mr-2" />
+              <ShoppingBag className={styles.buttonIcon} />
               Tiếp tục mua sắm
             </Button>
           </Link>

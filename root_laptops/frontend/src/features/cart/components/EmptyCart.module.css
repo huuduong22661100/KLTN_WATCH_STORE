@@ -1,0 +1,37 @@
+.wrapper {
+    text-align: center;
+    padding-top: 4rem; /* py-16 */
+    padding-bottom: 4rem; /* py-16 */
+}
+
+.icon {
+    font-size: 3.75rem; /* text-6xl */
+    line-height: 1;
+    margin-bottom: 1rem; /* mb-4 */
+}
+
+.title {
+    font-size: 1.5rem; /* text-2xl */
+    font-weight: 700; /* font-bold */
+    color: #111827; /* text-gray-900 */
+    margin-bottom: 0.5rem; /* mb-2 */
+}
+
+.subtitle {
+    color: #6b7280; /* text-gray-500 */
+    margin-bottom: 1.5rem; /* mb-6 */
+}
+
+.button {
+    display: inline-block;
+    background-color: #2563eb; /* bg-blue-600 */
+    color: white;
+    padding: 0.75rem 1.5rem; /* px-6 py-3 */
+    border-radius: 0.5rem; /* rounded-lg */
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.button:hover {
+    background-color: #1d4ed8; /* hover:bg-blue-700 */
+}

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useProducts } from "../hook/useProducts";
 import ProductCard from "./ProductCard";
 import { Product } from "@/features/products/types";
+import styles from './ProductList.module.css';
 
 interface ProductListProps {
     filters?: {
@@ -33,17 +34,17 @@ const ProductList = ({ filters = {} }: ProductListProps) => {
     } = useProducts(defaultFilters);
 
     if (isLoading) {
-        return <div>Đang tải sản phẩm...</div>;
+        return <div className={styles.loadingMessage}>Đang tải sản phẩm...</div>;
     }
 
     if (error) {
-        return <div>Có lỗi xảy ra</div>;
+        return <div className={styles.errorMessage}>Có lỗi xảy ra</div>;
     }
 
     const containerClasses =
         layout === "grid"
-            ? "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-            : "flex flex-col gap-6";
+            ? styles.gridContainer
+            : styles.listContainer;
 
     return (
         <section>

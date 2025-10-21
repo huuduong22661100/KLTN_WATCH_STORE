@@ -1,0 +1,199 @@
+.footer {
+    background-color: black;
+    color: white;
+    padding-top: 0;
+    padding-bottom: 1rem;
+}
+
+.topBar {
+    background-color: #575781;
+    width: 100%;
+    border-bottom: 1px solid #374151; /* border-gray-800 */
+}
+
+.container {
+    max-width: 80rem; /* container */
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1rem; /* Adjusted from py-4 and px-4 */
+}
+
+.topBarList {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7rem; /* gap-28 */
+}
+
+.topBarItem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* gap-2 */
+    font-size: 0.875rem; /* text-sm */
+}
+
+.topBarIcon {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: #facc15; /* text-yellow-400 */
+    margin-right: 0.5rem;
+}
+
+.topBarLabel {
+    font-weight: 700; /* font-bold */
+}
+
+.topBarDesc {
+    color: #9ca3af; /* text-gray-400 */
+}
+
+.mainContent {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid #4b5563; /* border-gray-700 */
+    padding-bottom: 1.5rem; /* pb-6 */
+    margin-bottom: 1.5rem; /* mb-6 */
+}
+
+.contactSection {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem; /* gap-2 */
+}
+
+.contactPhone {
+    font-weight: 700; /* font-bold */
+    font-size: 1.125rem; /* text-lg */
+}
+
+.contactPhoneIcon {
+    display: inline;
+    width: 1.25rem;
+    height: 1.25rem;
+    color: #facc15; /* text-yellow-400 */
+    margin-right: 0.25rem;
+}
+
+.contactPhoneHighlight {
+    color: #facc15; /* text-yellow-400 */
+}
+
+.contactInfo {
+    color: #9ca3af; /* text-gray-400 */
+    font-size: 0.875rem; /* text-sm */
+}
+
+.contactInfoIcon {
+    display: inline;
+    width: 1rem;
+    height: 1rem;
+    margin-right: 0.25rem;
+}
+
+.logoSection {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem; /* my-4 */
+    margin-bottom: 1rem; /* my-4 */
+}
+
+.logo {
+    height: 3rem; /* h-12 */
+}
+
+.socialSection {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem; /* gap-4 */
+}
+
+.socialLink {
+    color: white;
+}
+
+.socialLink:hover {
+    color: #facc15; /* hover:text-yellow-400 */
+}
+
+.columnsGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem; /* gap-8 */
+    margin-bottom: 2rem; /* mb-8 */
+}
+
+.columnTitle {
+    font-weight: 700; /* font-bold */
+    margin-bottom: 0.75rem; /* mb-3 */
+    color: #facc15; /* text-yellow-400 */
+}
+
+.columnIcon {
+    display: inline;
+    margin-right: 0.25rem;
+    width: 1rem;
+    height: 1rem;
+}
+
+.columnList {
+    font-size: 0.875rem; /* text-sm */
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem; /* space-y-1 */
+}
+
+.columnLink:hover {
+    color: #facc15; /* hover:text-yellow-400 */
+}
+
+.bottomBar {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid #4b5563; /* border-gray-700 */
+    padding-top: 1rem; /* pt-4 */
+}
+
+.paymentIcons {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* gap-2 */
+    margin-bottom: 0.5rem; /* mb-2 */
+}
+
+.paymentIcon {
+    height: 1.5rem; /* h-6 */
+}
+
+.copyright {
+    font-size: 0.75rem; /* text-xs */
+    color: #9ca3af; /* text-gray-400 */
+}
+
+@media (min-width: 768px) {
+    .topBarItem {
+        font-size: 1rem; /* md:text-base */
+    }
+    .mainContent {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .logoSection {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    .columnsGrid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    .bottomBar {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .paymentIcons {
+        margin-bottom: 0;
+    }
+}

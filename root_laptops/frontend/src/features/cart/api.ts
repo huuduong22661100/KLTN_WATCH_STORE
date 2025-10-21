@@ -18,7 +18,15 @@ export const getCartApi = async (token: string): Promise<Cart> => {
   const cartData = response.data;
 
   return {
-    items: cartData.items,
+    items: cartData.items.map((item: any) => ({
+      id: item._id,
+      product_id: item.watch_id._id,
+      product_name: item.watch_id.title,
+      product_image: item.watch_id.images?.mainImg?.url || '',
+      price: item.watch_id.sale_price || item.watch_id.price,
+      quantity: item.quantity,
+      stock: item.watch_id.stock || 0,
+    })),
     total: cartData.total_amount,
     itemCount: cartData.item_count,
   };

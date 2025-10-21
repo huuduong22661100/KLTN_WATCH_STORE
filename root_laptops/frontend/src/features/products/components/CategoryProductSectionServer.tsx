@@ -4,21 +4,22 @@ import { ProductCategory } from "@/features/products/types";
 import ProductCard from "./ProductCard";
 import Link from "next/link";
 import { Suspense } from "react";
+import styles from './CategoryProductSectionServer.module.css';
 
 
 function ProductSkeleton() {
   return (
-    <div className="bg-muted rounded-lg p-4 animate-pulse">
-      <div className="h-48 bg-gray-300 rounded mb-4"></div>
-      <div className="h-4 bg-gray-300 rounded mb-2"></div>
-      <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+    <div className={styles.skeletonProductCard}>
+      <div className={styles.skeletonImage}></div>
+      <div className={styles.skeletonLine1}></div>
+      <div className={styles.skeletonLine2}></div>
     </div>
   );
 }
 
 function ProductsGridSkeleton() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className={styles.productsGrid}>
       {[1, 2, 3, 4].map((i) => (
         <ProductSkeleton key={i} />
       ))}
@@ -39,14 +40,14 @@ async function CategoryProducts({ categoryId }: { categoryId: string }) {
 
     if (products.length === 0) {
       return (
-        <div className="text-center text-muted-foreground py-8">
+        <div className={styles.emptyProductsMessage}>
           Chưa có sản phẩm trong danh mục này
         </div>
       );
     }
 
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className={styles.productsGrid}>
         {products.map((product: any) => (
           <ProductCard key={product._id} product={product} />
         ))}
@@ -55,7 +56,7 @@ async function CategoryProducts({ categoryId }: { categoryId: string }) {
   } catch (error) {
     console.error("Error fetching products:", error);
     return (
-      <div className="text-center text-red-500 py-8">
+      <div className={styles.errorProductsMessage}>
         Không thể tải sản phẩm. Vui lòng thử lại sau.
       </div>
     );
@@ -69,12 +70,12 @@ export default function CategoryProductSection({
   category: ProductCategory;
 }) {
   return (
-    <section className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-3xl font-bold">{category.category}</h2>
+    <section className={styles.sectionWrapper}>
+      <div className={styles.header}>
+        <h2 className={styles.title}>{category.category}</h2>
         <Link
           href={`/products?category=${category._id}`}
-          className="text-primary hover:underline text-lg"
+          className={styles.viewAllLink}
         >
           Xem tất cả
         </Link>

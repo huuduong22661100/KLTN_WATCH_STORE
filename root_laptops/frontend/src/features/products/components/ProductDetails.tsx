@@ -1,11 +1,15 @@
 'use client';
 import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Product } from '@/features/products/types';
 import { Button } from '@/shared/components/ui/button';
 import { ChevronUp, ChevronDown, Heart, Share2, ShoppingCart, CreditCard } from 'lucide-react';
 import { useCartStore } from '@/store/cartStore';
+import { useWishlistStore } from '@/features/wishlist/store/wishlistStore';
 import { Badge } from '@/ui/badge';
+import { toast } from 'sonner';
+import styles from './ProductDetails.module.css';
 
 interface ProductDetailsProps {
   product: Product;
@@ -14,52 +18,89 @@ interface ProductDetailsProps {
 }
 
 export function ProductDetails({ product, quantity, setQuantity }: ProductDetailsProps) {
+  const router = useRouter();
   const { title, price, sale_price, sku, brand, color_id, category_id, tags, gender, origin } = product;
   const addToCart = useCartStore((state) => state.addToCart);
+  const addToWishlist = useWishlistStore((state) => state.addToWishlist);
+  const removeFromWishlist = useWishlistStore((state) => state.removeFromWishlist);
+  const isInWishlist = useWishlistStore((state) => state.isInWishlist);
 
   const hasDiscount = sale_price && sale_price < price;
   const discountPercent = hasDiscount ? Math.round(((price - sale_price) / price) * 100) : 0;
   const finalPrice = hasDiscount ? sale_price : price;
   const totalPrice = finalPrice * quantity;
+  const productInWishlist = isInWishlist(product._id);
 
   const handleAddToCart = () => {
     addToCart(product, quantity);
   };
 
+  const handleBuyNow = async () => {
+    await addToCart(product, quantity);
+    router.push('/cart');
+  };
+
+  const handleToggleWishlist = () => {
+    if (productInWishlist) {
+      removeFromWishlist(product._id);
+    } else {
+      addToWishlist(product);
+    }
+  };
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: product.title,
+          text: `Check out ${product.title}`,
+          url: window.location.href,
+        });
+      } catch (error) {
+        console.error('Error sharing:', error);
+      }
+    } else {
+      // Fallback: Copy URL to clipboard
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        toast.success('Link copied to clipboard!');
+      } catch (error) {
+        toast.error('Failed to copy link');
+      }
+    }
+  };
+
   return (
-    <div className="flex flex-col space-y-6">
-      {}
-      <nav className="text-sm text-muted-foreground">
-        <Link href="/" className="hover:text-primary transition-colors">Home</Link>
-        <span className="mx-2">/</span>
-        <Link href="/products" className="hover:text-primary transition-colors">Products</Link>
-        <span className="mx-2">/</span>
-        <span className="text-foreground">{title}</span>
+    <div className={styles.detailsWrapper}>
+      <nav className={styles.breadcrumb}>
+        <Link href="/" className={styles.breadcrumbLink}>Home</Link>
+        <span className={styles.breadcrumbSeparator}>/</span>
+        <Link href="/products" className={styles.breadcrumbLink}>Products</Link>
+        <span className={styles.breadcrumbSeparator}>/</span>
+        <span className={styles.breadcrumbCurrent}>{title}</span>
       </nav>
 
-      {}
       <div>
-        <h1 className="text-3xl lg:text-4xl font-bold text-foreground mb-2">{title}</h1>
-        <div className="flex items-center gap-3 flex-wrap">
+        <h1 className={styles.title}>{title}</h1>
+        <div className={styles.meta}>
           <Badge variant="secondary" className="text-xs">{brand}</Badge>
           {category_id && category_id.length > 0 && (
             <Badge variant="outline" className="text-xs">{category_id[0].category}</Badge>
           )}
-          <Link href="#reviews" className="text-sm text-primary hover:underline">
+          <Link href="#reviews" className={styles.reviewLink}>
             ⭐ Be the first to review
           </Link>
         </div>
       </div>
 
-      {}
-      <div className="bg-muted/30 rounded-lg p-4 border">
-        <div className="flex items-baseline gap-3 flex-wrap">
-          <span className="text-3xl font-bold text-primary">
+      <div className={styles.priceBox}>
+        <div className={styles.priceWrapper}>
+          <span className={styles.finalPrice}>
             {finalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
           </span>
           {hasDiscount && (
             <>
-              <span className="text-xl text-muted-foreground line-through">
+              <span className={styles.originalPrice}>
                 {price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
               </span>
               <Badge variant="destructive" className="text-sm">-{discountPercent}%</Badge>
@@ -68,28 +109,27 @@ export function ProductDetails({ product, quantity, setQuantity }: ProductDetail
         </div>
       </div>
 
-      {}
-      <div className="grid grid-cols-2 gap-3 text-sm">
-        <div className="flex flex-col space-y-1">
-          <span className="text-muted-foreground">SKU:</span>
-          <span className="font-medium">{sku}</span>
+      <div className={styles.infoGrid}>
+        <div className={styles.infoItem}>
+          <span className={styles.infoLabel}>SKU:</span>
+          <span className={styles.infoValue}>{sku}</span>
         </div>
         {origin && (
-          <div className="flex flex-col space-y-1">
-            <span className="text-muted-foreground">Origin:</span>
-            <span className="font-medium">{origin}</span>
+          <div className={styles.infoItem}>
+            <span className={styles.infoLabel}>Origin:</span>
+            <span className={styles.infoValue}>{origin}</span>
           </div>
         )}
         {gender && (
-          <div className="flex flex-col space-y-1">
-            <span className="text-muted-foreground">Gender:</span>
-            <span className="font-medium capitalize">{gender}</span>
+          <div className={styles.infoItem}>
+            <span className={styles.infoLabel}>Gender:</span>
+            <span className={styles.infoValueCapitalize}>{gender}</span>
           </div>
         )}
         {color_id && color_id.length > 0 && (
-          <div className="flex flex-col space-y-1">
-            <span className="text-muted-foreground">Colors:</span>
-            <div className="flex gap-2 flex-wrap">
+          <div className={styles.infoItem}>
+            <span className={styles.infoLabel}>Colors:</span>
+            <div className={styles.badgeGroup}>
               {color_id.map((color) => (
                 <Badge key={color._id} variant="outline" className="text-xs">
                   {color.color}
@@ -100,9 +140,8 @@ export function ProductDetails({ product, quantity, setQuantity }: ProductDetail
         )}
       </div>
 
-      {}
       {tags && tags.length > 0 && (
-        <div className="flex flex-wrap gap-2">
+        <div className={styles.badgeGroup}>
           {tags.map((tag, index) => (
             <Badge key={index} variant="secondary" className="text-xs">
               {tag}
@@ -111,81 +150,87 @@ export function ProductDetails({ product, quantity, setQuantity }: ProductDetail
         </div>
       )}
 
-      <div className="border-t pt-6">
-        {}
-        <div className="flex items-center gap-4 mb-4">
-          <span className="text-sm font-medium">Quantity:</span>
-          <div className="flex items-center border rounded-lg">
+      <div className={styles.actionsWrapper}>
+        <div className={styles.quantitySection}>
+          <span className={styles.quantityLabel}>Quantity:</span>
+          <div className={styles.quantityControl}>
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setQuantity(q => (q > 1 ? q - 1 : 1))}
-              className="h-10 w-10"
+              className={styles.quantityButton}
             >
-              <ChevronDown className="h-4 w-4" />
+              <ChevronDown className={styles.quantityIcon} />
             </Button>
-            <span className="px-6 font-semibold text-lg min-w-[60px] text-center">{quantity}</span>
+            <span className={styles.quantityValue}>{quantity}</span>
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setQuantity(q => q + 1)}
-              className="h-10 w-10"
+              className={styles.quantityButton}
             >
-              <ChevronUp className="h-4 w-4" />
+              <ChevronUp className={styles.quantityIcon} />
             </Button>
           </div>
-          <div className="ml-auto text-right">
-            <span className="text-sm text-muted-foreground block">Total:</span>
-            <span className="text-xl font-bold text-primary">
+          <div className={styles.totalPriceWrapper}>
+            <span className={styles.totalLabel}>Total:</span>
+            <span className={styles.totalValue}>
               {totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
             </span>
           </div>
         </div>
 
-        {}
-        <div className="flex flex-col sm:flex-row gap-3">
+        <div className={styles.mainButtons}>
           <Button 
             onClick={handleAddToCart}
-            className="flex-1 h-12 text-base"
+            className={styles.mainButton}
             size="lg"
           >
-            <ShoppingCart className="mr-2 h-5 w-5" />
+            <ShoppingCart className={styles.buttonIcon} />
             Add to Cart
           </Button>
           <Button 
+            onClick={handleBuyNow}
             variant="default"
-            className="flex-1 h-12 text-base bg-gradient-to-r from-primary to-primary/80"
+            className={styles.buyNowButton}
             size="lg"
           >
-            <CreditCard className="mr-2 h-5 w-5" />
+            <CreditCard className={styles.buttonIcon} />
             Buy Now
           </Button>
         </div>
 
-        {}
-        <div className="flex gap-3 mt-4">
-          <Button variant="outline" className="flex-1" size="lg">
-            <Heart className="mr-2 h-5 w-5" />
-            Add to Wishlist
+        <div className={styles.secondaryButtons}>
+          <Button 
+            onClick={handleToggleWishlist}
+            variant={productInWishlist ? "default" : "outline"}
+            className={styles.wishlistButton} 
+            size="lg"
+          >
+            <Heart className={styles.buttonIcon} fill={productInWishlist ? "currentColor" : "none"} />
+            {productInWishlist ? "In Wishlist" : "Add to Wishlist"}
           </Button>
-          <Button variant="outline" size="lg">
-            <Share2 className="h-5 w-5" />
+          <Button 
+            onClick={handleShare}
+            variant="outline" 
+            size="lg"
+          >
+            <Share2 className={styles.shareIcon} />
           </Button>
         </div>
       </div>
 
-      {}
-      <div className="bg-muted/20 rounded-lg p-4 space-y-2 text-sm">
-        <div className="flex items-center gap-2">
-          <span className="text-green-600">✓</span>
+      <div className={styles.perks}>
+        <div className={styles.perkItem}>
+          <span className={styles.perkIcon}>✓</span>
           <span>Free shipping for orders over 500,000₫</span>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="text-green-600">✓</span>
+        <div className={styles.perkItem}>
+          <span className={styles.perkIcon}>✓</span>
           <span>30-day return policy</span>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="text-green-600">✓</span>
+        <div className={styles.perkItem}>
+          <span className={styles.perkIcon}>✓</span>
           <span>Genuine product warranty</span>
         </div>
       </div>

@@ -11,6 +11,7 @@ import { DollarSign, Package, ShoppingCart, Users, TrendingUp, AlertCircle } fro
 import { useProducts } from "@/features/products/hooks/useProducts";
 import { useOrders } from "@/features/orders/hooks/useOrders";
 import { useUsers } from "@/features/users/hooks/useUsers";
+import styles from "./page.module.css";
 
 export default function DashboardPage() {
   const { data: productsData, isLoading: isLoadingProducts } = useProducts({ limit: 1000 });
@@ -19,16 +20,15 @@ export default function DashboardPage() {
 
   const isLoading = isLoadingProducts || isLoadingOrders || isLoadingUsers;
 
-  
   const totalProducts = productsData?.total || 0;
   const totalOrders = ordersData?.total || 0;
   const totalUsers = usersData?.total || 0;
   
   const totalRevenue = ordersData?.data?.reduce((sum, order) => {
     if (order.status !== 'cancelled') {
-      return sum + order.total; 
+      return sum + order.total;
     }
-    return sum; 
+    return sum;
   }, 0) || 0; 
 
   const lowStockProducts = productsData?.data?.filter(p => p.stock < 10).length || 0;
@@ -70,53 +70,50 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground">
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1 className={styles.title}>Dashboard</h1>
+        <p className={styles.description}>
           Tổng quan về hoạt động của cửa hàng
         </p>
       </div>
 
-      {}
       {isLoading ? (
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center space-y-4">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary mx-auto"></div>
-            <p className="text-muted-foreground">Đang tải dữ liệu dashboard...</p>
+        <div className={styles.loadingContainer}>
+          <div className={styles.loadingContent}>
+            <div className={styles.spinner}></div>
+            <p className={styles.loadingText}>Đang tải dữ liệu dashboard...</p>
           </div>
         </div>
       ) : (
         <>
-          {}
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <div className={styles.statsGrid}>
             {cardData.map((card, index) => (
               <Card key={index}>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">{card.title}</CardTitle>
-                  <card.icon className={`h-5 w-5 ${card.color}`} />
+                <CardHeader className={styles.cardHeader}>
+                  <CardTitle className={styles.cardTitle}>{card.title}</CardTitle>
+                  <card.icon className={`${styles.cardIcon} ${card.color === "text-green-600" ? styles.iconGreen : card.color === "text-blue-600" ? styles.iconBlue : card.color === "text-orange-600" ? styles.iconOrange : card.color === "text-yellow-600" ? styles.iconYellow : card.color === "text-purple-600" ? styles.iconPurple : styles.iconIndigo}`} />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{card.value}</div>
-                  <p className="text-xs text-muted-foreground mt-1">
+                  <div className={styles.cardValue}>{card.value}</div>
+                  <p className={styles.cardDescription}>
                     {card.description}
                   </p>
-                  <div className="flex items-center gap-1 mt-2">
-                    <TrendingUp className="h-3 w-3 text-green-600" />
-                    <span className="text-xs text-green-600 font-medium">{card.trend}</span>
-                    <span className="text-xs text-muted-foreground">so với tháng trước</span>
+                  <div className={styles.trendContainer}>
+                    <TrendingUp className={styles.trendIcon} />
+                    <span className={styles.trendValue}>{card.trend}</span>
+                    <span className={styles.trendLabel}>so với tháng trước</span>
                   </div>
                 </CardContent>
               </Card>
             ))}
           </div>
 
-          {}
-          <div className="p-4">
-            <Card  className="p-4 mt-4">
+          <div className={styles.detailsSection}>
+            <Card className={styles.detailCard}>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <AlertCircle className="h-5 w-5 text-orange-600" />
+                <CardTitle className={styles.detailCardHeader}>
+                  <AlertCircle className={`${styles.detailIcon} ${styles.iconOrange}`} />
                   Sản phẩm sắp hết hàng
                 </CardTitle>
                 <CardDescription>
@@ -124,18 +121,17 @@ export default function DashboardPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-2">
+                <div className={styles.detailsList}>
                   {productsData?.data?.filter(p => p.stock < 10).slice(0, 5).map((product) => (
-                    <div key={product._id} className="flex justify-between items-center text-sm gap-2">
-                      <span className="truncate flex-1">{product.title}</span>
-                      <span className="truncate flex-1">{product.price.toLocaleString('vi-VN')}đ</span>
-                      
-                      <span className="text-red-600 font-medium">{product.stock} sản phẩm</span>
+                    <div key={product._id} className={styles.detailItem}>
+                      <span className={`${styles.detailItemTruncate} ${styles.detailItemFlex}`}>{product.title}</span>
+                      <span className={`${styles.detailItemTruncate} ${styles.detailItemFlex}`}>{product.price.toLocaleString('vi-VN')}đ</span>
+                      <span className={styles.detailStock}>{product.stock} sản phẩm</span>
                       {product.images?.mainImg?.url && (
                         <img 
                           src={product.images.mainImg.url} 
                           alt={product.images.mainImg.alt_text || product.title} 
-                          className="w-12 h-12 object-cover rounded"
+                          className={styles.detailImage}
                         />
                       )}
                     </div>
@@ -144,10 +140,10 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
 
-            <Card  className="p-4 mt-4">
+            <Card className={styles.detailCard}>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <ShoppingCart className="h-5 w-5 text-yellow-600" />
+                <CardTitle className={styles.detailCardHeader}>
+                  <ShoppingCart className={`${styles.detailIcon} ${styles.iconYellow}`} />
                   Đơn hàng chờ xác nhận
                 </CardTitle>
                 <CardDescription>
@@ -155,22 +151,22 @@ export default function DashboardPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-2">
+                <div className={styles.detailsList}>
                   {ordersData?.data?.filter(o => o.status === 'pending').slice(0, 5).map((order) => (
-                    <div key={order._id} className="flex justify-between items-center text-sm">
-                      <span className="truncate">{order._id}</span>
-                      <span className="truncate">{order.updatedAt}</span>
-                      <span className="font-medium">{order.total.toLocaleString('vi-VN')}đ</span>
+                    <div key={order._id} className={styles.detailItem}>
+                      <span className={styles.detailItemTruncate}>{order._id}</span>
+                      <span className={styles.detailItemTruncate}>{order.updatedAt}</span>
+                      <span className={styles.detailPrice}>{order.total.toLocaleString('vi-VN')}đ</span>
                     </div>
                   ))}
                 </div>
               </CardContent>
             </Card>
 
-            <Card  className="p-4 mt-4">
+            <Card className={styles.detailCard}>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5 text-green-600" />
+                <CardTitle className={styles.detailCardHeader}>
+                  <TrendingUp className={`${styles.detailIcon} ${styles.iconGreen}`} />
                   Sản phẩm bán chạy
                 </CardTitle>
                 <CardDescription>
@@ -178,11 +174,11 @@ export default function DashboardPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-2">
+                <div className={styles.detailsList}>
                   {productsData?.data?.slice(0, 5).map((product, index) => (
-                    <div key={product._id} className="flex justify-between items-center text-sm">
-                      <span className="truncate">#{index + 1} {product.title}</span>
-                      <span className="font-medium">{product.price.toLocaleString('vi-VN')}đ</span>
+                    <div key={product._id} className={styles.detailItem}>
+                      <span className={styles.detailItemTruncate}>#{index + 1} {product.title}</span>
+                      <span className={styles.detailPrice}>{product.price.toLocaleString('vi-VN')}đ</span>
                     </div>
                   ))}
                 </div>

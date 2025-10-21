@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Card, CardContent, CardFooter, CardHeader } from "@/shared/components/ui/card";
 import { Calendar, User } from "lucide-react";
 import { News } from "../types";
+import styles from './NewsCard.module.css';
 
 interface NewsCardProps {
   news: News;
@@ -30,37 +31,37 @@ export default function NewsCard({ news }: NewsCardProps) {
 
   return (
     <Link href={`/news/${news._id}`}>
-      <Card className="h-full hover:shadow-lg transition-shadow duration-300 cursor-pointer overflow-hidden">
-        <CardHeader className="p-0">
-          <div className="relative w-full h-56 overflow-hidden">
+      <Card className={styles.card}>
+        <CardHeader className={styles.cardHeader}>
+          <div className={styles.imageWrapper}>
             <Image
               src={news.thumbnail_img}
               alt={news.title}
               fill
-              className="object-cover hover:scale-105 transition-transform duration-300"
+              className={styles.image}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           </div>
         </CardHeader>
         
-        <CardContent className="p-4 space-y-3">
-          <h3 className="text-xl font-bold line-clamp-2 hover:text-primary transition-colors">
+        <CardContent className={styles.cardContent}>
+          <h3 className={styles.title}>
             {news.title}
           </h3>
           
-          <p className="text-muted-foreground text-sm line-clamp-3">
+          <p className={styles.excerpt}>
             {getExcerpt(news.content)}
           </p>
         </CardContent>
 
-        <CardFooter className="px-4 pb-4 pt-0 flex items-center gap-4 text-sm text-muted-foreground">
-          <div className="flex items-center gap-1">
-            <User className="w-4 h-4" />
+        <CardFooter className={styles.cardFooter}>
+          <div className={styles.metaItem}>
+            <User className={styles.metaIcon} />
             <span>{news.author_id?.name || "Admin"}</span>
           </div>
           
-          <div className="flex items-center gap-1">
-            <Calendar className="w-4 h-4" />
+          <div className={styles.metaItem}>
+            <Calendar className={styles.metaIcon} />
             <span>{formatDate(news.createdAt)}</span>
           </div>
         </CardFooter>

@@ -1,12 +1,13 @@
 
 import Header from "@/shared/components/layout/Header"
 import Footer from "@/shared/components/layout/Footer";
+import styles from './layout.module.css';
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className={styles.layoutWrapper}>
       <Header />
-      <main className="flex-grow">{children}</main>
+      <main className={styles.mainContent}>{children}</main>
       <Footer />
     </div>
   );

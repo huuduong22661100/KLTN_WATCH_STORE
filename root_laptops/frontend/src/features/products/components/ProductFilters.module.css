@@ -1,0 +1,54 @@
+.filtersWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* space-y-6 */
+}
+
+.filterGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem; /* space-y-3 */
+}
+
+.groupTitle {
+    font-weight: 700; /* font-bold */
+    font-size: 0.875rem; /* text-sm */
+    text-transform: uppercase;
+    color: #374151; /* text-gray-700 */
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* gap-2 */
+}
+
+.titleIcon {
+    width: 1rem; /* w-4 */
+    height: 1rem; /* h-4 */
+}
+
+.searchInput {
+    width: 100%;
+}
+
+.divider {
+    border-top: 1px solid #e5e7eb; /* border-t */
+    padding-top: 1.5rem; /* pt-6 */
+}
+
+.radioItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem; /* space-x-3 */
+    padding: 0.5rem; /* py-2 px-2 */
+    border-radius: 0.25rem; /* rounded */
+    transition: background-color 0.2s;
+}
+
+.radioItem:hover {
+    background-color: #f9fafb; /* hover:bg-gray-50 */
+}
+
+.radioLabel {
+    font-weight: 400; /* font-normal */
+    cursor: pointer;
+    flex: 1 1 0%;
+}

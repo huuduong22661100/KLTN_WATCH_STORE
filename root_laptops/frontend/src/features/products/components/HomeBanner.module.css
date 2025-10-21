@@ -1,0 +1,34 @@
+.carouselWrapper {
+    width: 100%;
+    margin-top: -1rem; /* -mt-4 */
+}
+
+.carouselItemContent {
+    height: 35rem; /* h-140 (assuming 140px = 35rem, adjust if needed) */
+    position: relative;
+}
+
+.bannerImage {
+    object-fit: cover;
+}
+
+.carouselPrevious, .carouselNext {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.5); /* bg-black/50 */
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.carouselPrevious:hover, .carouselNext:hover {
+    background-color: rgba(0, 0, 0, 0.7); /* hover:bg-black/70 */
+}
+
+.carouselPrevious {
+    left: 2rem; /* left-8 */
+}
+
+.carouselNext {
+    right: 2rem; /* right-8 */
+}
