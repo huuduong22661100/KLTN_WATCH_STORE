@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { useAuthGuard } from '@/hooks/useAuthGuard';
 import { useOrders, OrderItemCard } from '@/features/orders';
 import type { Order } from '@/features/orders';
@@ -63,9 +64,9 @@ export default function OrdersPage() {
       <div className={styles.container}>
         <div className={styles.centerContent}>
           <p className={styles.emptyTitle}>Chưa có đơn hàng nào</p>
-          <a href="/products" className={styles.emptyLink}>
+          <Link href="/products" className={styles.emptyLink}>
             Bắt đầu mua sắm
-          </a>
+          </Link>
         </div>
       </div>
     );

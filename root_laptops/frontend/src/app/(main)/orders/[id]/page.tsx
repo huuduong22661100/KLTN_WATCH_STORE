@@ -1,6 +1,7 @@
 'use client';
 
 import { use } from 'react';
+import Link from 'next/link';
 import { useOrderDetail, useCancelOrder, OrderStatusComponent, OrderSummary } from '@/features/orders';
 import type { OrderItem } from '@/features/orders';
 import { toast } from 'sonner';
@@ -49,9 +50,9 @@ export default function OrderDetailPage({
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <a href="/orders" className={styles.backLink}>
+        <Link href="/orders" className={styles.backLink}>
           ← Quay lại danh sách đơn hàng
-        </a>
+        </Link>
         <h1 className={styles.title}>Chi tiết đơn hàng</h1>
         <p className={styles.orderNumber}>Mã đơn hàng: {order.order_number}</p>
       </div>

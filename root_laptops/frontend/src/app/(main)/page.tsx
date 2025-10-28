@@ -5,6 +5,7 @@ import { getCategories } from "@/features/products/api/categories";
 import { ProductCategory } from "@/features/products/types";
 import { Suspense } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import type { Metadata } from 'next';
 import styles from './page.module.css';
 
@@ -74,9 +75,9 @@ export default async function HomePage() {
                 <p className={styles.categoryDescription}>
                   Dòng đồng hồ thể thao với độ bền vượt trội, phù hợp cho mọi hoạt động ngoài trời
                 </p>
-                <a href="/products?category=68d576258eeaf6e58e8aaa3d" className={styles.categoryLink}>
+                <Link href="/products?category=68d576258eeaf6e58e8aaa3d" className={styles.categoryLink}>
                   Xem ngay
-                </a>
+                </Link>
               </div>
               
               <div className={styles.categoryCard}>
@@ -93,9 +94,9 @@ export default async function HomePage() {
                 <p className={styles.categoryDescription}>
                   Sang trọng, lịch lãm phù hợp cho môi trường công sở và các sự kiện quan trọng
                 </p>
-                <a href="/products?category=68d576258eeaf6e58e8aaa3a" className={styles.categoryLink}>
+                <Link href="/products?category=68d576258eeaf6e58e8aaa3a" className={styles.categoryLink}>
                   Xem ngay
-                </a>
+                </Link>
               </div>
               
               <div className={styles.categoryCard}>
@@ -112,9 +113,9 @@ export default async function HomePage() {
                 <p className={styles.categoryDescription}>
                   Thiết kế trẻ trung, năng động với mức giá phù hợp cho sinh viên
                 </p>
-                <a href="/products?category=68d576258eeaf6e58e8aaa42" className={styles.categoryLink}>
+                <Link href="/products?category=68d576258eeaf6e58e8aaa42" className={styles.categoryLink}>
                   Xem ngay
-                </a>
+                </Link>
               </div>
               
               <div className={styles.categoryCard}>
@@ -131,9 +132,9 @@ export default async function HomePage() {
                 <p className={styles.categoryDescription}>
                   Tinh tế, thanh lịch dành cho những ai yêu thích sự sáng tạo và nghệ thuật
                 </p>
-                <a href="/products?category=68d576258eeaf6e58e8aaa3a" className={styles.categoryLink}>
+                <Link href="/products?category=68d576258eeaf6e58e8aaa3a" className={styles.categoryLink}>
                   Xem ngay
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -184,9 +185,9 @@ export default async function HomePage() {
           <div className={styles.promoCard}>
             <h2 className={styles.promoTitle}>Ưu đãi đặc biệt!</h2>
             <p className={styles.promoText}>Giảm giá lên đến 20% cho tất cả Watch gaming.</p>
-            <a href="/products?category=Gaming" className={styles.promoButton}>
+            <Link href="/products?category=Gaming" className={styles.promoButton}>
               Mua ngay
-            </a>
+            </Link>
           </div>
         </div>
       </section>

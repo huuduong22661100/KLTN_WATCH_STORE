@@ -10,7 +10,7 @@ interface CartSummaryProps {
 
 export function CartSummary({ cart, onCheckout }: CartSummaryProps) {
   
-  const calculatedTotal = cart.items.reduce((total: number, item: any) => {
+  const calculatedTotal = cart.items.reduce((total: number, item) => {
     return total + (item.price * item.quantity);
   }, 0);
 

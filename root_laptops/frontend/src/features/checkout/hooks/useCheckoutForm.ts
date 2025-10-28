@@ -43,10 +43,8 @@ export function useCheckoutForm() {
   }, []);
 
   
-  const calculatedSubtotal = cart?.items.reduce((total: number, item: any) => {
-    const product = item.watch_id;
-    const price = product.sale_price || product.price;
-    return total + (price * item.quantity);
+  const calculatedSubtotal = cart?.items.reduce((total: number, item) => {
+    return total + (item.price * item.quantity);
   }, 0) || 0;
 
   

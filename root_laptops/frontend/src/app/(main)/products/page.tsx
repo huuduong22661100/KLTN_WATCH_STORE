@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { SlidersHorizontal } from "lucide-react";
@@ -37,7 +37,7 @@ import {
 } from "@/components/ui/sheet";
 import type { Product } from "@/features/products/types";
 
-export default function ProductPage() {
+function ProductPageContent() {
   const searchParams = useSearchParams();
   
   const [filters, setFilters] = useState({
@@ -45,8 +45,8 @@ export default function ProductPage() {
     limit: 20,
     category: "",
     color: "",
-    minPrice: "",
-    maxPrice: "",
+    minPrice: undefined as number | undefined,
+    maxPrice: undefined as number | undefined,
     search: "",
     sort: "",
   });
@@ -57,8 +57,8 @@ export default function ProductPage() {
     const colorFromUrl = searchParams.get('color') || '';
     const searchFromUrl = searchParams.get('search') || '';
     const sortFromUrl = searchParams.get('sort') || '';
-    const minPriceFromUrl = searchParams.get('minPrice') || '';
-    const maxPriceFromUrl = searchParams.get('maxPrice') || '';
+    const minPriceFromUrl = searchParams.get('minPrice');
+    const maxPriceFromUrl = searchParams.get('maxPrice');
     
     if (categoryFromUrl || colorFromUrl || searchFromUrl || sortFromUrl || minPriceFromUrl || maxPriceFromUrl) {
       setFilters(prev => ({
@@ -67,8 +67,8 @@ export default function ProductPage() {
         color: colorFromUrl,
         search: searchFromUrl,
         sort: sortFromUrl,
-        minPrice: minPriceFromUrl,
-        maxPrice: maxPriceFromUrl,
+        minPrice: minPriceFromUrl ? Number(minPriceFromUrl) : undefined,
+        maxPrice: maxPriceFromUrl ? Number(maxPriceFromUrl) : undefined,
       }));
     }
   }, [searchParams]);
@@ -142,8 +142,8 @@ export default function ProductPage() {
                     limit: 20,
                     category: "",
                     color: "",
-                    minPrice: "",
-                    maxPrice: "",
+                    minPrice: undefined,
+                    maxPrice: undefined,
                     search: "",
                     sort: "",
                   })}
@@ -156,8 +156,8 @@ export default function ProductPage() {
                 onFilterChange={handleFilterChange}
                 initialCategory={filters.category}
                 initialColor={filters.color}
-                initialMinPrice={filters.minPrice}
-                initialMaxPrice={filters.maxPrice}
+                initialMinPrice={filters.minPrice?.toString()}
+                initialMaxPrice={filters.maxPrice?.toString()}
               />
             </div>
           </aside>
@@ -178,8 +178,8 @@ export default function ProductPage() {
                   onFilterChange={handleFilterChange}
                   initialCategory={filters.category}
                   initialColor={filters.color}
-                  initialMinPrice={filters.minPrice}
-                  initialMaxPrice={filters.maxPrice}
+                  initialMinPrice={filters.minPrice?.toString()}
+                  initialMaxPrice={filters.maxPrice?.toString()}
                 />
               </div>
             </SheetContent>
@@ -233,8 +233,8 @@ export default function ProductPage() {
                     limit: 20,
                     category: "",
                     color: "",
-                    minPrice: "",
-                    maxPrice: "",
+                    minPrice: undefined,
+                    maxPrice: undefined,
                     search: "",
                     sort: "",
                   })}
@@ -311,5 +311,20 @@ export default function ProductPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function ProductPage() {
+  return (
+    <Suspense fallback={
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
+        <div style={{ textAlign: 'center' }}>
+          <div className="spinner" style={{ margin: '0 auto 1rem' }}></div>
+          <p>Đang tải...</p>
+        </div>
+      </div>
+    }>
+      <ProductPageContent />
+    </Suspense>
   );
 }

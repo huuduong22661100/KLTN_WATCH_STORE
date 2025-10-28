@@ -58,7 +58,13 @@ export const useCartStore = create<CartState>()(
           }
 
           const data = await response.json();
-          const serverItems = data.data.items.map((item: any) => ({
+          
+          interface ServerCartItem {
+            watch_id: Product;
+            quantity: number;
+          }
+          
+          const serverItems = data.data.items.map((item: ServerCartItem) => ({
             product: item.watch_id, 
             quantity: item.quantity,
           }));

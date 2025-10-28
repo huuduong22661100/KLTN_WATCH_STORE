@@ -59,7 +59,7 @@ export default function OrderSuccessPage() {
               </li>
               <li className={styles.orderInfoListItem}>
                 <span className={styles.bullet}>•</span>
-                <span>Bạn có thể theo dõi đơn hàng trong mục "Đơn hàng của tôi"</span>
+                <span>Bạn có thể theo dõi đơn hàng trong mục &quot;Đơn hàng của tôi&quot;</span>
               </li>
             </ul>
           </div>

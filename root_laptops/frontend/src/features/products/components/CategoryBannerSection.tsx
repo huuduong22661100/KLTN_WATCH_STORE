@@ -1,6 +1,6 @@
 
 import { getProducts } from "@/features/products/api/products";
-import { ProductCategory } from "@/features/products/types";
+import { ProductCategory, Product } from "@/features/products/types";
 import ProductCard from "./ProductCard";
 import Link from "next/link";
 import Image from "next/image";
@@ -49,7 +49,7 @@ async function CategoryProducts({ categoryId }: { categoryId: string }) {
 
     return (
       <div className={styles.skeletonGrid}>
-        {products.map((product: any) => (
+        {products.map((product: Product) => (
           <ProductCard key={product._id} product={product} />
         ))}
       </div>

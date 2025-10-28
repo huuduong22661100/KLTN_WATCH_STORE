@@ -2,7 +2,18 @@ import { useQuery } from "@tanstack/react-query"
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"
 
-const fetchProducts = async (filters: any) => {
+interface ProductFilters {
+  page?: number;
+  limit?: number;
+  category?: string;
+  color?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  search?: string;
+  sort?: string;
+}
+
+const fetchProducts = async (filters: ProductFilters) => {
   const params = new URLSearchParams();
   if (filters.page) params.append("page", filters.page.toString());
   if (filters.limit) params.append("limit", filters.limit.toString());
@@ -22,7 +33,7 @@ const fetchProducts = async (filters: any) => {
   return response;
 }
 
-export function useProducts(filters: any) {
+export function useProducts(filters: ProductFilters) {
   return useQuery({
     queryKey: ["products", filters],
     queryFn: () => fetchProducts(filters),

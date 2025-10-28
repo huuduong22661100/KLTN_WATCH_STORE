@@ -38,7 +38,7 @@ export function OrderSummary({ order }: OrderSummaryProps) {
         <div className={styles.infoRow}>
           <span className={styles.label}>Ngày đặt:</span>
           <span className={styles.valueMedium}>
-            {new Date(order.created_at).toLocaleDateString('vi-VN')}
+            {order.created_at ? new Date(order.created_at).toLocaleDateString('vi-VN') : 'N/A'}
           </span>
         </div>
 

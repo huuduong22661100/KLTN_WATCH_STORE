@@ -1,6 +1,5 @@
 'use client';
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import {
@@ -26,6 +25,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/ui/avatar";
 import { DropdownMenuGroup, DropdownMenuLabel } from "@/shared/components/ui/dropdown-menu";
 import { useCategories } from "@/features/products/hook/useCategories";
+import { Product, ProductCategory } from "@/features/products/types";
 import styles from './Header.module.css';
 
 const headerData = {
@@ -47,7 +47,7 @@ const Header = () => {
   
   
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showSearchResults, setShowSearchResults] = useState(false);
   
@@ -99,10 +99,10 @@ const Header = () => {
   return (
     <header className={styles.header}>
       <div className={styles.container}>
-        <a href="/" className={styles.logoLink}>
+        <Link href="/" className={styles.logoLink}>
           <img src={headerData.logoUrl} alt="Logo" className={styles.logoImage} />
           <span className={styles.logoText}>Watch Store</span>
-        </a>
+        </Link>
 
         <NavigationMenu className={styles.navigation} delayDuration={0}>
           <NavigationMenuList className="gap-4">
@@ -113,15 +113,15 @@ const Header = () => {
 
               <NavigationMenuContent className="bg-black border border-gray-700 rounded-lg shadow-lg p-2 min-w-[200px] z-50">
                 <ul className="flex flex-col gap-1">
-                  {categories.map((category: any) => (
+                  {categories.map((category: ProductCategory) => (
                     <li key={category._id}>
                       <NavigationMenuLink asChild>
-                        <a
+                        <Link
                           href={`/products?category=${category._id}`}
                           className="block px-4 py-2.5 text-white text-sm rounded hover:bg-gray-800 transition-colors"
                         >
                           {category.category}
-                        </a>
+                        </Link>
                       </NavigationMenuLink>
                     </li>
                   ))}
@@ -132,12 +132,12 @@ const Header = () => {
             {headerData.navItems.map((item) => (
               <NavigationMenuItem key={item.name}>
                 <NavigationMenuLink asChild >
-                  <a
+                  <Link
                     href={item.url}
                     className="px-4 py-2 rounded font-semibold text-sm text-white transition-colors"
                   >
                     {item.name}
-                  </a>
+                  </Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
             ))}
@@ -213,12 +213,12 @@ const Header = () => {
 
         <div className={styles.actionsWrapper}>
           <div className={styles.cartWrapper}>
-            <a href="/cart" className={styles.cartLink}>
+            <Link href="/cart" className={styles.cartLink}>
               <ShoppingCart className={styles.cartIcon} />
               <span className={styles.cartBadge}>
                 {isClient ? totalItems : 0}
               </span>
-            </a>
+            </Link>
             <div className={styles.cartDropdown}>
               <h3 className={styles.cartDropdownTitle}>Giỏ hàng của tôi</h3>
               <p className={styles.cartDropdownSubtitle}>
@@ -269,10 +269,10 @@ const Header = () => {
                     className={styles.viewCartButton}
                     variant="outline"
                   >
-                    <a href="/cart">Xem hoặc chỉnh sửa giỏ hàng</a>
+                    <Link href="/cart">Xem hoặc chỉnh sửa giỏ hàng</Link>
                   </Button>
-                  <Button className={styles.checkoutButton}>
-                    <a href="/checkout">Tiến hành thanh toán</a>
+                  <Button asChild className={styles.checkoutButton}>
+                    <Link href="/checkout">Tiến hành thanh toán</Link>
                   </Button>
                 </>
               )}
@@ -335,12 +335,12 @@ const Header = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56 bg-white" align="end" forceMount>
                   <DropdownMenuItem className="cursor-pointer">
-                    <Link href="/auth/login" className="block w-full">
+                    <Link href="/login" className="block w-full">
                       Đăng Nhập
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem className="cursor-pointer">
-                    <Link href="/auth/register" className="block w-full">
+                    <Link href="/register" className="block w-full">
                       Đăng Ký
                     </Link>
                   </DropdownMenuItem>

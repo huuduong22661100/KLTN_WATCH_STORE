@@ -1,5 +1,6 @@
 import { useCart } from '@/features/cart';
 import { CheckoutSummary } from '../types';
+import { CartItem } from '@/features/cart/types';
 import styles from './OrderReview.module.css';
 
 interface OrderReviewProps {
@@ -22,35 +23,26 @@ export function OrderReview({
       <h3 className={styles.title}>Đơn hàng của bạn</h3>
 
       <div className={styles.itemList}>
-        {cart?.items.map((item: any) => {
-          const product = item.watch_id;
-          const displayPrice = product.sale_price || product.price;
+        {cart?.items.map((item: CartItem) => {
           return (
-            <div key={item._id} className={styles.item}>
+            <div key={item.id} className={styles.item}>
               <img
-                src={product.images.mainImg.url}
-                alt={product.title}
+                src={item.product_image || '/assets/image/placeholder.png'}
+                alt={item.product_name}
                 className={styles.itemImage}
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = '/assets/image/placeholder.png';
+                }}
               />
               <div className={styles.itemInfo}>
-                <p className={styles.itemTitle}>{product.title}</p>
+                <p className={styles.itemTitle}>{item.product_name}</p>
                 <p className={styles.itemQuantity}>x{item.quantity}</p>
               </div>
               <div className={styles.itemPriceWrapper}>
-                {product.sale_price ? (
-                  <>
-                    <p className={styles.itemSalePrice}>
-                      {(product.sale_price * item.quantity).toLocaleString('vi-VN')} đ
-                    </p>
-                    <p className={styles.itemOriginalPrice}>
-                      {(product.price * item.quantity).toLocaleString('vi-VN')} đ
-                    </p>
-                  </>
-                ) : (
-                  <p className={styles.itemRegularPrice}>
-                    {(product.price * item.quantity).toLocaleString('vi-VN')} đ
-                  </p>
-                )}
+                <p className={styles.itemRegularPrice}>
+                  {(item.price * item.quantity).toLocaleString('vi-VN')} đ
+                </p>
               </div>
             </div>
           );

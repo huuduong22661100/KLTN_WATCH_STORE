@@ -3,6 +3,7 @@ import { useCategories } from "@/features/products/hook/useCategories";
 import { RadioGroup, RadioGroupItem } from "@/shared/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { ProductCategory, ProductColor } from "../types";
 import styles from './ProductFilters.module.css';
 
 interface ProductFiltersProps {
@@ -84,7 +85,7 @@ export default function ProductFilters({
             <RadioGroupItem value="" id="cat-all" />
             <Label htmlFor="cat-all" className={styles.radioLabel}>Tất cả danh mục</Label>
           </div>
-          {categories.map((category: any) => (
+          {categories.map((category: ProductCategory) => (
             <div key={category._id} className={styles.radioItem}>
               <RadioGroupItem value={category._id} id={category._id} />
               <Label htmlFor={category._id} className={styles.radioLabel}>
@@ -128,7 +129,7 @@ export default function ProductFilters({
             <RadioGroupItem value="" id="color-all" />
             <Label htmlFor="color-all" className={styles.radioLabel}>Tất cả màu</Label>
           </div>
-          {colors.map((color: any) => (
+          {colors.map((color: ProductColor) => (
             <div key={color._id} className={styles.radioItem}>
               <RadioGroupItem value={color._id} id={color._id} />
               <Label htmlFor={color._id} className={styles.radioLabel}>{color.color}</Label>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
@@ -278,12 +279,12 @@ export default function AboutPage() {
             Ghé thăm cửa hàng của chúng tôi hoặc mua sắm trực tuyến ngay hôm nay!
           </p>
           <div className={styles.ctaButtons}>
-            <a href="/products" className={styles.ctaButtonPrimary}>
+            <Link href="/products" className={styles.ctaButtonPrimary}>
               Xem sản phẩm
-            </a>
-            <a href="/contact" className={styles.ctaButtonSecondary}>
+            </Link>
+            <Link href="/contact" className={styles.ctaButtonSecondary}>
               Liên hệ ngay
-            </a>
+            </Link>
           </div>
         </section>
       </div>

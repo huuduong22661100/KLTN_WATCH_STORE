@@ -17,8 +17,21 @@ export const getCartApi = async (token: string): Promise<Cart> => {
   const response = await res.json();
   const cartData = response.data;
 
+  interface CartItemResponse {
+    _id: string;
+    watch_id: {
+      _id: string;
+      title: string;
+      images?: { mainImg?: { url?: string } };
+      sale_price?: number;
+      price: number;
+      stock?: number;
+    };
+    quantity: number;
+  }
+
   return {
-    items: cartData.items.map((item: any) => ({
+    items: cartData.items.map((item: CartItemResponse) => ({
       id: item._id,
       product_id: item.watch_id._id,
       product_name: item.watch_id.title,

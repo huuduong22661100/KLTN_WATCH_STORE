@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { toast } from 'sonner';
 import { 
   CheckoutForm, 
@@ -72,9 +73,9 @@ const handleSubmit = async (e: React.FormEvent) => {
       <div className={styles.container}>
         <div className={styles.emptyContainer}>
           <p className={styles.emptyText}>Giỏ hàng trống</p>
-          <a href="/products" className={styles.emptyLink}>
+          <Link href="/products" className={styles.emptyLink}>
             Tiếp tục mua sắm
-          </a>
+          </Link>
         </div>
       </div>
     );
@@ -104,7 +105,10 @@ const handleSubmit = async (e: React.FormEvent) => {
               isCalculatingFee={isCalculatingFee}
               isSubmitting={isSubmitting || isPending}
               onSubmit={() => {
-                const fakeEvent = new Event('submit') as any;
+                const fakeEvent = {
+                  preventDefault: () => {},
+                  stopPropagation: () => {},
+                } as React.FormEvent<HTMLFormElement>;
                 handleSubmit(fakeEvent);
               }}
             />

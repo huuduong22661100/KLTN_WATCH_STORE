@@ -3,9 +3,10 @@ import { useUpdateCart } from '../hooks/useUpdateCart';
 import { useRemoveFromCart } from '../hooks/useRemoveFromCart';
 import { Button } from '@/shared/components/ui/button';
 import { Trash2 } from 'lucide-react';
+import { CartItem as CartItemType } from '../types';
 import styles from './CartItem.module.css';
 
-export function CartItem({ item }: { item: any }) {
+export function CartItem({ item }: { item: CartItemType }) {
   const [isEditing, setIsEditing] = useState(false);
   const [quantity, setQuantity] = useState(item.quantity);
 

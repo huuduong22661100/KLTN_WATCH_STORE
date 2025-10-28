@@ -1,6 +1,7 @@
 'use client';
 
 import { use } from 'react';
+import Link from 'next/link';
 import { useOrderDetail } from '@/features/orders';
 import styles from './page.module.css';
 
@@ -76,18 +77,18 @@ export default function OrderSuccessPage({
         </div>
 
         <div className={styles.actionButtons}>
-          <a
+          <Link
             href={`/orders/${order.id}`}
             className={styles.viewOrderButton}
           >
             Xem chi tiết đơn hàng
-          </a>
-          <a
+          </Link>
+          <Link
             href="/products"
             className={styles.continueShoppingButton}
           >
             Tiếp tục mua sắm
-          </a>
+          </Link>
         </div>
 
         {order.payment_method === 'bank_transfer' && (

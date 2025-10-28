@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@/shared/components/ui/button';
 import Link from 'next/link';
-import LoginForm from '../components/LoginForm';
+import { LoginForm } from '../components/LoginForm';
 import {
   Breadcrumb,
   BreadcrumbItem,
