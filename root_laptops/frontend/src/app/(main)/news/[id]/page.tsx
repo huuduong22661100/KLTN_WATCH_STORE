@@ -5,6 +5,10 @@ import { getNewsById, getAllNews } from "@/features/news";
 import type { News } from "@/features/news";
 import styles from './page.module.css';
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 type Props = {
   params: Promise<{ id: string }>;
 };
@@ -33,13 +37,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export async function generateStaticParams() {
-  const response = await getAllNews();
-
-  return response.data.map((article: News) => ({
-    id: article._id,
-  }));
-}
+// Comment out generateStaticParams to avoid build-time API calls
+// export async function generateStaticParams() {
+//   const response = await getAllNews();
+//   return response.data.map((article: News) => ({
+//     id: article._id,
+//   }));
+// }
 
 export default async function NewsDetailPage({ params }: Props) {
   const { id } = await params;

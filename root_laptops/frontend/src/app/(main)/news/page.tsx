@@ -4,6 +4,10 @@ import { News } from "@/features/news/types";
 import { Newspaper } from "lucide-react";
 import styles from './page.module.css';
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export const metadata = {
   title: "Tin Tức - Watch Store",
   description: "Tin tức mới nhất về đồng hồ và thời trang",

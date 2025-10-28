@@ -9,6 +9,8 @@ import Link from "next/link";
 import type { Metadata } from 'next';
 import styles from './page.module.css';
 
+// Force dynamic rendering to avoid build-time API calls
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Trang chủ - Cửa hàng đồng hồ Casio',
@@ -20,7 +22,6 @@ export const metadata: Metadata = {
     type: 'website',
   },
 };
-
 
 export const revalidate = 300;
 
@@ -46,9 +47,15 @@ function CategorySectionSkeleton() {
 }
 
 export default async function HomePage() {
+  let categories: ProductCategory[] = [];
   
-  const categoriesData = await getCategories();
-  const categories: ProductCategory[] = categoriesData?.data || [];
+  try {
+    const categoriesData = await getCategories();
+    categories = categoriesData?.data || [];
+  } catch (error) {
+    console.error('Failed to load categories:', error);
+    // Continue with empty categories array
+  }
 
   return (
     <main>
