@@ -1,16 +1,11 @@
 
 import HomeBanner from "@/features/products/components/HomeBanner";
-import CategoryBannerSection from "@/features/products/components/CategoryBannerSection";
-import { getCategories } from "@/features/products/api/categories";
-import { ProductCategory } from "@/features/products/types";
+import DynamicProductSections from "./components/DynamicProductSections";
 import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from 'next';
 import styles from './page.module.css';
-
-// Force dynamic rendering to avoid build-time API calls
-export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Trang chủ - Cửa hàng đồng hồ Casio',
@@ -46,23 +41,13 @@ function CategorySectionSkeleton() {
   );
 }
 
-export default async function HomePage() {
-  let categories: ProductCategory[] = [];
-  
-  try {
-    const categoriesData = await getCategories();
-    categories = categoriesData?.data || [];
-  } catch (error) {
-    console.error('Failed to load categories:', error);
-    // Continue with empty categories array
-  }
-
+export default function HomePage() {
   return (
     <main>
-      {}
+      {/* Banner chính */}
       <HomeBanner name="Home" />
 
-      {}
+      {/* Danh mục sản phẩm */}
       <section className={styles.categoriesSection}>
         <div className={styles.container}>
           <div className={styles.categoriesWrapper}>
@@ -148,18 +133,10 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {}
-      <div className={styles.productSectionsWrapper}>
-        <div className={`${styles.container} ${styles.productSections}`}>
-          {categories.map((category: ProductCategory) => (
-            <Suspense key={category._id} fallback={<CategorySectionSkeleton />}>
-              <CategoryBannerSection category={category} />
-            </Suspense>
-          ))}
-        </div>
-      </div>
+      {/* Danh mục sản phẩm */}
+      <DynamicProductSections />
 
-      {}
+      {/* Thương hiệu */}
       <section className={styles.brandsSection}>
         <div className={styles.container}>
           <h2 className={styles.brandsTitle}>Thương hiệu nổi bật</h2>
