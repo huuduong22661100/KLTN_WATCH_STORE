@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 import cors from "cors";
 import v1Routes from "./routes/v1/index.js";
 import { errorHandler, notFound } from "./middlewares/errorHandler.js";
+import corsOptions from "./config/cors.js";
+import { healthCheck } from "./controllers/healthController.js";
 
 
 import "./models/Cart.js";
@@ -25,14 +27,17 @@ const app = express();
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cors(corsOptions));
 
 const PORT = process.env.PORT || 5000;
 
-
+// MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log("✅ MongoDB connected"))
-  .catch(err => console.error("❌ MongoDB error:", err));
+  .catch(err => {
+    console.error("❌ MongoDB error:", err);
+    process.exit(1); // Thoát nếu không kết nối được DB
+  });
 
 
 app.get("/", (req, res) => {
@@ -49,6 +54,9 @@ app.get("/", (req, res) => {
   });
 });
 
+// Health check endpoint for monitoring
+app.get("/health", healthCheck);
+
 
 app.use("/api/v1", v1Routes);
 
@@ -58,6 +66,7 @@ app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`✅ Backend running on port ${PORT}`);
-  
+  console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🔗 API Endpoint: http://localhost:${PORT}`);
 });
 

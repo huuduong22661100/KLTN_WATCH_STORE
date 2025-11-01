@@ -3,9 +3,10 @@
   "private": true,
   "version": "1.0.0",
   "author": "",
-  "description": "",
+  "description": "Backend API for Watch Store E-commerce - KLTN Project",
   "engines": {
-    "node": ">=18.x"
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
   },
   "main": "src/server.js",
   "type": "module",
