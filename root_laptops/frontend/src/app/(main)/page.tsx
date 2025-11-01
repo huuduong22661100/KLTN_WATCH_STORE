@@ -1,6 +1,7 @@
 
 import HomeBanner from "@/features/products/components/HomeBanner";
 import DynamicProductSections from "./components/DynamicProductSections";
+import LatestNews from "./components/LatestNews";
 import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -136,34 +137,12 @@ export default function HomePage() {
       {/* Danh mục sản phẩm */}
       <DynamicProductSections />
 
-      {/* Thương hiệu */}
-      <section className={styles.brandsSection}>
-        <div className={styles.container}>
-          <h2 className={styles.brandsTitle}>Thương hiệu nổi bật</h2>
-          <div className={styles.brandsGrid}>
-            <div className={styles.brandLogoWrapper}>
-              <Image src="/assets/image/brand-dell.png" alt="Dell" fill className={styles.brandLogo} sizes="(max-width: 768px) 50vw, 16vw" />
-            </div>
-            <div className={styles.brandLogoWrapper}>
-              <Image src="/assets/image/brand-hp.png" alt="HP" fill className={styles.brandLogo} sizes="(max-width: 768px) 50vw, 16vw" />
-            </div>
-            <div className={styles.brandLogoWrapper}>
-              <Image src="/assets/image/brand-lenovo.png" alt="Lenovo" fill className={styles.brandLogo} sizes="(max-width: 768px) 50vw, 16vw" />
-            </div>
-            <div className={styles.brandLogoWrapper}>
-              <Image src="/assets/image/brand-asus.png" alt="Asus" fill className={styles.brandLogo} sizes="(max-width: 768px) 50vw, 16vw" />
-            </div>
-            <div className={styles.brandLogoWrapper}>
-              <Image src="/assets/image/brand-apple.png" alt="Apple" fill className={styles.brandLogo} sizes="(max-width: 768px) 50vw, 16vw" />
-            </div>
-            <div className={styles.brandLogoWrapper}>
-              <Image src="/assets/image/brand-acer.png" alt="Acer" fill className={styles.brandLogo} sizes="(max-width: 768px) 50vw, 16vw" />
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Tin tức mới nhất */}
+      <Suspense fallback={<div className={styles.loadingNews}>Đang tải tin tức...</div>}>
+        <LatestNews />
+      </Suspense>
 
-      {}
+      {/* Ưu đãi đặc biệt */}
       <section className={styles.promoSection}>
         <div className={styles.container}>
           <div className={styles.promoCard}>

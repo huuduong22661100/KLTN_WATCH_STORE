@@ -9,6 +9,7 @@ const corsOptions = {
     // Danh sách các domain được phép truy cập
     const allowedOrigins = [
       'https://kltn-watch-store.netlify.app', // Frontend production URL
+      'https://admin-kltn-store-watch.netlify.app', // Admin production URL
       'http://localhost:3000', // Frontend local
       'http://localhost:3001', // Admin local
       process.env.FRONTEND_URL,

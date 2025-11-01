@@ -46,6 +46,3 @@ next-env.d.ts
 
 # OS
 Thumbs.db
-
-NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
-

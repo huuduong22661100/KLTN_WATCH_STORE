@@ -157,6 +157,13 @@
   background-color: hsl(var(--muted));
 }
 
+.loadingNews {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: hsl(var(--muted-foreground));
+  font-size: 1rem;
+}
+
 .skeletonSection {
   padding: 2rem 1rem;
 }
