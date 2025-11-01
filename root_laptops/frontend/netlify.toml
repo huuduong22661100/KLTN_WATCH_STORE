@@ -10,8 +10,6 @@
 [build.environment]
   # Node version
   NODE_VERSION = "20"
-  # Next.js requires this for standalone output
-  NEXT_PRIVATE_STANDALONE = "true"
 
 # Essential for Next.js App Router
 [[plugins]]

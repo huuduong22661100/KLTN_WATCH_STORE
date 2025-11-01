@@ -36,7 +36,9 @@ export default function DynamicProductSections() {
     const fetchCategories = async () => {
       try {
         const categoriesData = await getCategories();
-        setCategories(categoriesData?.data || []);
+        // Giới hạn chỉ lấy 4 categories đầu tiên để tránh quá tải API
+        const limitedCategories = (categoriesData?.data || []).slice(0, 4);
+        setCategories(limitedCategories);
       } catch (err) {
         console.error('Failed to load categories:', err);
         setError('Không thể tải danh mục sản phẩm. Vui lòng thử lại sau.');

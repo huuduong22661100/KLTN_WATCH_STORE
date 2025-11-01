@@ -39,4 +39,12 @@ const productSchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
+// Add indexes for better query performance
+productSchema.index({ title: 'text', brand: 'text' }); // Text search
+productSchema.index({ category_id: 1 }); // Filter by category
+productSchema.index({ color_id: 1 }); // Filter by color
+productSchema.index({ price: 1 }); // Sort/filter by price
+productSchema.index({ createdAt: -1 }); // Sort by date
+productSchema.index({ stock: 1 }); // Filter in-stock products
+
 export default mongoose.model('Product', productSchema);

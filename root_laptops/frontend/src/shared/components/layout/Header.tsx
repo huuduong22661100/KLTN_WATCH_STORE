@@ -71,7 +71,7 @@ const Header = () => {
       setIsSearching(true);
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/v1"}/products?search=${searchQuery}`
+          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/products?search=${searchQuery}`
         );
         const data = await response.json();
         setSearchResults(data.data || []);

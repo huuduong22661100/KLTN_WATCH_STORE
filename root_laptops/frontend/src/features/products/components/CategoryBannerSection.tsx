@@ -1,10 +1,11 @@
+'use client';
 
+import { useQuery } from "@tanstack/react-query";
 import { getProducts } from "@/features/products/api/products";
 import { ProductCategory, Product } from "@/features/products/types";
 import ProductCard from "./ProductCard";
 import Link from "next/link";
 import Image from "next/image";
-import { Suspense } from "react";
 import styles from './CategoryBannerSection.module.css';
 
 
@@ -28,33 +29,24 @@ function ProductsGridSkeleton() {
   );
 }
 
-
-async function CategoryProducts({ categoryId }: { categoryId: string }) {
-  try {
-    const productsData = await getProducts({
+// Client Component using React Query for better performance
+function CategoryProducts({ categoryId }: { categoryId: string }) {
+  const { data: productsData, isLoading, error } = useQuery({
+    queryKey: ['category-products', categoryId],
+    queryFn: () => getProducts({
       category: categoryId,
       limit: 4,
       page: 1,
-    });
+    }),
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    retry: 2,
+  });
 
-    const products = productsData?.data || [];
+  if (isLoading) {
+    return <ProductsGridSkeleton />;
+  }
 
-    if (products.length === 0) {
-      return (
-        <div className={styles.emptyProductsWrapper}>
-          <p className={styles.emptyProductsText}>Chưa có sản phẩm trong danh mục này</p>
-        </div>
-      );
-    }
-
-    return (
-      <div className={styles.skeletonGrid}>
-        {products.map((product: Product) => (
-          <ProductCard key={product._id} product={product} />
-        ))}
-      </div>
-    );
-  } catch (error) {
+  if (error) {
     console.error("Error fetching products:", error);
     return (
       <div className={styles.errorProductsWrapper}>
@@ -62,6 +54,24 @@ async function CategoryProducts({ categoryId }: { categoryId: string }) {
       </div>
     );
   }
+
+  const products = productsData?.data || [];
+
+  if (products.length === 0) {
+    return (
+      <div className={styles.emptyProductsWrapper}>
+        <p className={styles.emptyProductsText}>Chưa có sản phẩm trong danh mục này</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.skeletonGrid}>
+      {products.map((product: Product) => (
+        <ProductCard key={product._id} product={product} />
+      ))}
+    </div>
+  );
 }
 
 
@@ -112,9 +122,7 @@ export default function CategoryBannerSection({
       </div>
 
       <div className={styles.productsContainer}>
-        <Suspense fallback={<ProductsGridSkeleton />}>
-          <CategoryProducts categoryId={category._id} />
-        </Suspense>
+        <CategoryProducts categoryId={category._id} />
       </div>
     </section>
   );
