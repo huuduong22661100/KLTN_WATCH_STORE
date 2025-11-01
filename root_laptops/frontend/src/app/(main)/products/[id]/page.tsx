@@ -8,8 +8,10 @@ import { ProductDetails } from '@/features/products/components/ProductDetails';
 import { ProductGallery } from '@/features/products/components/ProductGallery';
 import styles from './page.module.css';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+
 const fetchProductById = async (id: string): Promise<Product> => {
-  const res = await fetch(`http://localhost:5000/api/v1/products/${id}`);
+  const res = await fetch(`${API_URL}/products/${id}`);
   if (!res.ok) {
     throw new Error('Network response was not ok');
   }
