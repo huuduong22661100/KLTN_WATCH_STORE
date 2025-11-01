@@ -2,10 +2,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: "standalone",
+  // Remove standalone output for Netlify deployment
+  // output: "standalone",
   
   images: {
-    unoptimized: false,
+    unoptimized: true, // Required for static export on Netlify
     remotePatterns: [
       {
         protocol: "http",

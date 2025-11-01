@@ -8,28 +8,27 @@ const corsOptions = {
   origin: function (origin, callback) {
     // Danh sách các domain được phép truy cập
     const allowedOrigins = [
-      process.env.FRONTEND_URL || 'http://localhost:3000',
-      process.env.ADMIN_URL || 'http://localhost:3001',
-      'http://localhost:3000',
-      'http://localhost:3001',
       'https://kltn-watch-store.netlify.app', // Frontend production URL
-      // Thêm Admin URL sau khi deploy
-      // Ví dụ: 'https://your-admin.netlify.app'
-    ];
+      'http://localhost:3000', // Frontend local
+      'http://localhost:3001', // Admin local
+      process.env.FRONTEND_URL,
+      process.env.ADMIN_URL,
+    ].filter(Boolean); // Loại bỏ undefined
 
-    // Cho phép request không có origin (mobile apps, curl, postman)
+    // Cho phép request không có origin (mobile apps, curl, postman, server-to-server)
     if (!origin) return callback(null, true);
+
+    // Trong development, cho phép tất cả
+    if (process.env.NODE_ENV === 'development') {
+      return callback(null, true);
+    }
 
     // Kiểm tra origin có trong danh sách cho phép không
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      // Trong development, cho phép tất cả
-      if (process.env.NODE_ENV === 'development') {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
+      console.log('⚠️ CORS blocked origin:', origin);
+      callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true, // Cho phép gửi cookies
